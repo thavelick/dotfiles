@@ -1,0 +1,7 @@
+[init]
+	defaultBranch = main
+[alias]
+	co = checkout
+[user]
+	email = tristan@havelick.com
+	name = Tristan Havelick

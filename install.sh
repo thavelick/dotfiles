@@ -1,4 +1,5 @@
 #!/bin/bash
+export DOTFILES_HOME=`pwd`
 if grep -qF Arch /etc/issue; then
   missing_packages=`comm  -13 <(pacman -Qq | sort) <(sort arch/packages)`
   if ! pacman -Qq yay > /dev/null; then
@@ -12,3 +13,6 @@ if grep -qF Arch /etc/issue; then
     yay -S $missing_packages
   fi
 fi
+
+
+git/setup.sh

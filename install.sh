@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 export DOTFILES_HOME=`pwd`
 if grep -qF Arch /etc/issue; then
   missing_packages=`comm  -13 <(pacman -Qq | sort) <(sort arch/packages)`
@@ -9,7 +9,7 @@ if grep -qF Arch /etc/issue; then
     cd ~/src/yay
     makepkg -si
   fi 
-  if [[ -n $missing_packages ]]; then 
+  if [ -n $missing_packages ]; then 
     yay -S $missing_packages
   fi
 fi

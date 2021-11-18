@@ -15,3 +15,4 @@ if grep -qF Arch /etc/issue; then
 fi
 
 git/setup.sh
+zsh/setup.sh

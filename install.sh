@@ -9,7 +9,8 @@ if grep -qF Arch /etc/issue; then
     cd $HOME/src/yay
     makepkg -si
   fi 
-  if [ -n $missing_packages ]; then 
+
+  if [ -n "$missing_packages" ]; then 
     yay -S $missing_packages
   fi
 fi

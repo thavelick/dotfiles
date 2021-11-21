@@ -6,8 +6,10 @@ feh
 git
 github-cli
 irssi
+mupdf-tools
 neofetch
 nmap
+pdfcropmargins
 sacc
 sloc
 strace

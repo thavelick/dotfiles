@@ -15,6 +15,7 @@ python-pip
 python-pylint
 sacc
 sloc
+ssdeep
 strace
 torsocks
 vim

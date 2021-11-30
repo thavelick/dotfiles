@@ -5,3 +5,6 @@
 [user]
 	email = tristan@havelick.com
 	name = Tristan Havelick
+	signingKey = C5DC32EC20560DCA
+[commit]
+	gpgsign = true

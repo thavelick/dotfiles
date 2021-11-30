@@ -1,3 +1,4 @@
 source /usr/share/vim/vim82/defaults.vim
 :highlight ExtraWhitespace ctermbg=red guibg=red
 :match ExtraWhitespace /\s\+$/
+:let loaded_netrwPlugin = 1

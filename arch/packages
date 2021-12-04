@@ -1,3 +1,4 @@
+alsa-utils
 bat
 browsh-bin
 busybox
@@ -7,10 +8,13 @@ git
 github-cli
 irssi
 k2pdfopt
+lsd
 mupdf-tools
 neofetch
 nmap
 pdfcropmargins
+pulseaudio
+pulseaudio-alsa
 python-pip
 python-pylint
 sacc

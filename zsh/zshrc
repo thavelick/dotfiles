@@ -8,7 +8,13 @@ PATH=$PATH:$HOME/.local/bin
 source $HOME/.zsh/powerlevel10k/powerlevel10k.zsh-theme
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.cache/zsh/history
+
 source "$dotfiles_home/zsh/keys.zsh"
 
 export EDITOR=vim
 export GPG_TTY=$(tty)
+
+cd ~

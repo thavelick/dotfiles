@@ -17,4 +17,8 @@ source "$dotfiles_home/zsh/keys.zsh"
 export EDITOR=vim
 export GPG_TTY=$(tty)
 
-cd ~
+alias ls='lsd'
+alias diff='diff --color'
+
+[ $(pwd) = "/mnt/c/Users/trist" ] && cd $HOME
+

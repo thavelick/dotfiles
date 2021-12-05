@@ -1,4 +1,3 @@
-dotfiles_home=$HOME/Projects/dotfiles
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -12,13 +11,14 @@ HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=~/.cache/zsh/history
 
-source "$dotfiles_home/zsh/keys.zsh"
-
+export DOTFILES_HOME=$HOME/Projects/dotfiles
 export EDITOR=vim
 export GPG_TTY=$(tty)
+
+source "$DOTFILES_HOME/zsh/keys.zsh"
 
 alias ls='lsd'
 alias diff='diff --color'
 
-[ $(pwd) = "/mnt/c/Users/trist" ] && cd $HOME
+[ $(pwd) = "/mnt/c/Users/trist" ] && cd $HOME || true
 

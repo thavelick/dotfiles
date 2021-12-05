@@ -1,0 +1,3 @@
+#!/bin/sh
+dwl -s "$DOTFILES_HOME/dwl/init.sh"
+

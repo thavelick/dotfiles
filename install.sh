@@ -8,11 +8,12 @@ if grep -qF Arch /etc/issue; then
     [[ -d $HOME/src/yay ]] && git clone https://aur.archlinux.org/yay.git ~/src/yay
     cd $HOME/src/yay
     makepkg -si
-  fi 
+  fi
 
-  if [ -n "$missing_packages" ]; then 
+  if [ -n "$missing_packages" ]; then
     yay -S $missing_packages
   fi
+  dwl/setup.sh
 fi
 
 git/setup.sh

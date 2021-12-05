@@ -6,6 +6,7 @@ ed
 feh
 git
 github-cli
+inotify-tools
 irssi
 k2pdfopt
 lsd
@@ -24,6 +25,7 @@ strace
 torsocks
 vim
 vis
+waybar
 yay
 youtube-dl
 zsh

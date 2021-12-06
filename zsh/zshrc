@@ -14,6 +14,7 @@ HISTFILE=~/.cache/zsh/history
 export DOTFILES_HOME=$HOME/Projects/dotfiles
 export EDITOR=vim
 export GPG_TTY=$(tty)
+export MOZ_ENABLE_WAYLAND="1"
 
 source "$DOTFILES_HOME/zsh/keys.zsh"
 

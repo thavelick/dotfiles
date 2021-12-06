@@ -14,6 +14,7 @@ if grep -qF Arch /etc/issue; then
     yay -S $missing_packages
   fi
   dwl/setup.sh
+  alacritty/setup.sh
 fi
 
 git/setup.sh

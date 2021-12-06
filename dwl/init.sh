@@ -1,3 +1,5 @@
 #!/bin/sh
+cat -- | $DOTFILES_HOME/dwl/dwlwrapper.sh &
 /usr/sbin/waybar &
-cat > /tmp/dwltags-$WAYLAND_DISPLAY
+
+

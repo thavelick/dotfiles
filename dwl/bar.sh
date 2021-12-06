@@ -1,19 +1,21 @@
 #!/bin/sh
 
 set -e
-echo '| 1!| 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |'
-fname="/tmp/dwltags-wayland-1";
+echo 'aaa| 1!| 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |'
+echo "begin--: $1" >> /tmp/bar.log
+fname="/tmp/dwltags-WL-1";
 while true
 do
     #make sure the file exists
-    while [ ! -f $fname ]
+    while [ ! -p $fname ]
     do
         inotifywait -qqe create `dirname $fname`
     done;
     #wait for dwl to close it after writing
-    inotifywait -qqe close_write $fname
-
-    titleline=$1
+    # inotifywait -qqe close_write $fname
+    sleep 1
+    echo "+++++++" >> /tmp/bar.log
+    titleline="0"
     tagline=$((titleline+1))
 
     title=`sed "$titleline!d" $fname`
@@ -26,6 +28,11 @@ do
     mtags=`echo "$taginfo" | cut -d ' ' -f 3`
 
     layout=`echo "$taginfo" | cut -d ' ' -f 4-`
+
+    echo "titleline: $titleline" >> /tmp/bar.log
+    echo "tagline: $tagline" >> /tmp/bar.log
+    echo "title: $title" >> /tmp/bar.log
+    echo "taginfo: $taginfo" >> /tmp/bar.log
 
     for i in {0..8};
     do

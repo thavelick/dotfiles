@@ -4,10 +4,6 @@
 	"layer": "top",
 	"position": "bottom",
 
-	"modules-left": [
-		"custom/dwlbar",
-		"custom/right-arrow-dark"
-	],
 	"modules-center": [
 		"custom/left-arrow-dark",
 		"clock#1",
@@ -55,14 +51,6 @@
 		"format": "",
 		"tooltip": false
 	},
-	"custom/dwlbar": {
-        	"format": "{}",
-        	"max-length": 500,
-        	"escape": true,
-        	"exec": "/home/tristan/Projects/dotfiles/dwl/bar.sh 1"
-
-    	},
-
 	"clock#1": {
 		"format": "{:%a}",
 		"tooltip": false

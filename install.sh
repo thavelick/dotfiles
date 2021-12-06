@@ -15,6 +15,7 @@ if grep -qF Arch /etc/issue; then
   fi
   dwl/setup.sh
   alacritty/setup.sh
+  qutebrowser/setup.sh
 fi
 
 git/setup.sh

@@ -1,3 +1,5 @@
+qt5-wayland
+python-adblock
 alacritty
 alsa-utils
 bat
@@ -5,7 +7,6 @@ bemenu-wayland
 browsh-bin
 busybox
 ed
-feh
 firefox
 git
 github-cli
@@ -21,6 +22,7 @@ pulseaudio
 pulseaudio-alsa
 python-pip
 python-pylint
+qutebrowser
 sacc
 sloc
 ssdeep

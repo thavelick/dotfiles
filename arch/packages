@@ -1,5 +1,3 @@
-qt5-wayland
-python-adblock
 alacritty
 alsa-utils
 bat
@@ -14,14 +12,17 @@ inotify-tools
 irssi
 k2pdfopt
 lsd
+mpv
 mupdf-tools
 neofetch
 nmap
 pdfcropmargins
 pulseaudio
 pulseaudio-alsa
+python-adblock
 python-pip
 python-pylint
+qt5-wayland
 qutebrowser
 sacc
 sloc

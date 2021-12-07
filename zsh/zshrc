@@ -18,6 +18,7 @@ export MOZ_ENABLE_WAYLAND="1"
 export QT_QPA_PLATFORM=wayland
 
 source "$DOTFILES_HOME/zsh/keys.zsh"
+source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 alias ls='lsd'
 alias diff='diff --color'

@@ -22,7 +22,7 @@ source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 alias ls='lsd'
-alias diff='diff --color'
+[[ -n $(diff --version | grep GNU) ]] && alias diff='diff --color'
 
 # If windows defaults us to it's home directory, swtich to the unix one
 [ $(pwd) = "/mnt/c/Users/trist" ] && cd $HOME || true

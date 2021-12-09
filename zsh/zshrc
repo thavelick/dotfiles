@@ -27,5 +27,5 @@ alias diff='diff --color'
 [ $(pwd) = "/mnt/c/Users/trist" ] && cd $HOME || true
 
 # If this is a work computer, include work specific stuff
-[ -f $HOME/work.zsh ] && source $HOME/work.zsh
+[ -f $HOME/work.zsh ] && source $HOME/work.zsh || true
 

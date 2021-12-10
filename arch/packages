@@ -27,6 +27,7 @@ python-pylint
 qt5-wayland
 qutebrowser
 sacc
+shellcheck
 sloc
 ssdeep
 strace

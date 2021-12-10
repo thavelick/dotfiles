@@ -11,6 +11,7 @@ settings:
       normal:
         ',M': hint links spawn mpv {hint-url}
         ',m': spawn mpv {url}
+        ',s': scroll-px 0 500
   content.blocking.method:
     global: both
   fonts.default_size:

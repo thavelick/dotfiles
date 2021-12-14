@@ -1,6 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 export DOTFILES_HOME=$(pwd)
-if grep -qF Arch /etc/issue; then
+if [ $(uname) = 'Darwin' ]; then
+  missing_packages=$(comm -13 <(brew ls --formula | sort) <(sort mac/packages))
+  if [ -n "$missing_packages" ]; then
+    # echo "missing: $missing_packages"
+
+    brew install $missing_packages
+
+  fi
+elif grep -qF Arch /etc/issue; then
   missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort arch/packages))
   if ! pacman -Qq yay > /dev/null; then
     sudo pacman -S --needed git base-devel

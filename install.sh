@@ -20,4 +20,6 @@ if grep -qF Arch /etc/issue; then
   vim/setup.sh
 fi
 
+
+amfora/setup.sh
 zsh/setup.sh

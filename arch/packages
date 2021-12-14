@@ -1,5 +1,4 @@
 alacritty
-toot
 alsa-utils
 amfora-git
 bat
@@ -18,6 +17,7 @@ lsd
 mpv
 mupdf-tools
 neofetch
+newsboat
 nmap
 pdfcropmargins
 pulseaudio
@@ -33,6 +33,7 @@ sloc
 ssdeep
 strace
 swaybg
+toot
 torsocks
 ttf-meslo-nerd-font-powerlevel10k
 vim

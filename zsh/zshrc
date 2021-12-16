@@ -13,6 +13,7 @@ HISTFILE=~/.cache/zsh/history
 
 export DOTFILES_HOME=$HOME/Projects/dotfiles
 export EDITOR=vim
+export BROWSER=qutebrowser
 export GPG_TTY=$(tty)
 export MOZ_ENABLE_WAYLAND="1"
 export QT_QPA_PLATFORM=wayland

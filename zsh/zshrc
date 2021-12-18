@@ -25,6 +25,11 @@ source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 alias ls='lsd'
 [[ -n $(diff --version | grep GNU) ]] && alias diff='diff --color'
 
+nboffline() {
+  document=$1
+  nb show $document | tail +8 | head -n -1 | ansi2txt | w3m -T 'text/html'
+}
+
 # If windows defaults us to it's home directory, swtich to the unix one
 [ $(pwd) = "/mnt/c/Users/trist" ] && cd $HOME || true
 

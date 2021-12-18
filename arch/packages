@@ -5,7 +5,6 @@ bat
 bemenu-wayland
 bind
 busybox
-colorized-logs
 ed
 git
 github-cli

@@ -5,6 +5,7 @@ bat
 bemenu-wayland
 bind
 busybox
+colorized-logs
 ed
 git
 github-cli
@@ -19,6 +20,7 @@ nb-git
 neofetch
 newsboat
 nmap
+pandoc
 pdfcropmargins
 pulseaudio
 pulseaudio-alsa

@@ -9,6 +9,7 @@ if [ $(uname) = 'Darwin' ]; then
 
   fi
 elif grep -qF Arch /etc/issue; then
+  sudo pacman -Syu
   missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort arch/packages))
   if ! pacman -Qq yay > /dev/null; then
     sudo pacman -S --needed git base-devel

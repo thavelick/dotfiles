@@ -271,7 +271,8 @@ timeout = 1800 # 30 mins
 #
 # Note that HTTP and HTTPS are treated as separate protocols here.
 gopher = "localhost"
-
+http = "localhost:1966"
+https = "localhost:1966"
 
 [subscriptions]
 # For tracking feeds and pages

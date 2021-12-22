@@ -31,6 +31,11 @@ nboffline() {
     nb --no-color show $document | tail +8 | head -n -1 | w3m -T 'text/html'
 }
 
+qr-paste () {
+  [[ -f /usr/sbin/wl-paste ]] && /usr/sbin/wl-paste | \
+    qrencode -o - -t PNG | imv -
+}
+
 # If windows defaults us to it's home directory, swtich to the unix one
 [ $(pwd) = "/mnt/c/Users/trist" ] && cd $HOME || true
 

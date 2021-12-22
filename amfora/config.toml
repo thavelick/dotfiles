@@ -270,6 +270,7 @@ timeout = 1800 # 30 mins
 # the url-handlers section.
 #
 # Note that HTTP and HTTPS are treated as separate protocols here.
+gopher = "localhost"
 
 
 [subscriptions]

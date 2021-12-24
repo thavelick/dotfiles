@@ -25,6 +25,11 @@ source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 alias ls='lsd'
 [[ -n $(diff --version | grep GNU) ]] && alias diff='diff --color'
 
+wmpv() {
+  filepath=$(realpath $1)
+  mpv.exe "\\\wsl.localhost\\Arch${filepath//\//\\}"
+}
+
 nboffline() {
   document=$1
   nb --no-color bookmark list | grep -F "[$document]" && \

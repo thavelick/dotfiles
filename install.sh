@@ -6,8 +6,14 @@ if [ $(uname) = 'Darwin' ]; then
     # echo "missing: $missing_packages"
 
     brew install $missing_packages
-
   fi
+  amfora/setup.sh
+elif grep -qF Raspbian /etc/issue; then
+  sudo apt-get update
+  sudo apt-get upgrade
+  missing_packages=$(comm  -13 <(dpkg-query -f '${Package}\n' -W| sort) <(sort raspbian/packages))
+  sudo apt-get install $missing_packages
+  git/setup.sh
 elif grep -qF Arch /etc/issue; then
   sudo pacman -Syu
   missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort arch/packages))
@@ -27,8 +33,8 @@ elif grep -qF Arch /etc/issue; then
   qutebrowser/setup.sh
   git/setup.sh
   vim/setup.sh
+  amfora/setup.sh
 fi
 
 
-amfora/setup.sh
 zsh/setup.sh

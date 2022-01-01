@@ -34,7 +34,7 @@ elif grep -qF Arch /etc/issue; then
   git/setup.sh
   vim/setup.sh
   amfora/setup.sh
+  neomutt/setup.sh
 fi
-
 
 zsh/setup.sh

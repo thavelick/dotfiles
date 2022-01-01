@@ -1,0 +1,22 @@
+set folder = imaps://imap.migadu.com/
+set imap_user='tristan@tristanhavelick.com'
+set imap_pass='rind-frosting-stifling-passably-faction-rifling'
+set spoolfile=+INBOX
+set imap_check_subscribed
+mailboxes = +INBOX
+
+set header_cache = "~/.cache/mutt"
+set message_cachedir = "~/.cache/mutt"
+set postponed = +Drafts
+unset imap_passive
+set imap_keepalive = 300
+set mail_check = 120
+
+set record = +Sent
+
+set realname = 'Tristan Havelick'
+set from = 'tristan@havelick.com'
+set use_from = yes
+set smtp_pass = 'dont matter'
+set smtp_url = smtps://tristan@havelick.com@smtp.migadu.com
+set ssl_force_tls = yes

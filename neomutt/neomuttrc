@@ -1,7 +1,7 @@
 set folder = imaps://imap.migadu.com/
-set imap_user='tristan@tristanhavelick.com'
-set imap_pass='rind-frosting-stifling-passably-faction-rifling'
-set spoolfile=+INBOX
+set imap_user = 'tristan@tristanhavelick.com'
+set imap_pass = $IMAP_PASS
+set spoolfile = +INBOX
 set imap_check_subscribed
 mailboxes = +INBOX
 
@@ -17,6 +17,6 @@ set record = +Sent
 set realname = 'Tristan Havelick'
 set from = 'tristan@havelick.com'
 set use_from = yes
-set smtp_pass = 'dont matter'
+set smtp_pass = $SMTP_PASS
 set smtp_url = smtps://tristan@havelick.com@smtp.migadu.com
 set ssl_force_tls = yes

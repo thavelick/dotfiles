@@ -6,6 +6,7 @@ android-tools
 bat
 bemenu-wayland
 bind
+borg
 busybox
 dart
 ed
@@ -36,6 +37,7 @@ python-pip
 python-pylint
 qt5-wayland
 qutebrowser
+rclone
 ripgrep
 sacc
 shellcheck

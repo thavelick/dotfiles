@@ -6,6 +6,7 @@ android-tools
 bat
 bemenu-wayland
 bind
+borg
 busybox
 dart
 ed
@@ -22,6 +23,8 @@ mpv
 mupdf-tools
 nb-git
 neofetch
+neomutt
+neovim
 newsboat
 nmap
 nodejs
@@ -34,6 +37,7 @@ python-pip
 python-pylint
 qt5-wayland
 qutebrowser
+rclone
 ripgrep
 sacc
 shellcheck
@@ -49,6 +53,7 @@ vim
 vis
 w3m
 waybar
+whois
 wl-clipboard
 wlroots-git
 yay

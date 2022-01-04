@@ -5,3 +5,5 @@
 [user]
 	email = tristan@havelick.com
 	name = Tristan Havelick
+[pull]
+	rebase = false

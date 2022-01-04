@@ -44,6 +44,9 @@ qr-paste () {
 # If windows defaults us to it's home directory, swtich to the unix one
 [ $(pwd) = "/mnt/c/Users/trist" ] && cd $HOME || true
 
+# store secrets outside of source control
+[ -f $HOME/secrets.zsh ] && source $HOME/secrets.zsh || true
+
 # If this is a work computer, include work specific stuff
 [ -f $HOME/work.zsh ] && source $HOME/work.zsh || true
 

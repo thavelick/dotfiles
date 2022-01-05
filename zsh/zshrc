@@ -51,3 +51,5 @@ qr-paste () {
 # If this is a work computer, include work specific stuff
 [ -f $HOME/work.zsh ] && source $HOME/work.zsh || true
 
+# To customize prompt, run `p10k configure` or edit ~/Projects/dotfiles/zsh/p10k.zsh.
+[[ ! -f ~/Projects/dotfiles/zsh/p10k.zsh ]] || source ~/Projects/dotfiles/zsh/p10k.zsh

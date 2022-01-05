@@ -4,6 +4,11 @@
 	"layer": "top",
 	"position": "bottom",
 
+	"modules-left": [
+		"custom/left-arrow-dark",
+		"river/tags",
+		"custom/right-arrow-dark"
+	],
 	"modules-center": [
 		"custom/left-arrow-dark",
 		"clock#1",
@@ -32,8 +37,13 @@
 		"disk",
 		"custom/left-arrow-light",
 		"custom/left-arrow-dark",
+		"backlight",
 		"tray"
 	],
+
+	"river/tags": {
+		"num-tags": 9
+	},
 
 	"custom/left-arrow-dark": {
 		"format": "",
@@ -109,5 +119,10 @@
 	},
 	"tray": {
 		"icon-size": 20
+	},
+	"backlight": {
+		"device": "intel_backlight",
+		"format": "{percent}% {icon}",
+		"format-icons": ["", ""]
 	}
 }

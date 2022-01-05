@@ -17,6 +17,7 @@ export BROWSER=qutebrowser
 export GPG_TTY=$(tty)
 export MOZ_ENABLE_WAYLAND="1"
 export QT_QPA_PLATFORM="wayland"
+export XKB_DEFAULT_LAYOUT="us(colemak)"
 
 source "$DOTFILES_HOME/zsh/keys.zsh"
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

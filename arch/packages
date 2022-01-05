@@ -52,10 +52,9 @@ tut
 vim
 vis
 w3m
-waybar
+waybar-git
 whois
 wl-clipboard
-wlroots-git
 yay
 yt-dlp
 zsh-fix-winchanged-git

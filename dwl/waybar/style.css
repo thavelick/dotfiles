@@ -72,3 +72,18 @@ window#waybar {
 #disk {
 	padding: 0 10px;
 }
+
+#tags button {
+	background: #1a1a1a;
+}
+#tags button.occupied {
+    color: #2a90b0;
+}
+
+#tags button.focused {
+    color: white;
+}
+
+#tags button.urgent {
+    color: red;
+}

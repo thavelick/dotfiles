@@ -29,6 +29,7 @@ elif grep -qF Arch /etc/issue; then
     yay -S $missing_packages
   fi
   dwl/setup.sh
+  river/setup.sh
   alacritty/setup.sh
   qutebrowser/setup.sh
   git/setup.sh

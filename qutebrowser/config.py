@@ -156,6 +156,8 @@ config.set('content.javascript.enabled', True, 'chrome://*/*')
 # Type: Bool
 config.set('content.javascript.enabled', True, 'qute://*/*')
 
+config.set('content.javascript.can_access_clipboard', True, 'https://github.com')
+
 # Allow websites to show notifications.
 # Type: BoolAsk
 # Valid values:

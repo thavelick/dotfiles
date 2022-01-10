@@ -19,7 +19,7 @@ milestone() {
 }
 
 gh-list () {
-  gh issue -a thavelick --search "milestone:$(milestone)" $* list
+  gh issue -a @me --search "milestone:$(milestone)" $* list
 }
 
 gh-list-team() {

@@ -17,3 +17,11 @@ milestone() {
   milestone="$year-Q$quarter-$week"
   echo $milestone
 }
+
+gh-list () {
+  gh issue -a thavelick --search "milestone:$(milestone)" $* list
+}
+
+gh-list-team() {
+ gh-list --label "team: $1"
+}

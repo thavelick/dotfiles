@@ -33,6 +33,7 @@ pdfcropmargins
 pulseaudio
 pulseaudio-alsa
 python-adblock
+python-argostranslate-pip
 python-pip
 python-pylint
 qt5-wayland

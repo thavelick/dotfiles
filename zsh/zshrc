@@ -25,6 +25,7 @@ source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 which nvim > /dev/null && alias vim='nvim'
 which lsd > /dev/null && alias ls='lsd'
+alias ru2en='argos-translate --from-lang ru --to-lang en'
 [[ -n $(diff --version | grep GNU) ]] && alias diff='diff --color'
 
 wmpv() {
@@ -51,6 +52,8 @@ qr-paste () {
 
 # If this is a work computer, include work specific stuff
 [ -f $HOME/work.zsh ] && source $HOME/work.zsh && source $DOTFILES_HOME/work/github.zsh || true
+
+source $DOTFILES_HOME/gemini.zsh
 
 # To customize prompt, run `p10k configure` or edit ~/Projects/dotfiles/zsh/p10k.zsh.
 [[ ! -f ~/Projects/dotfiles/zsh/p10k.zsh ]] || source ~/Projects/dotfiles/zsh/p10k.zsh

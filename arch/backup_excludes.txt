@@ -4,6 +4,7 @@
 /home/tristan/.android/*
 /home/tristan/.cargo/*
 /home/tristan/.gradle/*
+/home/tristan/.local/share/kiwix/*.zim
 /home/tristan/.cache/*
 /home/tristan/Downloads/*
 /home/tristan/Android/*

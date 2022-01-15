@@ -44,6 +44,11 @@ qr-paste () {
     qrencode -o - -t PNG | imv -
 }
 
+def() {
+	sdcv -n --utf8-output "$@" 2>&1 | w3m -T text/html
+}
+
+
 # If windows defaults us to it's home directory, swtich to the unix one
 [ $(pwd) = "/mnt/c/Users/trist" ] && cd $HOME || true
 

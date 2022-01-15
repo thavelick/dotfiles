@@ -45,7 +45,7 @@ qr-paste () {
 }
 
 def() {
-	sdcv -n --utf8-output "$@" 2>&1 | w3m -T text/html
+	sdcv -n --utf8-output "$@" 2>&1 | sed 's/-->/<p>-->/g' | w3m -T text/html -dump | less -EXFRfM
 }
 
 

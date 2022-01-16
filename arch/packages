@@ -10,11 +10,11 @@ borg
 busybox
 dart
 docopt
+dtrx
 ed
 flutter
 git
 github-cli
-gumbo
 imv
 inotify-tools
 irssi
@@ -61,6 +61,7 @@ waybar-git
 whois
 wkhtmltopdf
 wl-clipboard
+yarn
 yay
 yt-dlp
 zsh-fix-winchanged-git

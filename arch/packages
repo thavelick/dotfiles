@@ -9,10 +9,12 @@ bind
 borg
 busybox
 dart
+docopt
 ed
 flutter
 git
 github-cli
+gumbo
 imv
 inotify-tools
 irssi

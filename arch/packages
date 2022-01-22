@@ -20,8 +20,11 @@ k2pdfopt
 kiwix-desktop
 kotlin
 lsd
+lua51
+luarocks
 mpv
 mupdf-tools
+nasm
 nb-git
 neofetch
 neomutt
@@ -39,6 +42,7 @@ python-pip
 python-pylint
 qt5-wayland
 qutebrowser
+ragel
 rclone
 ripgrep
 sacc

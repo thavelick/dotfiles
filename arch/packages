@@ -1,3 +1,4 @@
+aerc
 alacritty
 alsa-utils
 amfora-git
@@ -20,14 +21,14 @@ k2pdfopt
 kiwix-desktop
 kotlin
 lsd
+msmtp
 lua51
 luarocks
+mbsync-git
 mpv
 mupdf-tools
 nasm
 nb-git
-neofetch
-neomutt
 neovim
 newsboat
 nmap

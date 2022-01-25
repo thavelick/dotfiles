@@ -5,13 +5,16 @@
 /home/tristan/.cargo/*
 /home/tristan/.gradle/*
 /home/tristan/.local/share/kiwix/*.zim
+/home/tristan/.local/share/Zeal/*
 /home/tristan/.cache/*
 /home/tristan/Downloads/*
 /home/tristan/Android/*
+/home/tristan/Videos/*
 /home/tristan/tmp/*
 /home/tristan/go/*
 /home/tristan/src/**/.git/objects/*
 /home/tristan/Projects/**/.git/objects/*
+/home/tristan/Projects/koreader/base/*
 /tmp
 /mnt
 /backuprepo

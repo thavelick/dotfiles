@@ -177,6 +177,10 @@ c.hints.chars = 'arstdhneio'
 # Type: String
 c.fonts.default_size = '11pt'
 
+
+config.set('url.searchengines', {
+    'DEFAULT': 'https://lite.duckduckgo.com/lite/?q={}'
+})
 # Bindings for normal mode
 config.bind('!', 'tab-focus 1')
 config.bind('#', 'tab-focus 3')

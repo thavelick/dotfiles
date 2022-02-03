@@ -196,3 +196,6 @@ config.bind(',s', 'scroll-px 0 500')
 config.bind('@', 'tab-focus 2')
 config.bind('^', 'tab-focus 6')
 config.bind('yf', 'hint links yank')
+config.bind('<Space>', 'scroll-px 0 900')
+config.bind('<Shift-Space>', 'scroll-px 0 -900')
+

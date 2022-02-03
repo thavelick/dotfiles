@@ -10,6 +10,7 @@ bind
 borg
 busybox
 dart
+docker
 ed
 flutter
 git
@@ -19,13 +20,14 @@ inotify-tools
 irssi
 k2pdfopt
 kiwix-desktop
+kiwix-tools
 kotlin
 lsd
-msmtp
 lua51
 luarocks
 mbsync-git
 mpv
+msmtp
 mupdf-tools
 nasm
 nb-git
@@ -66,5 +68,6 @@ wkhtmltopdf
 wl-clipboard
 yay
 yt-dlp
+zathura
 zeal
 zsh-fix-winchanged-git

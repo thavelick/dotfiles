@@ -140,31 +140,18 @@ config.set('content.images', True, 'chrome-devtools://*')
 # Type: Bool
 config.set('content.images', True, 'devtools://*')
 
-# Enable JavaScript.
-# Type: Bool
+
+config.set('content.javascript.enabled', False)
 config.set('content.javascript.enabled', True, 'chrome-devtools://*')
-
-# Enable JavaScript.
-# Type: Bool
 config.set('content.javascript.enabled', True, 'devtools://*')
-
-# Enable JavaScript.
-# Type: Bool
 config.set('content.javascript.enabled', True, 'chrome://*/*')
-
-# Enable JavaScript.
-# Type: Bool
 config.set('content.javascript.enabled', True, 'qute://*/*')
 
-config.set('content.javascript.can_access_clipboard', True, 'https://github.com')
+config.set('content.javascript.enabled', True, 'http://localhost:8181')
+config.set('content.javascript.enabled', True, 'https://github.com')
+config.set('content.javascript.enabled', True, 'https://social.linux.pizza')
 
-# Allow websites to show notifications.
-# Type: BoolAsk
-# Valid values:
-#   - true
-#   - false
-#   - ask
-config.set('content.notifications.enabled', False, 'https://www.youtube.com')
+config.set('content.javascript.can_access_clipboard', True, 'https://github.com')
 
 # Characters used for hint strings.
 # Type: UniqueCharString
@@ -179,7 +166,11 @@ c.fonts.default_size = '11pt'
 
 
 config.set('url.searchengines', {
-    'DEFAULT': 'https://lite.duckduckgo.com/lite/?q={}'
+    'DEFAULT': 'http://localhost:8181/search?pattern={}',
+    'arch': 'http://localhost:8181/search?content=archlinux_en_all_nopic_2021-10&pattern={}',
+    'python': 'http://localhost:8181/search?content=python-3.10.2&pattern={}',
+    'w': 'http://localhost:8181/search?content=wikipedia_en_all_nopic_2022-01&pattern={}',
+    'd': 'https://lite.duckduckgo.com/lite/?q={}',
 })
 # Bindings for normal mode
 config.bind('!', 'tab-focus 1')

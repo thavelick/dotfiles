@@ -147,9 +147,18 @@ config.set('content.javascript.enabled', True, 'devtools://*')
 config.set('content.javascript.enabled', True, 'chrome://*/*')
 config.set('content.javascript.enabled', True, 'qute://*/*')
 
-config.set('content.javascript.enabled', True, 'http://localhost:8181')
-config.set('content.javascript.enabled', True, 'https://github.com')
-config.set('content.javascript.enabled', True, 'https://social.linux.pizza')
+
+js_sites = [
+    'http://localhost:8181',
+    'https://github.com',
+    'https://social.linux.pizza',
+    'https://duckduckgo.com',
+    'https://app.element.io',
+    'https://web.archive.org',
+]
+
+for site in js_sites:
+    config.set('content.javascript.enabled', True, site)
 
 config.set('content.javascript.can_access_clipboard', True, 'https://github.com')
 
@@ -171,6 +180,7 @@ config.set('url.searchengines', {
     'python': 'http://localhost:8181/search?content=python-3.10.2&pattern={}',
     'w': 'http://localhost:8181/search?content=wikipedia_en_all_nopic_2022-01&pattern={}',
     'd': 'https://lite.duckduckgo.com/lite/?q={}',
+    'wb': 'https://web.archive.org/web/*/{unquoted}',
 })
 # Bindings for normal mode
 config.bind('!', 'tab-focus 1')

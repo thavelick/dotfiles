@@ -182,6 +182,11 @@ config.set('url.searchengines', {
     'd': 'https://lite.duckduckgo.com/lite/?q={}',
     'wb': 'https://web.archive.org/web/*/{unquoted}',
 })
+
+
+config.set('zoom.default', '115')
+
+
 # Bindings for normal mode
 config.bind('!', 'tab-focus 1')
 config.bind('#', 'tab-focus 3')
@@ -194,6 +199,7 @@ config.bind('*', 'tab-focus 8')
 config.bind(',M', 'hint links spawn mpv {hint-url}')
 config.bind(',m', 'spawn mpv {url}')
 config.bind(',s', 'scroll-px 0 500')
+config.bind(',r', 'spawn --userscript readability')
 config.bind('@', 'tab-focus 2')
 config.bind('^', 'tab-focus 6')
 config.bind('yf', 'hint links yank')

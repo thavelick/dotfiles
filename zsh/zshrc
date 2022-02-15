@@ -23,7 +23,7 @@ source "$DOTFILES_HOME/zsh/keys.zsh"
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-which nvim > /dev/null && alias vim='nvim'
+# which nvim > /dev/null && alias vim='nvim'
 which lsd > /dev/null && alias ls='lsd'
 alias ru2en='argos-translate --from-lang ru --to-lang en'
 [[ -n $(diff --version | grep GNU) ]] && alias diff='diff --color'

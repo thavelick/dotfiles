@@ -166,7 +166,7 @@ riverctl focus-follows-cursor normal
 
 riverctl spawn /usr/sbin/waybar
 riverctl spawn $DOTFILES_HOME/river/background.sh
+[ -n "$HIDPI" ] && $HOME/.local/bin/wlr-randr --output eDP-1 --scale 1.75
 exec rivertile -view-padding 6 -outer-padding 6
-
 
 

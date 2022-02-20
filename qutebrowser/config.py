@@ -203,6 +203,3 @@ config.bind(',r', 'spawn --userscript readability')
 config.bind('@', 'tab-focus 2')
 config.bind('^', 'tab-focus 6')
 config.bind('yf', 'hint links yank')
-config.bind('<Space>', 'run-with-count 20 scroll down')
-config.bind('<Shift-Space>', 'run-with-count 20 scroll up')
-

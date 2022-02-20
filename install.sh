@@ -36,6 +36,7 @@ else # Assume Arch or derivaties
   vim/setup.sh
   amfora/setup.sh
   neomutt/setup.sh
+  fbterm/setup.sh
 fi
 
 zsh/setup.sh

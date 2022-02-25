@@ -24,11 +24,13 @@ k2pdfopt
 kiwix-desktop
 kiwix-tools
 kotlin
+light
 lsd
 lua51
 luarocks
 mbsync-git
 mpv
+mpv-mpris
 msmtp
 mupdf-tools
 nasm
@@ -37,8 +39,10 @@ neovim
 newsboat
 nmap
 nodejs
+pamixer
 pandoc
 pdfcropmargins
+playerctl
 pulseaudio-alsa
 python-adblock
 python-argostranslate-pip

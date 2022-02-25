@@ -12,9 +12,11 @@ busybox
 dart
 docker
 ed
+fbterm
 flutter
 git
 github-cli
+hugo
 imv
 inotify-tools
 irssi
@@ -66,7 +68,6 @@ whois
 wkhtmltopdf
 wl-clipboard
 yarn
-fbterm
 yay
 yt-dlp
 zathura

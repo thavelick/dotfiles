@@ -36,6 +36,7 @@ msmtp
 mupdf-tools
 nasm
 nb-git
+ncspot
 neovim
 newsboat
 nmap
@@ -47,6 +48,7 @@ playerctl
 pulseaudio-alsa
 python-adblock
 python-argostranslate-pip
+python-bs4
 python-pip
 python-pylint
 qt5-wayland
@@ -58,6 +60,8 @@ sacc
 sdcv
 shellcheck
 sloc
+spotifyd
+spotify-tui
 ssdeep
 strace
 swaybg

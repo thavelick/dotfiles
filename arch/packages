@@ -45,6 +45,7 @@ pamixer
 pandoc
 pdfcropmargins
 playerctl
+powertop
 pulseaudio-alsa
 python-adblock
 python-argostranslate-pip

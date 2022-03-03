@@ -1,4 +1,6 @@
 aerc
+netsurf
+libcss
 alacritty
 alsa-utils
 amfora-git
@@ -12,10 +14,12 @@ busybox
 dart
 docker
 ed
+elinks
 fbterm
 flutter
 git
 github-cli
+gperf
 hugo
 imv
 inotify-tools
@@ -25,6 +29,11 @@ keepassxc
 kiwix-desktop
 kiwix-tools
 kotlin
+libcss
+libdom
+libharu
+libnsutils
+libutf8proc
 light
 lsd
 lua51

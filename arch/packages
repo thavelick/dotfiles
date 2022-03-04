@@ -1,11 +1,11 @@
 aerc
-netsurf
-libcss
 alacritty
 alsa-utils
 amfora-git
 android-studio
 android-tools
+aspell
+aspell-en
 bat
 bemenu-wayland
 bind
@@ -50,6 +50,7 @@ neovim
 newsboat
 nmap
 nodejs
+nvm
 pamixer
 pandoc
 pdfcropmargins

@@ -178,7 +178,7 @@ config.set('url.searchengines', {
     'DEFAULT': 'http://localhost:8181/search?pattern={}',
     'arch': 'http://localhost:8181/search?content=archlinux_en_all_nopic_2021-10&pattern={}',
     'python': 'http://localhost:8181/search?content=python-3.10.2&pattern={}',
-    'w': 'http://localhost:8181/search?content=wikipedia_en_all_nopic_2022-01&pattern={}',
+    'w': 'http://localhost:8181/search?content=wikipedia_en_all_maxi_2021-12&pattern={}',
     'd': 'https://lite.duckduckgo.com/lite/?q={}',
     'wb': 'https://web.archive.org/web/*/{unquoted}',
 })
@@ -188,6 +188,8 @@ config.set('zoom.default', '115')
 
 
 # Bindings for normal mode
+config.bind('<', 'tab-prev')
+config.bind('>', 'tab-next')
 config.bind('!', 'tab-focus 1')
 config.bind('#', 'tab-focus 3')
 config.bind('$', 'tab-focus 4')

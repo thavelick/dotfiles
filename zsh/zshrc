@@ -43,6 +43,10 @@ def() {
 	sdcv -n --utf8-output "$@" 2>&1 | sed 's/-->/<p>-->/g' | w3m -T text/html -dump | less -EXFRfM
 }
 
+uniclip() {
+    cat $DOTFILES_HOME/zsh/latex_symbols.txt| fzf --query $1 | tr -s ' ' | cut -d ' ' -f2 | tr -d "\n" | wl-copy
+}
+
 
 # If windows defaults us to it's home directory, swtich to the unix one
 [ $(pwd) = "/mnt/c/Users/trist" ] && cd $HOME || true

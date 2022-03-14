@@ -4,13 +4,16 @@ alsa-utils
 amfora-git
 android-studio
 android-tools
+anki-bin
 aspell
 aspell-en
+avahi
 bat
 bemenu-wayland
 bind
 borg
 busybox
+cups
 dart
 docker
 ed
@@ -51,6 +54,7 @@ neovim
 newsboat
 nmap
 nodejs
+noto-fonts-emoji
 nvm
 pamixer
 pandoc

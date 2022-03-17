@@ -1,11 +1,6 @@
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
 PATH=$PATH:$HOME/bin
 PATH=$PATH:$HOME/.local/bin
 PATH=$PATH:$HOME/Android/Sdk/cmdline-tools/latest/bin
-source $HOME/.zsh/powerlevel10k/powerlevel10k.zsh-theme
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 HISTSIZE=100000
 SAVEHIST=100000
@@ -18,6 +13,7 @@ export GPG_TTY=$TTY
 export MOZ_ENABLE_WAYLAND="1"
 export QT_QPA_PLATFORM="wayland"
 export XKB_DEFAULT_LAYOUT="us(colemak)"
+export PS1="%~ ➜ "
 
 source "$DOTFILES_HOME/zsh/keys.zsh"
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -59,5 +55,3 @@ uniclip() {
 
 source $DOTFILES_HOME/gemini.zsh
 
-# To customize prompt, run `p10k configure` or edit ~/Projects/dotfiles/zsh/p10k.zsh.
-[[ ! -f ~/Projects/dotfiles/zsh/p10k.zsh ]] || source ~/Projects/dotfiles/zsh/p10k.zsh

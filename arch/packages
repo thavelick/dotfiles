@@ -71,6 +71,7 @@ python-pylint
 qt5-wayland
 qutebrowser
 ragel
+rbutil
 rclone
 ripgrep
 sacc

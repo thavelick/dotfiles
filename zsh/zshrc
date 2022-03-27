@@ -6,6 +6,7 @@ HISTSIZE=100000
 SAVEHIST=100000
 HISTFILE=~/.cache/zsh/history
 
+export LD_LIBRARY_PATH=$HOME/.local/lib
 export DOTFILES_HOME=$HOME/Projects/dotfiles
 export EDITOR=vim
 export BROWSER=qutebrowser

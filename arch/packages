@@ -16,6 +16,7 @@ busybox
 cups
 dart
 docker
+docker-compose
 ed
 elinks
 fbterm

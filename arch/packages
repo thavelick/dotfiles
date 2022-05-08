@@ -58,6 +58,7 @@ nvm
 pamixer
 pandoc
 pdfcropmargins
+pdfjs
 playerctl
 powertop
 pulseaudio-alsa

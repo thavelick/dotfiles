@@ -2,8 +2,6 @@
 import os
 
 url = os.environ.get('QUTE_URL')
-with open('/tmp/qute.log', 'w') as log:
-    log.write('url: %s' % url)
 if url:
     new_url = url.replace('twitter.com', 'nitter.net')
     new_url = new_url.replace('youtube.com', 'yewtu.be')

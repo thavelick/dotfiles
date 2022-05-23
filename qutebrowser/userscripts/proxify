@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+import os
+
+url = os.environ.get('QUTE_URL')
+with open('/tmp/qute.log', 'w') as log:
+    log.write('url: %s' % url)
+if url:
+    new_url = url.replace('twitter.com', 'nitter.net')
+    new_url = new_url.replace('youtube.com', 'yewtu.be')
+    new_url = new_url.replace('medium.com', 'scribe.rip')
+    new_url = new_url.replace('reddit.com', 'teddit.net')
+
+    if new_url != url:
+        with open(os.environ['QUTE_FIFO'], 'w') as fifo:
+            fifo.write('open %s' % new_url)

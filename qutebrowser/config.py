@@ -149,8 +149,8 @@ config.set('content.javascript.enabled', True, 'qute://*/*')
 
 
 js_sites = [
-    'http://localhost:8050', # Miniflux
-    'http://localhost:8181', # Kiwix
+    'http://miniflux.surface.local',
+    'http://kiwix.surface.local',
     'https://github.com',
     'https://social.linux.pizza',
     'https://duckduckgo.com',
@@ -176,11 +176,7 @@ c.fonts.default_size = '11pt'
 
 
 config.set('url.searchengines', {
-    'DEFAULT': 'http://localhost:8181/search?pattern={}',
-    'arch': 'http://localhost:8181/search?content=archlinux_en_all_nopic_2021-10&pattern={}',
-    'python': 'http://localhost:8181/search?content=python-3.10.2&pattern={}',
-    'w': 'http://localhost:8181/search?content=wikipedia_en_all_maxi_2021-12&pattern={}',
-    'd': 'https://lite.duckduckgo.com/lite/?q={}',
+    'DEFAULT': 'http://bangs.surface.local/{}',
     'wb': 'https://web.archive.org/web/*/{unquoted}',
 })
 

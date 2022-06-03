@@ -55,3 +55,4 @@ uniclip() {
 
 source $DOTFILES_HOME/gemini.zsh
 
+setopt interactive_comments

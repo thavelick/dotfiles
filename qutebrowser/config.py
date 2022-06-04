@@ -18,8 +18,8 @@ config.set('content.javascript.enabled', True, 'chrome://*/*')
 config.set('content.javascript.enabled', True, 'qute://*/*')
 
 js_sites = [
-    'http://localhost:8050', # Miniflux
-    'http://localhost:8181', # Kiwix
+    'http://miniflux.surface.local',
+    'http://kiwix.surface.local',
     'https://github.com',
     'https://social.linux.pizza',
     'https://duckduckgo.com',
@@ -51,16 +51,12 @@ c.hints.chars = 'arstdhneio'
 c.fonts.default_size = '11pt'
 
 search_engines = {
-    'arch': 'http://localhost:8181/search?content=archlinux_en_all_nopic_2021-10&pattern={}',
-    'python': 'http://localhost:8181/search?content=python-3.10.2&pattern={}',
-    'w': 'http://localhost:8181/search?content=wikipedia_en_all_maxi_2021-12&pattern={}',
-    'd': 'https://lite.duckduckgo.com/lite/?q={}',
+    'DEFAULT': 'http://bangs.surface.local/{}',
     'wb': 'https://web.archive.org/web/*/{unquoted}',
 }
 if is_work:
     search_engines['DEFAULT'] = 'https://lite.duckduckgo.com/lite/?q={}'
-config.set('url.searchengines', search_engines) 
-   
+config.set('url.searchengines', search_engines)
 
 config.set('zoom.default', '115')
 config.set('spellcheck.languages', ['en-US'])

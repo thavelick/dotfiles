@@ -8,6 +8,7 @@ anki-bin
 aspell
 aspell-en
 avahi
+autopep8
 bat
 bemenu-wayland
 bind
@@ -67,7 +68,9 @@ pulseaudio-alsa
 python-adblock
 python-argostranslate-pip
 python-bs4
+python-pep8
 python-pip
+python-pydocstyle
 python-pylint
 qt5-wayland
 qutebrowser

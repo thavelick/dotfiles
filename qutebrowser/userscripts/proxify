@@ -10,4 +10,4 @@ if url:
 
     if new_url != url:
         with open(os.environ['QUTE_FIFO'], 'w') as fifo:
-            fifo.write('open %s' % new_url)
+            fifo.write('open -t %s' % new_url)

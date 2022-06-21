@@ -53,12 +53,17 @@ config.set('content.blocking.whitelist', okay_ad_sites)
 c.hints.chars = 'arstdhneio'
 c.fonts.default_size = '11pt'
 
+default_page = 'https://bangs.surface.local/'
 search_engines = {
     'DEFAULT': 'http://bangs.surface.local/{}',
     'wb': 'https://web.archive.org/web/*/{unquoted}',
 }
 if is_work:
     search_engines['DEFAULT'] = 'https://lite.duckduckgo.com/lite/?q={}'
+    default_page = 'https://lite.duckduckgo.com/'
+
+config.set('url.default_page', default_page)
+config.set('url.start_pages', [default_page])
 config.set('url.searchengines', search_engines)
 
 config.set('zoom.default', '115')

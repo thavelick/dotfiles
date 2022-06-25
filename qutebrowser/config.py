@@ -20,8 +20,8 @@ config.set('content.javascript.enabled', True, 'chrome://*/*')
 config.set('content.javascript.enabled', True, 'qute://*/*')
 
 js_sites = [
-    'http://miniflux.surface.local',
-    'http://kiwix.surface.local',
+    'https://miniflux.surface.local',
+    'https://kiwix.surface.local',
     'https://github.com',
     'https://social.linux.pizza',
     'https://duckduckgo.com',

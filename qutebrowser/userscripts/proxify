@@ -3,10 +3,14 @@ import os
 
 url = os.environ.get('QUTE_URL')
 if url:
-    new_url = url.replace('twitter.com', 'nitter.net')
-    new_url = new_url.replace('youtube.com', 'yewtu.be')
-    new_url = new_url.replace('medium.com', 'scribe.rip')
-    new_url = new_url.replace('reddit.com', 'teddit.net')
+    new_url = (
+        url
+        .replace('twitter.com', 'nitter.net')
+        .replace('youtube.com', 'yewtu.be')
+        .replace('medium.com', 'scribe.rip')
+        .replace('www.reddit.com', 'libredd.it')
+        .replace('reddit.com', 'libredd.it')
+    )
 
     if new_url != url:
         with open(os.environ['QUTE_FIFO'], 'w') as fifo:

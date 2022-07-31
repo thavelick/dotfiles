@@ -14,7 +14,7 @@ elif grep -qF Raspbian /etc/issue; then
   missing_packages=$(comm  -13 <(dpkg-query -f '${Package}\n' -W| sort) <(sort raspbian/packages))
   sudo apt-get install $missing_packages
   git/setup.sh
-elif grep -qF Arch /etc/issue; then
+else # Assume Arch or derivaties
   sudo pacman -Syu
   missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort arch/packages))
   if ! pacman -Qq yay > /dev/null; then
@@ -36,6 +36,7 @@ elif grep -qF Arch /etc/issue; then
   vim/setup.sh
   amfora/setup.sh
   neomutt/setup.sh
+  fbterm/setup.sh
 fi
 
 zsh/setup.sh

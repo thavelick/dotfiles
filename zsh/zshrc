@@ -1,23 +1,19 @@
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
 PATH=$PATH:$HOME/bin
 PATH=$PATH:$HOME/.local/bin
 PATH=$PATH:$HOME/Android/Sdk/cmdline-tools/latest/bin
-source $HOME/.zsh/powerlevel10k/powerlevel10k.zsh-theme
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=100000
+SAVEHIST=100000
 HISTFILE=~/.cache/zsh/history
 
 export DOTFILES_HOME=$HOME/Projects/dotfiles
 export EDITOR=vim
 export BROWSER=qutebrowser
-export GPG_TTY=$(tty)
+export GPG_TTY=$TTY
 export MOZ_ENABLE_WAYLAND="1"
 export QT_QPA_PLATFORM="wayland"
 export XKB_DEFAULT_LAYOUT="us(colemak)"
+export PS1="%~ ➜ "
 
 source "$DOTFILES_HOME/zsh/keys.zsh"
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -25,12 +21,8 @@ source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 which nvim > /dev/null && alias vim='nvim'
 which lsd > /dev/null && alias ls='lsd'
+alias ru2en='argos-translate --from-lang ru --to-lang en'
 [[ -n $(diff --version | grep GNU) ]] && alias diff='diff --color'
-
-wmpv() {
-  filepath=$(realpath $1)
-  mpv.exe "\\\wsl.localhost\\Arch${filepath//\//\\}"
-}
 
 nboffline() {
   document=$1
@@ -43,6 +35,15 @@ qr-paste () {
     qrencode -o - -t PNG | imv -
 }
 
+def() {
+	sdcv -n --utf8-output "$@" 2>&1 | sed 's/-->/<p>-->/g' | w3m -T text/html -dump | less -EXFRfM
+}
+
+uniclip() {
+    cat $DOTFILES_HOME/zsh/latex_symbols.txt| fzf --query $1 | tr -s ' ' | cut -d ' ' -f2 | tr -d "\n" | wl-copy
+}
+
+
 # If windows defaults us to it's home directory, swtich to the unix one
 [ $(pwd) = "/mnt/c/Users/trist" ] && cd $HOME || true
 
@@ -50,7 +51,8 @@ qr-paste () {
 [ -f $HOME/secrets.zsh ] && source $HOME/secrets.zsh || true
 
 # If this is a work computer, include work specific stuff
-[ -f $HOME/work.zsh ] && source $HOME/work.zsh || true
+[ -f $HOME/work.zsh ] && source $HOME/work.zsh && source $DOTFILES_HOME/work/github.zsh || true
 
-# To customize prompt, run `p10k configure` or edit ~/Projects/dotfiles/zsh/p10k.zsh.
-[[ ! -f ~/Projects/dotfiles/zsh/p10k.zsh ]] || source ~/Projects/dotfiles/zsh/p10k.zsh
+source $DOTFILES_HOME/gemini.zsh
+
+setopt interactive_comments

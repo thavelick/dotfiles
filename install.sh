@@ -33,6 +33,7 @@ else # Assume Arch or derivaties
   alacritty/setup.sh
   qutebrowser/setup.sh
   git/setup.sh
+  nag_runner/setup.sh
   vim/setup.sh
   amfora/setup.sh
   neomutt/setup.sh

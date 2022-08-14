@@ -1,4 +1,3 @@
-aerc
 alacritty
 alsa-utils
 amfora-git
@@ -41,7 +40,6 @@ light
 lsd
 lua51
 luarocks
-mbsync-git
 mpv
 mpv-mpris
 mpv-sponsorblock-minimal-git
@@ -64,7 +62,6 @@ playerctl
 powertop
 pulseaudio-alsa
 python-adblock
-python-argostranslate-pip
 python-bs4
 python-pep8
 python-pip

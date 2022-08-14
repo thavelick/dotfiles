@@ -1,0 +1,7 @@
+[
+    {
+        "name": "archlinux updates",
+        "command": "yay -Syu",
+        "interval": "7"
+    }
+]

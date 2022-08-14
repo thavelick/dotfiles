@@ -2,8 +2,6 @@ aerc
 alacritty
 alsa-utils
 amfora-git
-android-studio
-android-tools
 anki-bin
 ansible
 aspell
@@ -23,7 +21,6 @@ ed
 elinks
 fbterm
 feh
-flutter
 git
 github-cli
 gperf
@@ -51,7 +48,6 @@ mpv-sponsorblock-minimal-git
 msmtp
 mupdf-tools
 nasm
-nb-git
 ncspot
 neovim
 newsboat
@@ -91,13 +87,10 @@ strace
 swaybg
 syncthing
 tidy
-tig-git
 torsocks
 ttf-meslo-nerd-font-powerlevel10k
-tut
 vim
 vis
-w3m
 waybar-git
 whois
 wkhtmltopdf

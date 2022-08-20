@@ -83,7 +83,7 @@ config.bind(',m', 'spawn mpv {url}')
 config.bind(',r', 'spawn --userscript readability')
 config.bind(',S', 'hint links userscript proxify')
 config.bind(',s', 'spawn --userscript proxify')
-config.bind(',w', 'spawn /home/tristan/Projects/wallabag-tiny-cli/wallabag_tiny_cli.py add "{url}"')
+config.bind(',w', 'spawn -m /home/tristan/Projects/wallabag-tiny-cli/wallabag_tiny_cli.py add "{url}"')
 config.bind('yf', 'hint links yank')
 
 c.aliases = {'w': 'session-save', 'q': 'close', 'qa': 'quit', 'wq': 'quit --save', 'wqa': 'quit --save', '1': 'scroll-to-perc 0', '%': 'scroll-to-perc 100'}

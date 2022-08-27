@@ -10,6 +10,9 @@ avahi
 bat
 bemenu-wayland
 bind
+blueman
+bluez
+bluez-utils
 borg
 busybox
 cups
@@ -27,6 +30,7 @@ hugo
 imv
 inotify-tools
 irssi
+joycond-git
 k2pdfopt
 keepassxc
 koreader-bin

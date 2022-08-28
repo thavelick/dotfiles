@@ -3,5 +3,10 @@
         "name": "archlinux updates",
         "command": "yay -Syu",
         "interval": "7"
+    },
+    {
+        "name": "backups",
+        "command": "~/Projects/dotfiles/backups.zsh",
+        "interval": "10"
     }
 ]

@@ -88,6 +88,8 @@ powertop
 pulseaudio-alsa
 python-adblock
 python-bs4
+python-jq
+python-markdown-it-py
 python-pep8
 python-pip
 python-pydocstyle

@@ -17,6 +17,7 @@ borg
 busybox
 cups
 dart
+datasette
 docker
 docker-compose
 ed
@@ -107,6 +108,7 @@ shellcheck
 sloc
 spotifyd
 spotify-tui
+sqlite-utils
 ssdeep
 strace
 swaybg

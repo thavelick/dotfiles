@@ -9,8 +9,10 @@ config.set('content.cookies.accept', 'all', 'devtools://*')
 config.set('content.headers.user_agent', 'Mozilla/5.0 ({os_info}; rv:90.0) Gecko/20100101 Firefox/90.0', 'https://accounts.google.com/*')
 config.set('content.headers.user_agent', 'Mozilla/5.0 ({os_info}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99 Safari/537.36', 'https://*.slack.com/*')
 
+
 custom_stylesheet = '/home/tristan/Projects/dotfiles/qutebrowser/styles.css'
-config.set('content.user_stylesheets', custom_stylesheet)
+if not is_work:
+    config.set('content.user_stylesheets', custom_stylesheet)
 c.content.blocking.method = 'both'
 
 config.set('content.javascript.enabled', is_work)
@@ -77,7 +79,8 @@ config.bind('&', 'tab-focus 7')
 config.bind('*', 'tab-focus 8')
 config.bind('(', 'tab-focus 9')
 config.bind(')', 'tab-focus 10')
-config.bind(',a', f'config-cycle content.user_stylesheets {custom_stylesheet} ""')
+if not is_work:
+    config.bind(',a', f'config-cycle content.user_stylesheets {custom_stylesheet} ""')
 config.bind(',M', 'hint links spawn mpv {hint-url}')
 config.bind(',m', 'spawn mpv {url}')
 config.bind(',r', 'spawn --userscript readability')

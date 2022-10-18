@@ -34,10 +34,10 @@ else # Assume Arch or derivaties
   qutebrowser/setup.sh
   git/setup.sh
   nag_runner/setup.sh
-  vim/setup.sh
   amfora/setup.sh
   neomutt/setup.sh
   fbterm/setup.sh
 fi
 
+vim/setup.sh
 zsh/setup.sh

@@ -1,7 +1,7 @@
 #!/bin/bash
 export DOTFILES_HOME=$(pwd)
 if [ $(uname) = 'Darwin' ]; then
-  missing_packages=$(comm -13 <(brew ls --formula | sort) <(sort mac/packages))
+  missing_packages=$(comm -13 <(cat <(brew ls --formula)  <(brew ls --cask) | sort) <(sort mac/packages))
   if [ -n "$missing_packages" ]; then
     # echo "missing: $missing_packages"
 
@@ -34,10 +34,10 @@ else # Assume Arch or derivaties
   qutebrowser/setup.sh
   git/setup.sh
   nag_runner/setup.sh
-  vim/setup.sh
   amfora/setup.sh
   neomutt/setup.sh
   fbterm/setup.sh
 fi
 
+vim/setup.sh
 zsh/setup.sh

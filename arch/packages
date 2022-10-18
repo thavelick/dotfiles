@@ -17,6 +17,7 @@ borg
 busybox
 cups
 dart
+datasette
 docker
 docker-compose
 ed
@@ -87,6 +88,8 @@ powertop
 pulseaudio-alsa
 python-adblock
 python-bs4
+python-jq
+python-markdown-it-py
 python-pep8
 python-pip
 python-pydocstyle
@@ -107,6 +110,7 @@ shellcheck
 sloc
 spotifyd
 spotify-tui
+sqlite-utils
 ssdeep
 strace
 swaybg

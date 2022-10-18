@@ -58,7 +58,7 @@ riverctl map normal $mod Return zoom
 # Mod+H and Mod+L to decrease/increase the main ratio of rivertile(1)
 # riverctl map normal $mod H send-layout-cmd rivertile "main-ratio -0.05"
 # riverctl map normal $mod L send-layout-cmd rivertile "main-ratio +0.05"
- 
+
 # Mod+Shift+H and Mod+Shift+L to increment/decrement the main count of rivertile(1)
 # riverctl map normal $mod+Shift H send-layout-cmd rivertile "main-count +1"
 # riverctl map normal $mod+Shift L send-layout-cmd rivertile "main-count -1"
@@ -178,6 +178,8 @@ riverctl focus-follows-cursor normal
 
 riverctl spawn /usr/sbin/waybar
 riverctl spawn $DOTFILES_HOME/river/background.sh
+riverctl spawn $DOTFILES_HOME/river/redshift.sh
+
 [ -n "$HIDPI" ] && $HOME/.local/bin/wlr-randr --output eDP-1 --scale 1.75
 exec rivertile -view-padding 6 -outer-padding 6
 

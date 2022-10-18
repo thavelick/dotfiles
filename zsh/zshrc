@@ -44,6 +44,16 @@ uniclip() {
     cat $DOTFILES_HOME/zsh/latex_symbols.txt| fzf --query $1 | tr -s ' ' | cut -d ' ' -f2 | tr -d "\n" | wl-copy
 }
 
+foreground() {
+    fg
+}
+
+zle -N foreground
+# use ctrl-z to toggle in and out of bg
+if [[ $- == *i* ]]; then
+  stty susp undef
+  bindkey "^Z" foreground
+fi
 
 # If windows defaults us to it's home directory, swtich to the unix one
 [ $(pwd) = "/mnt/c/Users/trist" ] && cd $HOME || true

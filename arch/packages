@@ -1,6 +1,6 @@
 alacritty
 alsa-utils
-amfora-git
+amfora
 anki-bin
 ansible
 aspell
@@ -40,24 +40,16 @@ libcss
 libdom
 libharu
 libnsutils
-libretro-atari800-git
 libretro-beetle-pce
-libretro-beetle-saturn-git
 libretro-desmume
 libretro-dolphin
-libretro-dosbox-pure-git
-libretro-fceumm-git
 libretro-gambatte
 libretro-genesis-plus-gx
-libretro-hatari-enhanced-git
 libretro-mgba
 libretro-mupen64plus-next
-libretro-pcsx2-git
-libretro-pcsx-rearmed-git
 libretro-ppsspp
 libretro-scummvm
 libretro-snes9x
-libretro-vice-git
 libutf8proc
 light
 lsd
@@ -69,7 +61,6 @@ mpv-sponsorblock-minimal-git
 msmtp
 mupdf-tools
 nasm
-ncspot
 neovim
 nethogs
 net-tools
@@ -108,8 +99,6 @@ sacc
 sdcv
 shellcheck
 sloc
-spotifyd
-spotify-tui
 sqlite-utils
 ssdeep
 strace
@@ -120,7 +109,7 @@ torsocks
 ttf-meslo-nerd-font-powerlevel10k
 vim
 vis
-waybar-git
+waybar
 whois
 wkhtmltopdf
 wl-clipboard
@@ -129,4 +118,4 @@ yay
 yt-dlp
 zathura
 zeal
-zsh-fix-winchanged-git
+zsh

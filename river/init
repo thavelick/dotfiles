@@ -27,7 +27,8 @@ riverctl map $mode None XF86AudioNext  spawn 'playerctl next'
 riverctl map normal $mod+Shift Return spawn alacritty
 
 # Mod+P to start bemenu
-riverctl map normal $mod P spawn bemenu-run
+riverctl map normal $mod P spawn 'bemenu-run -i -p "▶"  --fn "monospace 14" --hb "#89cff0" --hf "#000000" --tf "#2dc7bc" --tb "#00000" -l 10 -W .7 -H 10'
+
 
 # Mod+Q to close the focused view
 riverctl map normal $mod Q close

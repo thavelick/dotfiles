@@ -61,7 +61,6 @@ mpv-sponsorblock-minimal-git
 msmtp
 mupdf-tools
 nasm
-ncspot
 neovim
 nethogs
 net-tools
@@ -100,8 +99,6 @@ sacc
 sdcv
 shellcheck
 sloc
-spotifyd
-spotify-tui
 sqlite-utils
 ssdeep
 strace

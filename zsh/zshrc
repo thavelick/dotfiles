@@ -1,6 +1,4 @@
-PATH=$PATH:$HOME/bin
 PATH=$PATH:$HOME/.local/bin
-PATH=$PATH:$HOME/Android/Sdk/cmdline-tools/latest/bin
 
 HISTSIZE=100000
 SAVEHIST=100000

@@ -5,62 +5,35 @@
 	"position": "bottom",
 
 	"modules-left": [
-		"custom/left-arrow-dark",
 		"river/tags",
-		"custom/right-arrow-dark"
 	],
 	"modules-center": [
-		"custom/left-arrow-dark",
 		"clock#1",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
 		"clock#2",
-		"custom/right-arrow-dark",
-		"custom/right-arrow-light",
 		"clock#3",
-		"custom/right-arrow-dark"
 	],
 	"modules-right": [
-		"custom/left-arrow-dark",
 		"pulseaudio",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
+		"custom/divider",
 		"memory",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
+		"custom/divider",
 		"cpu",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
+		"custom/divider",
 		"battery",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
+		"custom/divider",
 		"disk",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
+		"custom/divider",
 		"backlight",
+		"custom/divider",
 		"tray"
 	],
-
 	"river/tags": {
 		"num-tags": 9
 	},
-
-	"custom/left-arrow-dark": {
-		"format": "",
-		"tooltip": false
-	},
-	"custom/left-arrow-light": {
-		"format": "",
-		"tooltip": false
-	},
-	"custom/right-arrow-dark": {
-		"format": "",
-		"tooltip": false
-	},
-	"custom/right-arrow-light": {
-		"format": "",
-		"tooltip": false
-	},
+	"custom/divider": {
+                "format": "",
+                "tooltip": false
+        },
 	"clock#1": {
 		"format": "{:%a}",
 		"tooltip": false
@@ -73,7 +46,6 @@
 		"format": "{:%m-%d}",
 		"tooltip": false
 	},
-
 	"pulseaudio": {
 		"format": "{icon} {volume:2}%",
 		"format-bluetooth": "{icon}  {volume}%",

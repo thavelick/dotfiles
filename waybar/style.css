@@ -1,10 +1,10 @@
 * {
 	font-size: 20px;
-	font-family: monospace;
+	font-family: "monospace";
 }
 
 window#waybar {
-	background: #292b2e;
+	background: #1a1a1a;
 	color: #fdf6e3;
 }
 
@@ -27,7 +27,9 @@ window#waybar {
 #cpu,
 #battery,
 #disk,
+#backlight,
 #tray {
+	margin-left: 10px;
 	background: #1a1a1a;
 }
 

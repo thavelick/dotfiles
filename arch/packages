@@ -1,5 +1,4 @@
 alacritty
-python-graphviz
 alsa-utils
 amfora
 anki-bin
@@ -63,8 +62,8 @@ msmtp
 mupdf-tools
 nasm
 neovim
-nethogs
 net-tools
+nethogs
 newsboat
 nginx
 nmap
@@ -80,6 +79,7 @@ powertop
 pulseaudio-alsa
 python-adblock
 python-bs4
+python-graphviz
 python-jq
 python-markdown-it-py
 python-pep8
@@ -108,6 +108,7 @@ syncthing
 tidy
 torsocks
 ttf-meslo-nerd-font-powerlevel10k
+udiskie
 vim
 vis
 waybar

@@ -74,6 +74,7 @@ pamixer
 pandoc
 pdfcropmargins
 pdfjs
+perl-image-exiftool
 playerctl
 powertop
 pulseaudio-alsa
@@ -107,6 +108,7 @@ swaybg
 syncthing
 tidy
 torsocks
+transmission-cli
 ttf-meslo-nerd-font-powerlevel10k
 udiskie
 vim

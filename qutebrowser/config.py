@@ -39,6 +39,7 @@ js_sites = [
     "https://app.element.io",
     "https://web.archive.org",
     "https://articles.tristanhavelick.com",
+    "https://*.vanguard.com"
 ]
 
 for site in js_sites:

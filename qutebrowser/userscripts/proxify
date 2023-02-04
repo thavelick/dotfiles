@@ -6,7 +6,7 @@ if url:
     libreddit = 'libreddit.de'
     new_url = (
         url
-        .replace('twitter.com', 'nitter.net')
+        .replace('twitter.com', 'nitter.moomoo.me')
         .replace('youtube.com', 'yewtu.be')
         .replace('medium.com', 'scribe.rip')
         .replace('www.reddit.com', libreddit)

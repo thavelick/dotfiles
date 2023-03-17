@@ -11,7 +11,6 @@ export GPG_TTY=$TTY
 export MOZ_ENABLE_WAYLAND="1"
 export QT_QPA_PLATFORM="wayland"
 export XKB_DEFAULT_LAYOUT="us(colemak)"
-export PS1="%~ ➜ "
 
 source "$DOTFILES_HOME/zsh/keys.zsh"
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -66,3 +65,17 @@ source $DOTFILES_HOME/gemini.zsh
 
 setopt interactive_comments
 $HOME/Projects/nag-runner/nag_runner.py
+
+
+# prompt
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' unstagedstr '*'
+zstyle ':vcs_info:*' stagedstr '+'
+zstyle ':vcs_info:git:*' formats '(%b%u%c) '
+precmd() {
+vcs_info
+}
+setopt prompt_subst
+
+PROMPT='%~ ${vcs_info_msg_0_}% ➜ '

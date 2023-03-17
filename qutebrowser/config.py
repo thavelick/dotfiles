@@ -39,13 +39,15 @@ js_sites = [
     "https://app.element.io",
     "https://web.archive.org",
     "https://articles.tristanhavelick.com",
-    "https://*.vanguard.com"
+    "https://*.vanguard.com",
+    "https://*.openai.com",
 ]
 
 for site in js_sites:
     config.set("content.javascript.enabled", True, site)
 
 config.set("content.javascript.can_access_clipboard", True, "https://github.com")
+config.set("content.javascript.can_access_clipboard", True, "https://chat.openai.com")
 
 okay_ad_sites = []
 if is_work:

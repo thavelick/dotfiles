@@ -114,7 +114,7 @@ precmd() {
     # run git commands
 
     # make sure any previous prompts from within ~/Projects are cleared out
-    vcs_info_msg_0_=""
+    vcs_info_msg_0_=''
     return
   fi
 

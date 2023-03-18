@@ -85,17 +85,21 @@ precmd() {
     vcs_info_msg_0_=""
     return
   fi
+
   unpushed_commits=''
+  untracked_files=''
   if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
     # we're in a git project, show git info in the prompt
     unpushed_count=$(git rev-list --count @{u}..)
     if [[ $unpushed_count -gt 0 ]]; then
       unpushed_commits='🔥'
     fi
+    if [[ -n $(git ls-files --others --exclude-standard) ]]; then
+      untracked_files='🌱'
+    fi
   fi
-  zstyle ':vcs_info:git:*' formats "(%b%u%c${unpushed_commits})%m "
+  zstyle ':vcs_info:git:*' formats "(%b%u%c${unpushed_commits}${untracked_files})%m "
   vcs_info
-
 }
 setopt prompt_subst
 

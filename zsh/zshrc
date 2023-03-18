@@ -69,12 +69,23 @@ $HOME/Projects/nag-runner/nag_runner.py
 
 # prompt
 autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' unstagedstr ' 🚧'
-zstyle ':vcs_info:*' stagedstr ' 💾'
-zstyle ':vcs_info:git:*' formats '(%b%u%c) '
+zstyle ':vcs_info:*' unstagedstr '🚧'
+zstyle ':vcs_info:*' stagedstr '💾'
+# zstyle ':vcs_info:git:*' formats '(%b%u%c${unpushed_commits})%m '
+
 precmd() {
-vcs_info
+  unpushed_commits=''
+  if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+    unpushed_count=$(git rev-list --count @{u}..)
+    if [[ $unpushed_count -gt 0 ]]; then
+      unpushed_commits='🔥'
+    fi
+  fi
+  zstyle ':vcs_info:git:*' formats "(%b%u%c${unpushed_commits})%m "
+  vcs_info
+
 }
 setopt prompt_subst
 

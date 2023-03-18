@@ -74,7 +74,39 @@ zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' unstagedstr '🚧'
 zstyle ':vcs_info:*' stagedstr '💾'
 
+preexec() {
+  exec_start_time=$(date +%s%3N) # Record start time of the command in milliseconds
+}
+
+set_prompt_time() {
+  # Set prompt_time to show how long the last command took to run: 🐢 1m2s
+  # It will only show if the command took longer than 5 seconds.
+  # If the command took longer than 60 seconds, it will show minutes and
+  # seconds.
+
+  prompt_time=''
+  if [ "$exec_start_time" ]; then
+    exec_end_time=$(date +%s%3N) # Record end time of the command in milliseconds
+    exec_duration=$((exec_end_time - exec_start_time)) # Calculate command duration in milliseconds
+    exec_duration_seconds=$((exec_duration / 1000)) # Convert duration to seconds
+
+    if (( exec_duration_seconds >= 5 )); then
+      clock_icon="🐢"
+      if (( exec_duration_seconds >= 60 )); then
+        exec_duration_minutes=$((exec_duration_seconds / 60))
+        exec_duration_seconds=$((exec_duration_seconds % 60))
+        prompt_time="${clock_icon} ${exec_duration_minutes}m${exec_duration_seconds}s "
+      else
+        prompt_time="${clock_icon} ${exec_duration_seconds}s "
+      fi
+    fi
+  fi
+  exec_start_time=''
+}
+
 precmd() {
+  set_prompt_time
+
   current_directory=$(pwd)
   if [[ $current_directory != $HOME/Projects/* ]]; then
     # skip doing stuff with git prompts if we're outside of ~/Projects
@@ -101,6 +133,6 @@ precmd() {
   zstyle ':vcs_info:git:*' formats "(%b%u%c${unpushed_commits}${untracked_files})%m "
   vcs_info
 }
-setopt prompt_subst
 
-PROMPT='%~ ${vcs_info_msg_0_}% ➜ '
+setopt prompt_subst
+PROMPT='${prompt_time}%~ ${vcs_info_msg_0_}% ➜ '

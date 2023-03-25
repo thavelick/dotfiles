@@ -85,6 +85,7 @@ python-ebooklib
 python-graphviz
 python-jq
 python-markdown-it-py
+python-openai
 python-pep8
 python-pip
 python-pydocstyle

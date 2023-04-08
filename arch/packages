@@ -72,7 +72,7 @@ nodejs
 noto-fonts-emoji
 nvm
 pamixer
-pandoc
+pandoc-cli
 pdfcropmargins
 pdfjs
 perl-image-exiftool

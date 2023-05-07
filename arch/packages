@@ -90,6 +90,10 @@ python-pep8
 python-pip
 python-pydocstyle
 python-pylint
+python-pytorch
+python-selenium
+python-spacy
+python-spacy-en_core_web_sm
 qt5-wayland
 qutebrowser
 ragel

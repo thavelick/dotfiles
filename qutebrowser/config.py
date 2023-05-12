@@ -95,7 +95,7 @@ if not is_work:
     config.bind(",a", f'config-cycle content.user_stylesheets {custom_stylesheet} ""')
 config.bind(",M", "hint links spawn mpv {hint-url}")
 config.bind(",m", "spawn mpv {url}")
-config.bind(",r", "spawn --userscript readability")
+config.bind(",r", "spawn --userscript my_readability")
 config.bind(",S", "hint links userscript proxify")
 config.bind(",s", "spawn --userscript proxify")
 config.bind(

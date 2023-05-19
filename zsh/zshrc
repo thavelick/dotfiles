@@ -18,6 +18,8 @@ source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 [[ -n $(diff --version | grep GNU) ]] && alias diff='diff --color'
 alias batp='bat --style=plain'
+alias count_tokens='python3 -c '\''import tiktoken, sys; encoding = tiktoken.encoding_for_model("gpt-3.5-turbo"); token_count = len(encoding.encode(sys.stdin.read())); print(token_count)'\'''
+
 which lsd > /dev/null && alias ls='lsd'
 which nvim > /dev/null && alias vim='nvim'
 alias ru2en='argos-translate --from-lang ru --to-lang en'

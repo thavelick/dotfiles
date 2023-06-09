@@ -31,23 +31,31 @@ config.set("content.javascript.enabled", True, "chrome://*/*")
 config.set("content.javascript.enabled", True, "qute://*/*")
 
 js_sites = [
-    "https://miniflux.tristanhavelick.com",
-    "https://kiwix.tristanhavelick.com",
-    "https://github.com",
-    "https://social.linux.pizza",
-    "https://duckduckgo.com",
-    "https://app.element.io",
-    "https://web.archive.org",
-    "https://articles.tristanhavelick.com",
-    "https://*.vanguard.com",
     "https://*.openai.com",
+    "https://*.vanguard.com",
+    "https://app.element.io",
+    "https://articles.tristanhavelick.com",
+    "https://chatpad.ai",
+    "https://duckduckgo.com",
+    "https://github.com",
+    "https://kiwix.tristanhavelick.com",
+    "https://miniflux.tristanhavelick.com",
+    "https://social.linux.pizza",
+    "https://web.archive.org",
+    "https://webmail.migadu.com",
 ]
 
 for site in js_sites:
     config.set("content.javascript.enabled", True, site)
 
-config.set("content.javascript.can_access_clipboard", True, "https://github.com")
-config.set("content.javascript.can_access_clipboard", True, "https://chat.openai.com")
+clipboard_sites = [
+    "https://chat.openai.com",
+    "https://chatpad.ai",
+    "https://github.com",
+]
+
+for site in clipboard_sites:
+    config.set("content.javascript.can_access_clipboard", True, site)
 
 okay_ad_sites = []
 if is_work:

@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 import os
 
-url = os.environ.get('QUTE_URL')
+sites_to_replace = {
+    "twitter.com": "nitter.moomoo.me",
+    "youtube.com": "invidious.slipfox.xyz",
+    "medium.com": "scribe.rip",
+    "reddit.com": "libreddit.de",
+}
+
+url = os.environ.get("QUTE_URL")
 if url:
-    libreddit = 'libreddit.de'
-    new_url = (
-        url
-        .replace('twitter.com', 'nitter.moomoo.me')
-        .replace('youtube.com', 'yewtu.be')
-        .replace('medium.com', 'scribe.rip')
-        .replace('www.reddit.com', libreddit)
-        .replace('reddit.com', libreddit)
-    )
+    for site, replacement in sites_to_replace.items():
+        new_url = url.replace(f"www.{site}", replacement).replace(site, replacement)
 
     if new_url != url:
-        with open(os.environ['QUTE_FIFO'], 'w') as fifo:
-            fifo.write('open %s' % new_url)
+        with open(os.environ["QUTE_FIFO"], "w", encoding="utf-8") as fifo:
+            fifo.write("open %s" % new_url)

@@ -5,13 +5,18 @@ sites_to_replace = {
     "twitter.com": "nitter.moomoo.me",
     "youtube.com": "invidious.slipfox.xyz",
     "medium.com": "scribe.rip",
-    "reddit.com": "libreddit.de",
+    "reddit.com": "safereddit.com",
 }
 
 url = os.environ.get("QUTE_URL")
 if url:
     for site, replacement in sites_to_replace.items():
-        new_url = url.replace(f"www.{site}", replacement).replace(site, replacement)
+        new_url = url.replace(f"www.{site}", replacement)
+        # bail if the url changed so we don't accidentally change the url twice
+        if new_url != url:
+            break
+
+        new_url = url.replace(site, replacement)
 
     if new_url != url:
         with open(os.environ["QUTE_FIFO"], "w", encoding="utf-8") as fifo:

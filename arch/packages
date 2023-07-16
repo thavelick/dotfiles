@@ -91,6 +91,7 @@ python-pip
 python-pydocstyle
 python-pylint
 python-pytorch
+python-readability-lxml
 qt5-wayland
 qutebrowser
 ragel

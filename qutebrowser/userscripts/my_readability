@@ -41,6 +41,11 @@ HEADER = """
         h1, h2, h3 {
             line-height: 1.2;
         }
+
+        .wwsgd_new_visitor, .wwsgd_return_visitor {
+            /* hack to hide junk on ERE */
+            display: none;
+        }
     </style>
 </head>
 """

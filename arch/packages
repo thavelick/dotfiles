@@ -94,6 +94,7 @@ python-pylint
 python-pytorch
 python-readability-lxml
 qt5-wayland
+qt6-wayland
 qutebrowser
 ragel
 rbutil

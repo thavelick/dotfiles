@@ -27,6 +27,8 @@ gimp
 git
 github-cli
 gperf
+gst-plugin-libcamera
+gst-plugins-good
 htop
 hugo
 imv
@@ -118,6 +120,8 @@ torsocks
 transmission-cli
 ttf-meslo-nerd-font-powerlevel10k
 udiskie
+units
+v4l2loopback-dkms
 vim
 vis
 visual-studio-code-insiders-bin

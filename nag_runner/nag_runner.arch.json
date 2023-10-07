@@ -16,7 +16,7 @@
     },
     {
         "name": "backups",
-        "command": "sudo ~/Projects/dotfiles/backups.zsh",
+        "command": "~/Projects/dotfiles/backups.zsh",
         "interval": "11"
     }
 ]

@@ -43,6 +43,7 @@ js_sites = [
     "https://social.linux.pizza",
     "https://web.archive.org",
     "https://webmail.migadu.com",
+    "https://www.ebay.com",
 ]
 
 for site in js_sites:

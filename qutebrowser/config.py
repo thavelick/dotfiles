@@ -33,7 +33,6 @@ config.set("content.javascript.enabled", True, "qute://*/*")
 js_sites = [
     "https://*.openai.com",
     "https://*.vanguard.com",
-    "https://app.element.io",
     "https://articles.tristanhavelick.com",
     "https://chatpad.ai",
     "https://duckduckgo.com",
@@ -48,6 +47,24 @@ js_sites = [
 
 for site in js_sites:
     config.set("content.javascript.enabled", True, site)
+
+config.set("content.cookies.accept", "never")
+
+cookie_sites = [
+    "https://*.openai.com",
+    "https://*.vanguard.com",
+    "https://articles.tristanhavelick.com",
+    "https://chatpad.ai",
+    "https://duckduckgo.com",
+    "https://github.com",
+    "https://kiwix.tristanhavelick.com",
+    "https://miniflux.tristanhavelick.com",
+    "https://social.linux.pizza",
+    "https://webmail.migadu.com",
+]
+
+for site in cookie_sites:
+    config.set("content.cookies.accept", "no-3rdparty", site)
 
 clipboard_sites = [
     "https://chat.openai.com",

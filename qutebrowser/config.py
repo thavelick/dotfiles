@@ -32,13 +32,13 @@ config.set("content.javascript.enabled", True, "qute://*/*")
 
 js_sites = [
     "https://*.openai.com",
+    "https://*.namecheap.com",
+    "https://*.signalwire.com",
+    "https://*.tristanhavelick.com",
     "https://*.vanguard.com",
-    "https://articles.tristanhavelick.com",
     "https://chatpad.ai",
     "https://duckduckgo.com",
     "https://github.com",
-    "https://kiwix.tristanhavelick.com",
-    "https://miniflux.tristanhavelick.com",
     "https://social.linux.pizza",
     "https://web.archive.org",
     "https://webmail.migadu.com",
@@ -52,13 +52,13 @@ config.set("content.cookies.accept", "never")
 
 cookie_sites = [
     "https://*.openai.com",
+    "https://*.namecheap.com",
+    "https://*.signalwire.com",
+    "https://*.tristanhavelick.com",
     "https://*.vanguard.com",
-    "https://articles.tristanhavelick.com",
     "https://chatpad.ai",
     "https://duckduckgo.com",
     "https://github.com",
-    "https://kiwix.tristanhavelick.com",
-    "https://miniflux.tristanhavelick.com",
     "https://social.linux.pizza",
     "https://webmail.migadu.com",
 ]
@@ -68,7 +68,7 @@ for site in cookie_sites:
 
 clipboard_sites = [
     "https://chat.openai.com",
-    "https://chatpad.ai",
+    "https://chatpad.tristanhavelick.com",
     "https://github.com",
 ]
 

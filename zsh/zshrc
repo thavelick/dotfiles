@@ -142,3 +142,7 @@ precmd() {
 
 setopt prompt_subst
 PROMPT='${prompt_time}%~ ${vcs_info_msg_0_}% ➜ '
+
+if [[ $(tty) == /dev/tty1 ]]; then
+  exec river
+fi

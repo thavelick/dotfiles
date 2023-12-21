@@ -68,7 +68,7 @@ for site in cookie_sites:
 
 clipboard_sites = [
     "https://chat.openai.com",
-    "https://chatpad.tristanhavelick.com",
+    "https://*.tristanhavelick.com",
     "https://github.com",
 ]
 

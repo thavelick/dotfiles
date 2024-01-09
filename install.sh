@@ -28,6 +28,7 @@ else # Assume Arch or derivaties
   if [ -n "$missing_packages" ]; then
     yay -S $missing_packages
   fi
+  dwm/setup.sh
   waybar/setup.sh
   river/setup.sh
   alacritty/setup.sh

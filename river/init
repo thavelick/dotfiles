@@ -182,6 +182,8 @@ riverctl spawn $DOTFILES_HOME/river/background.sh
 riverctl spawn $DOTFILES_HOME/river/redshift.sh
 riverctl spawn udiskie
 
+export QT_QPA_PLATFORM="wayland"
+
 [ -n "$HIDPI" ] && $HOME/.local/bin/wlr-randr --output eDP-1 --scale 1.75
 exec rivertile -view-padding 6 -outer-padding 6
 

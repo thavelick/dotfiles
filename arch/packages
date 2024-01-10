@@ -130,6 +130,7 @@ waybar
 whois
 wl-clipboard
 xorg-server
+xorg-xsetroot
 yamllint
 yarn
 yay

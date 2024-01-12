@@ -179,7 +179,6 @@ riverctl focus-follows-cursor normal
 
 riverctl spawn /usr/sbin/waybar
 riverctl spawn $DOTFILES_HOME/river/background.sh
-riverctl spawn $DOTFILES_HOME/river/redshift.sh
 riverctl spawn udiskie
 
 export QT_QPA_PLATFORM="wayland"

@@ -1,10 +1,5 @@
 set spell
 set spelllang=en_us
-highlight clear SpellBad
-highlight SpellBad cterm=underline ctermfg=blue gui=underline guifg=yellow
-
-
-highlight ColorColumn ctermbg=grey
 call matchadd('ColorColumn', '\%81v', 100)
 
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
@@ -13,15 +8,17 @@ Plug 'dense-analysis/ale'
 Plug 'github/copilot.vim'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
+Plug 'folke/tokyonight.nvim'
 Plug 'folke/which-key.nvim'
 call plug#end()
 
 set timeoutlen=250
-lua << EOF
-  require("which-key").setup {
-}
+lua require("which-key").setup()
 
-EOF
+colorscheme tokyonight
+highlight Normal ctermbg=NONE guibg=NONE
+highlight ColorColumn ctermbg=grey
+
 
 set clipboard+=unnamedplus
 

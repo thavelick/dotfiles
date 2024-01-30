@@ -74,6 +74,7 @@ nginx
 nmap
 nodejs
 noto-fonts-emoji
+nvim-packer-git
 nvm
 openvpn
 pamixer

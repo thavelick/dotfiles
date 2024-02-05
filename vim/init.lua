@@ -19,6 +19,30 @@ end)
 -- Key timeout
 vim.o.timeoutlen = 250
 
+-- enable line numbers
+vim.wo.number = true
+vim.wo.relativenumber = true
+
+-- set the leader key to space
+vim.g.mapleader = ' '
+
+-- disable the arrow keys so I actually learn to use hjkl
+vim.api.nvim_set_keymap('n', '<up>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<down>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<left>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<right>', '<nop>', { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap('v', '<up>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<down>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<left>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<right>', '<nop>', { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap('i', '<up>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<down>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<left>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<right>', '<nop>', { noremap = true, silent = true })
+
+
 -- Configure which-key
 require('which-key').setup({})
 
@@ -56,3 +80,6 @@ vim.cmd([[autocmd BufWritePre * lua _G.trim_whitespace()]])
 vim.g.copilot_filetypes = {
     yaml = 1,
 }
+
+-- highlight all search matches
+vim.o.hlsearch = true

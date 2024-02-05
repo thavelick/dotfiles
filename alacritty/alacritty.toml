@@ -5,19 +5,19 @@ import = [
 size = 12
 
 [font.bold]
-family = "MesloLGS NF"
+family = "MesloLGS Nerd Font Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "MesloLGS NF"
+family = "MesloLGS Nerd Font Mono"
 style = "Bold Italic"
 
 [font.italic]
-family = "MesloLGS NF"
+family = "MesloLGS Nerd Font Mono"
 style = "Italic"
 
 [font.normal]
-family = "MesloLGS NF"
+family = "MesloLGS Nerd Font Mono"
 style = "Regular"
 
 [window]

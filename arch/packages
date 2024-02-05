@@ -51,7 +51,7 @@ pdfjs
 playerctl
 pulseaudio-alsa
 python-adblock
-python-bs4
+python-beautifulsoup4
 python-jq
 python-openai
 python-pip

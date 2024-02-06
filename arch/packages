@@ -31,10 +31,12 @@ intel-ucode
 irssi
 keepassxc
 koreader-bin
+libqalculate
 light
 linux
 linux-surface
 lsd
+man-db
 mpv
 mpv-sponsorblock-minimal-git
 mupdf-tools
@@ -75,7 +77,6 @@ tidy
 torsocks
 ttf-meslo-nerd
 udiskie
-units
 v4l2loopback-dkms
 waybar
 whois

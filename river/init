@@ -15,8 +15,8 @@ riverctl map normal None XF86AudioRaiseVolume  spawn 'pamixer -i 5'
 riverctl map normal None XF86AudioLowerVolume  spawn 'pamixer -d 5'
 riverctl map normal None XF86AudioMute         spawn 'pamixer --toggle-mute'
 
-riverctl map normal None XF86MonBrightnessUp   spawn 'light -A 5'
-riverctl map normal None XF86MonBrightnessDown spawn 'light -U 5'
+riverctl map normal None XF86MonBrightnessUp   spawn "$DOTFILES_HOME/arch/brightness.sh 5"
+riverctl map normal None XF86MonBrightnessDown spawn "$DOTFILES_HOME/arch/brightness.sh -5"
 
 riverctl map $mode None XF86AudioMedia spawn 'playerctl play-pause'
 riverctl map $mode None XF86AudioPlay  spawn 'playerctl play-pause'

@@ -11,8 +11,8 @@ borg
 cups
 docker
 docker-compose
-ed
 elinks
+busybox
 fastfetch
 firefox
 foot
@@ -36,7 +36,6 @@ mpv-sponsorblock-minimal-git
 mupdf-tools
 neovim
 netsurf
-nmap
 nodejs
 noto-fonts-emoji
 nvim-packer-git

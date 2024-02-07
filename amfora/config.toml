@@ -192,7 +192,7 @@ other = 'off'
 # To open jpeg files with the feh command:
 #
 [[mediatype-handlers]]
-cmd = ['imv']
+cmd = ["mpv", "--no-terminal", "--loop-file"]
 types = ["image"]
 #
 # Each command that you specify must come under its own [[mediatype-handlers]]. You may

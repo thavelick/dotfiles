@@ -5,7 +5,7 @@ SAVEHIST=100000
 HISTFILE=~/.cache/zsh/history
 
 export DOTFILES_HOME=$HOME/Projects/dotfiles
-export EDITOR=vim
+export EDITOR=nvim
 export BROWSER=qutebrowser
 export GPG_TTY=$TTY
 export MOZ_ENABLE_WAYLAND="1"

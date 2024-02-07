@@ -4,7 +4,6 @@ aspell
 aspell-en
 base
 bat
-bemenu-wayland
 borg
 busybox
 cups
@@ -28,6 +27,7 @@ linux
 linux-surface
 man-db
 mpv
+mpv-mpris
 neovim
 netsurf
 nodejs

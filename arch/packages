@@ -15,7 +15,6 @@ docker-compose
 ed
 elinks
 fastfetch
-feh
 firefox
 foot
 git
@@ -23,7 +22,6 @@ gnumeric
 grim
 grub
 htop
-imv
 inkscape
 intel-ucode
 irssi

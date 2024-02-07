@@ -73,7 +73,6 @@ udiskie
 v4l2loopback-dkms
 waybar
 wl-clipboard
-wlroots
 xorg-server
 xorg-xsetroot
 yamllint

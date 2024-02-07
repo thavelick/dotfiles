@@ -30,6 +30,7 @@ alias mpv="mpv --no-terminal"
 alias mpvi="mpv --no-terminal --loop-file"
 alias ed="busybox ed"
 alias nc="busybox nc"
+alias nslookup="busybox nslookup"
 nboffline() {
   document=$1
   nb --no-color bookmark list | grep -F "[$document]" && \

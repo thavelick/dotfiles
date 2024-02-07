@@ -30,7 +30,7 @@ else # Assume Arch or derivatives
   dwm/setup.sh
   waybar/setup.sh
   river/setup.sh
-  alacritty/setup.sh
+  foot/setup.sh
   qutebrowser/setup.sh
   git/setup.sh
   nag_runner/setup.sh

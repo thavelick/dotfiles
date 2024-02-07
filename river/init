@@ -23,8 +23,8 @@ riverctl map $mode None XF86AudioPlay  spawn 'playerctl play-pause'
 riverctl map $mode None XF86AudioPrev  spawn 'playerctl previous'
 riverctl map $mode None XF86AudioNext  spawn 'playerctl next'
 
-# Mod+Shift+Return to start an instance of alacrity
-riverctl map normal $mod+Shift Return spawn alacritty
+# Mod+Shift+Return to start an instance of foot
+riverctl map normal $mod+Shift Return spawn foot
 
 # Mod+P to start bemenu
 riverctl map normal $mod P spawn 'bemenu-run -i -p "▶"  --fn "monospace 14" --hb "#89cff0" --hf "#000000" --tf "#2dc7bc" --tb "#00000" -l 10 -W .7 -H 10'

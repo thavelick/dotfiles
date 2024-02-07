@@ -8,7 +8,6 @@ base
 bat
 bemenu-wayland
 borg
-chafa
 cups
 docker
 docker-compose

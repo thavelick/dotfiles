@@ -8,11 +8,11 @@ base
 bat
 bemenu-wayland
 borg
+busybox
 cups
 docker
 docker-compose
 elinks
-busybox
 fastfetch
 firefox
 foot
@@ -31,7 +31,6 @@ linux
 linux-surface
 man-db
 mpv
-mpv-sponsorblock-minimal-git
 mupdf-tools
 neovim
 netsurf

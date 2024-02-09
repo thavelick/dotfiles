@@ -8,6 +8,8 @@ frequency_sorted_programs=$(echo -e "$programs\n$programs_from_history" | sort |
 
 # let the user choose what to launch, saving what they choose to a history file for later runs
 program_to_launch=$(echo -e "$frequency_sorted_programs" | fzf)
+# exit if they didn't choose anything valid
+[ -z "$program_to_launch" ] && exit 1
 echo "$program_to_launch" >> "$HOME/.cache/launcher_history"
 
 # run the program they chose, in a terminal if needed

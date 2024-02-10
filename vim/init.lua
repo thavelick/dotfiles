@@ -42,6 +42,8 @@ vim.api.nvim_set_keymap('i', '<down>', '<nop>', { noremap = true, silent = true 
 vim.api.nvim_set_keymap('i', '<left>', '<nop>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', '<right>', '<nop>', { noremap = true, silent = true })
 
+-- map escape in normal mode to clear search highlights
+vim.api.nvim_set_keymap('n', '<esc>', ':nohlsearch<cr>', { noremap = true, silent = true })
 
 -- Configure which-key
 require('which-key').setup({})

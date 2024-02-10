@@ -13,7 +13,6 @@ fi
 zig/install.sh
 river/build.sh
 river/setup.sh
-
 amfora/setup.sh
 foot/setup.sh
 git/setup.sh

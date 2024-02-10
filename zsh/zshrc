@@ -31,11 +31,6 @@ alias mpvi="mpv --no-terminal --loop-file"
 alias ed="busybox ed"
 alias nc="busybox nc"
 alias nslookup="busybox nslookup"
-nboffline() {
-  document=$1
-  nb --no-color bookmark list | grep -F "[$document]" && \
-    nb --no-color show $document | tail +8 | head -n -1 | w3m -T 'text/html'
-}
 
 qr-paste () {
   [[ -f /usr/sbin/wl-paste ]] && /usr/sbin/wl-paste | \
@@ -43,7 +38,7 @@ qr-paste () {
 }
 
 def() {
-	sdcv -n --utf8-output "$@" 2>&1 | sed 's/-->/<p>-->/g' | w3m -T text/html -dump | less -EXFRfM
+  sdcv -n --utf8-output "$@" 2>&1 | sed 's/-->/<p>-->/g' | elinks -dump | less -EXFRfM
 }
 
 uniclip() {
@@ -145,9 +140,9 @@ precmd() {
 
 distro_icon() {
   if grep -q 'ID=debian' /etc/os-release; then
-    echo "🌀"
+    echo "꩜"
   elif grep -q 'ID=arch' /etc/os-release; then
-    echo "🔷"
+    echo "⮝"
   else
     echo ""
   fi

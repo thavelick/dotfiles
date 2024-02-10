@@ -3,6 +3,7 @@ bat
 clang
 curl
 foot
+fzf
 git
 libevdev-dev
 libpixman-1-0

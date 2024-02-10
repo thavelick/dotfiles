@@ -143,8 +143,17 @@ precmd() {
   vcs_info
 }
 
+distro_icon() {
+  if grep -q 'ID=debian' /etc/os-release; then
+    echo "🌀"
+  elif grep -q 'ID=arch' /etc/os-release; then
+    echo "🔷"
+  else
+    echo ""
+  fi
+}
 setopt prompt_subst
-PROMPT='${prompt_time}%~ ${vcs_info_msg_0_}% ➜ '
+PROMPT='${prompt_time}%~ $(distro_icon) ${vcs_info_msg_0_}% ➜ '
 
 if [[ $(tty) == /dev/tty1 ]]; then
   exec river

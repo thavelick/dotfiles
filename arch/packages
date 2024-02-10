@@ -7,6 +7,7 @@ bat
 borg
 busybox
 cups
+debootstrap
 docker
 docker-compose
 elinks

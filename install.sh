@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 DOTFILES_HOME=$(pwd)
 export DOTFILES_HOME
 if [ "$(uname)" = 'Darwin' ]; then
@@ -13,6 +14,8 @@ elif grep -qF Raspbian /etc/issue; then
   missing_packages=$(comm  -13 <(dpkg-query -f '${Package}\n' -W| sort) <(sort raspbian/packages))
   sudo apt-get install "$missing_packages"
   git/setup.sh
+elif grep -qF Debian /etc/issue; then
+  debian/install.sh
 else # Assume Arch or derivatives
   sudo pacman -Syu
   missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort arch/packages))

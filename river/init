@@ -1,13 +1,5 @@
 #!/bin/sh
-
-# This is the example configuration file for river.
-#
-# If you wish to edit this, you will probably want to copy it to
-# $XDG_CONFIG_HOME/river/init or $HOME/.config/river/init first.
-#
-# See the river(1), riverctl(1), and rivertile(1) man pages for complete
-# documentation.
-
+set -e
 # Use the "alt" key as the primary modifier
 mod="Mod1"
 for mode in normal locked
@@ -156,13 +148,13 @@ riverctl default-layout rivertile
 
 riverctl focus-follows-cursor normal
 
-riverctl spawn /usr/sbin/waybar
+riverctl spawn waybar
 riverctl spawn $DOTFILES_HOME/river/background.sh
 riverctl spawn udiskie
 
 export QT_QPA_PLATFORM="wayland"
 
-[ -n "$HIDPI" ] && $HOME/.local/bin/wlr-randr --output eDP-1 --scale 1.75
+[ -n "$HIDPI" ] && wlr-randr --output eDP-1 --scale 1.75
 exec rivertile -view-padding 6 -outer-padding 6
 
 

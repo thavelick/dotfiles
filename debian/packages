@@ -21,5 +21,6 @@ sudo
 swaybg
 waybar
 wayland-protocols
+wlr-randr
 xz-utils
 zsh

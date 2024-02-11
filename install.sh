@@ -40,6 +40,7 @@ else # Assume Arch or derivatives
   amfora/setup.sh
   neomutt/setup.sh
   fbterm/setup.sh
+  font/setup.sh
   x11/setup.sh
 fi
 

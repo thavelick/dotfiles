@@ -14,6 +14,7 @@ zig/install.sh
 river/build.sh
 river/setup.sh
 amfora/setup.sh
+font/setup.sh
 foot/setup.sh
 git/setup.sh
 nag_runner/setup.sh

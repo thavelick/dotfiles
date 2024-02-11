@@ -12,8 +12,9 @@ require('packer').startup(function(use)
   use 'github/copilot.vim'
   use {'junegunn/fzf', run = './install --all'}
   use 'junegunn/fzf.vim'
-  use 'folke/tokyonight.nvim'
   use 'folke/which-key.nvim'
+  use {'folke/tokyonight.nvim', tag = 'v2.2.0'}
+  use 'wbthomason/packer.nvim'
 end)
 
 -- Key timeout

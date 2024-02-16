@@ -27,6 +27,10 @@ vim.wo.relativenumber = true
 -- set the leader key to space
 vim.g.mapleader = ' '
 
+-- leader [ and ] to switch buffers
+vim.api.nvim_set_keymap('n', '<leader>[', ':bp<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>]', ':bn<cr>', { noremap = true, silent = true })
+
 -- disable the arrow keys so I actually learn to use hjkl
 vim.api.nvim_set_keymap('n', '<up>', '<nop>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<down>', '<nop>', { noremap = true, silent = true })

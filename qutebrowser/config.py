@@ -1,5 +1,5 @@
 import os
-
+from qutebrowser import __version__ as qutebrowser_version
 is_work = os.environ.get("IS_WORK") != None
 home_dir = os.environ.get("HOME")
 
@@ -66,6 +66,7 @@ cookie_sites = [
 for site in cookie_sites:
     config.set("content.cookies.accept", "no-3rdparty", site)
 
+clipboard_setting = "content.javascript.clipboard"
 clipboard_sites = [
     "https://chat.openai.com",
     "https://*.tristanhavelick.com",
@@ -73,7 +74,10 @@ clipboard_sites = [
 ]
 
 for site in clipboard_sites:
-    config.set("content.javascript.clipboard", "access", site)
+    if qutebrowser_version.startswith("2."):
+        config.set("content.javascript.can_access_clipboard", True, site)
+    else:
+        config.set("content.javascript.clipboard", "access", site)
 
 okay_ad_sites = []
 if is_work:

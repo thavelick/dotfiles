@@ -2,19 +2,25 @@
 vim.o.spell = true
 vim.o.spelllang = 'en_us'
 
--- Create color column at column 81
+-- Create color column at column 100
 vim.opt.colorcolumn = '100'
 vim.cmd[[highlight ColorColumn guibg=grey]]
+
+-- set the leader key to space
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 
 require('packer').startup(function(use)
   use 'ctrlpvim/ctrlp.vim'
   use 'dense-analysis/ale'
-  use 'github/copilot.vim'
-  use {'junegunn/fzf', run = './install --all'}
-  use 'junegunn/fzf.vim'
   use 'folke/which-key.nvim'
-  use {'folke/tokyonight.nvim', tag = 'v2.2.0'}
+  use 'github/copilot.vim'
+  use 'junegunn/fzf.vim'
+  use 'neovim/nvim-lspconfig'
+  use 'tpope/vim-sleuth'
   use 'wbthomason/packer.nvim'
+  use {'folke/tokyonight.nvim', tag = 'v2.2.0'}
+  use {'junegunn/fzf', run = './install --all'}
 end)
 
 -- Key timeout
@@ -23,9 +29,6 @@ vim.o.timeoutlen = 250
 -- enable line numbers
 vim.wo.number = true
 vim.wo.relativenumber = true
-
--- set the leader key to space
-vim.g.mapleader = ' '
 
 -- leader [ and ] to switch buffers
 vim.api.nvim_set_keymap('n', '<leader>[', ':bp<cr>', { noremap = true, silent = true })
@@ -90,3 +93,57 @@ vim.g.copilot_filetypes = {
 
 -- highlight all search matches
 vim.o.hlsearch = true
+
+
+-- Setup language servers.
+local lspconfig = require('lspconfig')
+lspconfig.clangd.setup {}
+lspconfig.pyright.setup {}
+lspconfig.tsserver.setup {}
+lspconfig.lua_ls.setup {
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = { 'vim', 'require', 'use'},
+      },
+    },
+  },
+}
+
+-- Global mappings.
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+
+-- Use LspAttach autocommand to only map the following keys
+-- after the language server attaches to the current buffer
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+    -- Buffer local mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts)
+    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<space>f', function()
+      vim.lsp.buf.format { async = true }
+    end, opts)
+  end,
+})

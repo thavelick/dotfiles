@@ -6,6 +6,7 @@ base
 bat
 borg
 busybox
+clang
 cups
 debootstrap
 docker
@@ -26,6 +27,7 @@ koreader-bin
 libqalculate
 linux
 linux-surface
+lua-language-server
 man-db
 mpv
 mpv-mpris
@@ -37,6 +39,7 @@ openvpn
 pamixer
 pkgfile
 pulseaudio-alsa
+pyright
 python-adblock
 python-beautifulsoup4
 python-jq
@@ -61,6 +64,7 @@ syncthing
 tidy
 torsocks
 ttf-meslo-nerd
+typescript-language-server
 udiskie
 waybar
 wl-clipboard

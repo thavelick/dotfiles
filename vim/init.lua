@@ -12,6 +12,7 @@ vim.g.maplocalleader = ' '
 
 require('packer').startup(function(use)
   use 'ctrlpvim/ctrlp.vim'
+  use {'ThePrimeagen/harpoon', branch = 'harpoon2', requires = 'nvim-lua/plenary.nvim'}
   use 'dense-analysis/ale'
   use 'folke/which-key.nvim'
   use 'github/copilot.vim'
@@ -30,10 +31,6 @@ vim.o.timeoutlen = 250
 vim.wo.number = true
 vim.wo.relativenumber = true
 
--- leader [ and ] to switch buffers
-vim.api.nvim_set_keymap('n', '<leader>[', ':bp<cr>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>]', ':bn<cr>', { noremap = true, silent = true })
-
 -- disable the arrow keys so I actually learn to use hjkl
 vim.api.nvim_set_keymap('n', '<up>', '<nop>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<down>', '<nop>', { noremap = true, silent = true })
@@ -50,8 +47,8 @@ vim.api.nvim_set_keymap('i', '<down>', '<nop>', { noremap = true, silent = true 
 vim.api.nvim_set_keymap('i', '<left>', '<nop>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', '<right>', '<nop>', { noremap = true, silent = true })
 
--- map escape in normal mode to clear search highlights
-vim.api.nvim_set_keymap('n', '<esc>', ':nohlsearch<cr>', { noremap = true, silent = true })
+-- map escape in normal mode to clear search highlights and close the quickfix window
+vim.api.nvim_set_keymap('n', '<esc>', ':nohlsearch<cr>:ccl<cr>', { noremap = true, silent = true })
 
 -- Configure which-key
 require('which-key').setup({})
@@ -147,3 +144,20 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end, opts)
   end,
 })
+
+-- Harpoon configuration
+local harpoon = require("harpoon")
+
+harpoon:setup()
+
+vim.keymap.set("n", "<leader>a", function() harpoon:list():append() end)
+vim.keymap.set("n", "<C-h>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+
+vim.keymap.set("n", "<C-t>", function() harpoon:list():select(1) end)
+vim.keymap.set("n", "<C-n>", function() harpoon:list():select(2) end)
+vim.keymap.set("n", "<C-s>", function() harpoon:list():select(3) end)
+vim.keymap.set("n", "<C-e>", function() harpoon:list():select(4) end)
+
+-- Toggle previous & next buffers stored within Harpoon list
+vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
+vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)

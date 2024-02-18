@@ -155,6 +155,4 @@ riverctl spawn udiskie
 export QT_QPA_PLATFORM="wayland"
 
 [ -n "$HIDPI" ] && wlr-randr --output eDP-1 --scale 1.75
-exec rivertile -view-padding 6 -outer-padding 6
-
-
+exec rivertile -view-padding 5 -outer-padding 5 -main-ratio 0.5

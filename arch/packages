@@ -3,7 +3,6 @@ ansible
 aspell
 aspell-en
 base
-bat
 borg
 busybox
 clang

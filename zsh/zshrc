@@ -10,13 +10,16 @@ export BROWSER=qutebrowser
 export GPG_TTY=$TTY
 export MOZ_ENABLE_WAYLAND="1"
 export XKB_DEFAULT_LAYOUT="us(colemak)"
+export XKB_DEFAULT_OPTIONS=ctrl:nocaps
 
 source "$DOTFILES_HOME/zsh/keys.zsh"
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 [[ -n $(diff --version | grep GNU) ]] && alias diff='diff --color'
-alias batp='bat --style=plain'
+alias vat="vim -R -c 'set nomodifiable' -c 'nmap q :q!<CR>' -c 'set norelativenumber'"
+alias bat='echo "just use vat"'
+alias batp='echo "just use vat"'
 alias count_tokens='python3 -c '\''import tiktoken, sys; encoding = tiktoken.encoding_for_model("gpt-3.5-turbo"); token_count = len(encoding.encode(sys.stdin.read())); print(token_count)'\'''
 
 which nvim > /dev/null && alias vim='nvim'

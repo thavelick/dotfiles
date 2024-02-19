@@ -34,13 +34,13 @@ else # Assume Arch or derivatives
   waybar/setup.sh
   river/setup.sh
   foot/setup.sh
-  qutebrowser/setup.sh
   git/setup.sh
   nag_runner/setup.sh
   amfora/setup.sh
   neomutt/setup.sh
   fbterm/setup.sh
   font/setup.sh
+  sway/setup.sh
   x11/setup.sh
 fi
 

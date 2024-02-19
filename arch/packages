@@ -10,7 +10,6 @@ cups
 debootstrap
 docker
 docker-compose
-elinks
 fastfetch
 firefox
 firefox-adblock-plus
@@ -40,15 +39,11 @@ pamixer
 pkgfile
 pulseaudio-alsa
 pyright
-python-adblock
 python-beautifulsoup4
 python-jq
 python-openai
 python-pip
 python-pylint
-python-readability-lxml
-qt6-wayland
-qutebrowser
 rbutil
 rclone
 ripgrep
@@ -57,7 +52,6 @@ rsync
 sacc
 sdcv
 shellcheck
-sqlite-utils
 strace
 swaybg
 syncthing

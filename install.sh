@@ -7,7 +7,6 @@ if [ $(uname) = 'Darwin' ]; then
 
     brew install $missing_packages
   fi
-  amfora/setup.sh
 elif grep -qF Raspbian /etc/issue; then
   sudo apt-get update
   sudo apt-get upgrade

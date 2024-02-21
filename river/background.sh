@@ -1,2 +1,2 @@
 #!/bin/sh
-[ -f "$HOME/background.jpg" ] && /usr/sbin/swaybg --image "$HOME/background.jpg"
+[ -f "$HOME/background.jpg" ] && swaybg --image "$HOME/background.jpg"

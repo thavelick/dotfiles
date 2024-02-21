@@ -6,6 +6,7 @@
 
 	"modules-left": [
 		"river/tags",
+		"sway/workspaces",
 	],
 	"modules-center": [
 		"clock#1",
@@ -27,6 +28,9 @@
 		"custom/divider",
 		"tray"
 	],
+	"sway/workspaces": {
+		"num-workspaces": 9
+	},
 	"river/tags": {
 		"num-tags": 9
 	},

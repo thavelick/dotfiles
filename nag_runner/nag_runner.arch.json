@@ -11,12 +11,12 @@
     },
     {
         "name": "prune backups",
-        "command": "sudo borg prune -v --list --keep-within=89d /backuprepo && sudo borg compact --progress /backuprepo",
+        "command": "sudo -E borg prune -v --list --keep-within=89d /backuprepo && sudo -E borg compact --progress /backuprepo",
         "interval": "37"
     },
     {
         "name": "backups",
-        "command": "sudo ~/Projects/dotfiles/backups.zsh",
+        "command": "~/Projects/dotfiles/backups.zsh",
         "interval": "11"
     }
 ]

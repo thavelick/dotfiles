@@ -5,33 +5,35 @@ SAVEHIST=100000
 HISTFILE=~/.cache/zsh/history
 
 export DOTFILES_HOME=$HOME/Projects/dotfiles
-export EDITOR=vim
+export EDITOR=nvim
 export BROWSER=qutebrowser
 export GPG_TTY=$TTY
 export MOZ_ENABLE_WAYLAND="1"
-export QT_QPA_PLATFORM="wayland"
 export XKB_DEFAULT_LAYOUT="us(colemak)"
+export XKB_DEFAULT_OPTIONS=ctrl:nocaps
 
 source "$DOTFILES_HOME/zsh/keys.zsh"
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 [[ -n $(diff --version | grep GNU) ]] && alias diff='diff --color'
-alias batp='bat --style=plain'
+alias vat="vim -R -c 'set nomodifiable' -c 'nmap q :q!<CR>' -c 'set norelativenumber'"
+alias bat='echo "just use vat"'
+alias batp='echo "just use vat"'
 alias count_tokens='python3 -c '\''import tiktoken, sys; encoding = tiktoken.encoding_for_model("gpt-3.5-turbo"); token_count = len(encoding.encode(sys.stdin.read())); print(token_count)'\'''
 
-which lsd > /dev/null && alias ls='lsd'
 which nvim > /dev/null && alias vim='nvim'
-alias ru2en='argos-translate --from-lang ru --to-lang en'
+alias ls='ls --color=auto'
 alias ask="$HOME/Projects/ai-asker/ask.py"
 alias ask4="$HOME/Projects/ai-asker/ask.py --model gpt-4"
 alias autocommit="$HOME/Projects/dotfiles/git/auto-commit.zsh"
-
-nboffline() {
-  document=$1
-  nb --no-color bookmark list | grep -F "[$document]" && \
-    nb --no-color show $document | tail +8 | head -n -1 | w3m -T 'text/html'
-}
+alias clipstocks="SYMBOLS=VFIAX,VTIVX,VTSAX $HOME/Projects/stock-tsv/venv/bin/python3 $HOME/Projects/stock-tsv/stock_tsv.py | wl-copy"
+alias ghreadme="$DOTFILES_HOME/ghreadme.sh"
+alias mpv="mpv --no-terminal"
+alias mpvi="mpv --no-terminal --loop-file"
+alias ed="busybox ed"
+alias nc="busybox nc"
+alias nslookup="busybox nslookup"
 
 qr-paste () {
   [[ -f /usr/sbin/wl-paste ]] && /usr/sbin/wl-paste | \
@@ -39,7 +41,7 @@ qr-paste () {
 }
 
 def() {
-	sdcv -n --utf8-output "$@" 2>&1 | sed 's/-->/<p>-->/g' | w3m -T text/html -dump | less -EXFRfM
+  sdcv -n --utf8-output "$@" 2>&1 | sed 's/-->/<p>-->/g' | elinks -dump | less -EXFRfM
 }
 
 uniclip() {
@@ -139,5 +141,20 @@ precmd() {
   vcs_info
 }
 
+distro_icon() {
+  if grep -q 'ID=debian' /etc/os-release; then
+    echo "꩜"
+  elif grep -q 'ID=arch' /etc/os-release; then
+    echo "⮝"
+  else
+    echo ""
+  fi
+}
 setopt prompt_subst
-PROMPT='${prompt_time}%~ ${vcs_info_msg_0_}% ➜ '
+PROMPT='${prompt_time}%~ $(distro_icon) ${vcs_info_msg_0_}% ➜ '
+
+if [[ $(tty) == /dev/tty1 ]]; then
+  exec river
+fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

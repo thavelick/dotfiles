@@ -1,0 +1,12 @@
+[
+    {
+        "name": "debian updates",
+        "command": "sudo apt update && sudo apt upgrade -y",
+        "interval": "7"
+    },
+    {
+        "name": "reove old packages",
+        "command": "sudo apt autoremove -y",
+        "interval": "31"
+    }
+]

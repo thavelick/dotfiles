@@ -16,6 +16,7 @@
 /home/tristan/src/WSL2-Linux-Kernel
 /home/tristan/tmp/*
 /home/tristan/Videos/*
+/home/tristan/transmission/downloads/*
 /mnt
 /proc/*
 /root/tristan.tgz

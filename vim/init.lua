@@ -40,6 +40,19 @@ for _, key in ipairs({'<up>', '<down>', '<left>', '<right>'}) do
   vim.keymap.set({'n', 'v', 'i'}, key, '<nop>', {noremap = true, silent = true})
 end
 
+-- touch a file in the current directory
+local function touch_file()
+  print('Touching a file')
+  local file = vim.fn.input('File to touch: ')
+  if file == '' then
+    return
+  end
+  vim.fn.system('touch ' .. file)
+end
+vim.keymap.set('n', '<leader>tf', touch_file, {desc = 'Touch a file'})
+
+-- reload my vim config from any buffer
+vim.keymap.set('n', '<f4>', ":source $MYVIMRC<cr>", {desc = 'Reload vim config'})
 -- map escape in normal mode to clear search highlights and close the quickfix window
 vim.keymap.set('n', '<esc>', ':nohlsearch<cr>:ccl<cr>')
 

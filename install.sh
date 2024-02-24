@@ -40,6 +40,7 @@ else # Assume Arch or derivatives
   fbterm/setup.sh
   font/setup.sh
   sway/setup.sh
+  tidy/setup.sh
   tmux/setup.sh
   x11/setup.sh
 fi

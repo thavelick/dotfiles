@@ -71,7 +71,13 @@ vim.g.ctrlp_map = '<c-p>'
 vim.g.ctrlp_cmd = 'CtrlP'
 
 -- ALE linters and fixers configuration
-vim.g.ale_linters = { python = {'pylint'} }
+vim.g.ale_linters_explicit = 1
+-- enable html tidy
+
+vim.g.ale_linters = {
+  html = {'tidy'},
+  python = {'pylint'}
+}
 vim.g.ale_fixers = { python = {'black'} }
 vim.g.ale_fix_on_save = 1
 

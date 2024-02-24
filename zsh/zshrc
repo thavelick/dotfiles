@@ -17,6 +17,7 @@ source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 [[ -n $(diff --version | grep GNU) ]] && alias diff='diff --color'
+[[ ! -f /opt/homebrew/bin/gdate ]] && alias gdate='date'
 alias vat="vim -R -c 'set nomodifiable' -c 'nmap q :q!<CR>' -c 'set norelativenumber'"
 alias bat='echo "just use vat"'
 alias batp='echo "just use vat"'
@@ -82,7 +83,7 @@ zstyle ':vcs_info:*' unstagedstr '🚧'
 zstyle ':vcs_info:*' stagedstr '💾'
 
 preexec() {
-  exec_start_time=$(date +%s%3N) # Record start time of the command in milliseconds
+  exec_start_time=$(gdate +%s%3N) # Record start time of the command in milliseconds
 }
 
 set_prompt_time() {
@@ -93,7 +94,7 @@ set_prompt_time() {
 
   prompt_time=''
   if [ "$exec_start_time" ]; then
-    exec_end_time=$(date +%s%3N) # Record end time of the command in milliseconds
+    exec_end_time=$(gdate +%s%3N) # Record end time of the command in milliseconds
     exec_duration=$((exec_end_time - exec_start_time)) # Calculate command duration in milliseconds
     exec_duration_seconds=$((exec_duration / 1000)) # Convert duration to seconds
 
@@ -142,7 +143,9 @@ precmd() {
 }
 
 distro_icon() {
-  if grep -q 'ID=debian' /etc/os-release; then
+  if [ ! -f /etc/os-release ]; then
+    echo ""
+  elif grep -q 'ID=debian' /etc/os-release; then
     echo "꩜"
   elif grep -q 'ID=arch' /etc/os-release; then
     echo "⮝"

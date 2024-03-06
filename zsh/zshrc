@@ -6,8 +6,9 @@ HISTFILE=~/.cache/zsh/history
 
 export DOTFILES_HOME=$HOME/Projects/dotfiles
 export EDITOR=nvim
-export BROWSER=qutebrowser
+export BROWSER=firefox
 export GPG_TTY=$TTY
+export PYTHONPATH=.
 export MOZ_ENABLE_WAYLAND="1"
 export XKB_DEFAULT_LAYOUT="us(colemak)"
 export XKB_DEFAULT_OPTIONS=ctrl:nocaps

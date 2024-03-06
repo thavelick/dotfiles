@@ -11,17 +11,15 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 require('packer').startup(function(use)
-  use 'ctrlpvim/ctrlp.vim'
   use {'ThePrimeagen/harpoon', branch = 'harpoon2', requires = 'nvim-lua/plenary.nvim'}
   use 'dense-analysis/ale'
   use 'folke/which-key.nvim'
   use 'github/copilot.vim'
-  use 'junegunn/fzf.vim'
   use 'neovim/nvim-lspconfig'
+  use {'nvim-telescope/telescope.nvim', requires = 'nvim-lua/plenary.nvim'}
   use 'tpope/vim-sleuth'
   use 'wbthomason/packer.nvim'
   use {'folke/tokyonight.nvim', tag = 'v2.2.0'}
-  use {'junegunn/fzf', run = './install --all'}
 end)
 
 -- Key timeout
@@ -55,6 +53,16 @@ vim.keymap.set('n', '<leader>tf', touch_file, {desc = 'Touch a file'})
 vim.keymap.set('n', '<f4>', ":source $MYVIMRC<cr>", {desc = 'Reload vim config'})
 -- map escape in normal mode to clear search highlights and close the quickfix window
 vim.keymap.set('n', '<esc>', ':nohlsearch<cr>:ccl<cr>')
+-- run make test
+vim.keymap.set('n', '<leader>mt', ':make test<cr>', {desc = 'Run make test'})
+
+-- Telescope configuration
+local telescope_builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>ff', telescope_builtin.find_files, {desc = 'Find files'})
+vim.keymap.set('n', '<leader>fs', telescope_builtin.lsp_document_symbols, {desc = 'Find symbols in current document'})
+vim.keymap.set('n', '<leader>fg', telescope_builtin.live_grep, {desc = 'Grep files'})
+vim.keymap.set('n', '<leader>fb', telescope_builtin.buffers, {desc = 'List buffers'})
+vim.keymap.set('n', '<leader>fh', telescope_builtin.help_tags, {desc = 'Find help tags'})
 
 -- Set colorscheme
 vim.cmd('colorscheme tokyonight')
@@ -66,14 +74,7 @@ vim.cmd([[highlight ColorColumn ctermbg=grey]])
 -- Clipboard configuration
 vim.o.clipboard = 'unnamedplus'
 
--- CTRL-P settings
-vim.g.ctrlp_map = '<c-p>'
-vim.g.ctrlp_cmd = 'CtrlP'
-
 -- ALE linters and fixers configuration
-vim.g.ale_linters_explicit = 1
--- enable html tidy
-
 vim.g.ale_linters = {
   html = {'tidy'},
   python = {'pylint'}
@@ -117,6 +118,14 @@ lspconfig.pyright.setup {
     vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, { buffer = 0, desc = "Show diagnostics in loclist"})
 
     vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { buffer = 0, desc = "Rename symbol"})
+  end,
+}
+lspconfig.esbonio.setup {
+  on_attach = function()
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = 0, desc = "Go to definition"})
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = 0, desc = "Go to implementation"})
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = 0, desc = "Show references"})
+
   end,
 }
 lspconfig.tsserver.setup {}

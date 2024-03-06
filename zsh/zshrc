@@ -16,6 +16,8 @@ source "$DOTFILES_HOME/zsh/keys.zsh"
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
+ZSH_HIGHLIGHT_STYLES[comment]='fg=blue'
+
 [[ -n $(diff --version | grep GNU) ]] && alias diff='diff --color'
 [[ ! -f /opt/homebrew/bin/gdate ]] && alias gdate='date'
 alias vat="vim -R -c 'set nomodifiable' -c 'nmap q :q!<CR>' -c 'set norelativenumber'"

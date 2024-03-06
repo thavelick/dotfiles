@@ -25,7 +25,7 @@ set $menu foot --app-id float -- zsh -ic $DOTFILES_HOME/sway/launcher.sh
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+# output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 #
 # Example configuration:
 #
@@ -60,6 +60,11 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
 
+
+input * {
+    xkb_layout "us"
+    xkb_variant "colemak"
+}
 ### Key bindings
 #
 # Basics:
@@ -109,6 +114,12 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
     bindsym $mod+Shift+Down move down
     bindsym $mod+Shift+Up move up
     bindsym $mod+Shift+Right move right
+
+    bindsym $mod+F1 exec brightnessctl s 1-
+    bindsym $mod+F2 exec brightnessctl s +1
+    bindsym $mod+F3 exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+    bindsym $mod+F4 exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+    bindsym $mod+F5 exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 #
 # Workspaces:
 #

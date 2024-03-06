@@ -1,14 +1,10 @@
 #!/bin/bash
 set -e
 [ -x "$(command -v river)" ] && exit 0
-
-version="0.1.3"
-archive="river-${version}"
-url="https://github.com/riverwm/river/releases/download/v${version}/${archive}.tar.gz"
-
-curl -L "$url" -o "/tmp/${archive}.tar.gz"
-
-mkdir -p /tmp/river
-tar -xf "/tmp/${archive}.tar.gz" -C /tmp/river
-
-zig build -Doptimize=ReleaseSafe --prefix ~/.local install
+rm -rf /tmp/river
+ls /tmp
+echo "about to clone river"
+git clone https://github.com/riverwm/river /tmp/river
+echo "about to install river"
+cd /tmp/river && git submodule update --init && /usr/local/zig/zig build -Doptimize=ReleaseSafe --prefix ~/.local install
+echo "done installing river"

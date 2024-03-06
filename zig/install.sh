@@ -4,7 +4,7 @@ set -e
 [ -x /usr/local/zig/zig ] && exit 0
 
 architecture=$(uname -m)
-version="0.9.1"
+version="0.11.0"
 archive="zig-linux-${architecture}-${version}"
 url="https://ziglang.org/download/${version}/${archive}.tar.xz"
 

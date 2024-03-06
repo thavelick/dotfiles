@@ -7,9 +7,6 @@ borgbackup
 busybox
 clang
 cups
-curl
-docker
-docker-compose
 elinks
 firefox-esr
 fonts-noto
@@ -36,6 +33,9 @@ nodejs
 openvpn
 pamixer
 pkg-config
+playerctl
+python3-openai
+python3-tk
 qt6-wayland
 qutebrowser
 rclone

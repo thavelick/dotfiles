@@ -11,12 +11,12 @@ if [ -n "$missing_packages" ]; then
 fi
 
 zig/install.sh
-river/build.sh
+river/install.sh
 river/setup.sh
 amfora/setup.sh
 font/setup.sh
 foot/setup.sh
 git/setup.sh
 nag_runner/setup.sh
-qutebrowser/setup.sh
 waybar/setup.sh
+sway/setup.sh

@@ -17,6 +17,7 @@ require('packer').startup(function(use)
   use 'github/copilot.vim'
   use 'neovim/nvim-lspconfig'
   use {'nvim-telescope/telescope.nvim', requires = 'nvim-lua/plenary.nvim'}
+  use 'tpope/vim-commentary'
   use 'tpope/vim-sleuth'
   use 'wbthomason/packer.nvim'
   use {'folke/tokyonight.nvim', tag = 'v2.2.0'}
@@ -55,6 +56,9 @@ vim.keymap.set('n', '<f4>', ":source $MYVIMRC<cr>", {desc = 'Reload vim config'}
 vim.keymap.set('n', '<esc>', ':nohlsearch<cr>:ccl<cr>')
 -- run make test
 vim.keymap.set('n', '<leader>mt', ':make test<cr>', {desc = 'Run make test'})
+-- vertical split, then focus the new window
+vim.keymap.set('n', '<leader>wv', ':vsp<cr><c-w>l', {desc = 'Vertical split (with focus)'})
+
 
 -- Telescope configuration
 local telescope_builtin = require('telescope.builtin')

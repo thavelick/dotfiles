@@ -1,8 +1,8 @@
 amfora
-tmux
 ansible
 aspell
 aspell-en
+astroid
 base
 borg
 busybox
@@ -34,6 +34,7 @@ mpv-mpris
 neovim
 netsurf
 nodejs
+notmuch
 noto-fonts-emoji
 openvpn
 pamixer
@@ -58,6 +59,7 @@ sway
 swaybg
 syncthing
 tidy
+tmux
 torsocks
 ttf-meslo-nerd
 typescript-language-server

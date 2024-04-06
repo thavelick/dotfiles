@@ -11,6 +11,7 @@ cups
 debootstrap
 docker
 docker-compose
+dodo-mail-git
 fastfetch
 firefox
 firefox-adblock-plus
@@ -22,6 +23,7 @@ grub
 inkscape
 intel-ucode
 irssi
+isync
 keepassxc
 koreader-bin
 libqalculate
@@ -31,6 +33,7 @@ lua-language-server
 man-db
 mpv
 mpv-mpris
+msmtp
 neovim
 netsurf
 nodejs
@@ -46,6 +49,7 @@ python-jq
 python-openai
 python-pip
 python-pylint
+qt6-wayland
 rbutil
 rclone
 ripgrep

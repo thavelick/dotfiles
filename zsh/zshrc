@@ -38,6 +38,7 @@ alias mpvi="mpv --no-terminal --loop-file"
 alias ed="busybox ed"
 alias nc="busybox nc"
 alias nslookup="busybox nslookup"
+alias mailsync="mbsync primary && notmuch new"
 
 qr-paste () {
   [[ -f /usr/sbin/wl-paste ]] && /usr/sbin/wl-paste | \

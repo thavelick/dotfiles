@@ -16,6 +16,7 @@ fastfetch
 firefox
 firefox-adblock-plus
 foot
+fzf
 git
 gnumeric
 grim
@@ -42,7 +43,6 @@ noto-fonts-emoji
 openvpn
 pamixer
 pkgfile
-pulseaudio-alsa
 pyright
 python-beautifulsoup4
 python-jq

@@ -39,7 +39,7 @@ alias ed="busybox ed"
 alias nc="busybox nc"
 alias nslookup="busybox nslookup"
 alias mailsync="mbsync primary && notmuch new"
-
+alias llm4="/home/tristan/src/llm/venv/bin/llm --model 4o"
 qr-paste () {
   [[ -f /usr/sbin/wl-paste ]] && /usr/sbin/wl-paste | \
     qrencode -o - -t PNG | imv -

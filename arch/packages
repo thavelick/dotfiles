@@ -61,6 +61,8 @@ shellcheck
 strace
 sway
 swaybg
+swayidle
+swaylock
 syncthing
 tidy
 tmux

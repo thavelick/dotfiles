@@ -164,6 +164,7 @@ riverctl spawn waybar
 riverctl spawn $DOTFILES_HOME/river/background.sh
 riverctl spawn udiskie
 
+riverctl spawn 'swayidle -w before-sleep "swaylock -c 000033"'
 export QT_QPA_PLATFORM="wayland"
 
 [ -n "$HIDPI" ] && wlr-randr --output eDP-1 --scale 1.75

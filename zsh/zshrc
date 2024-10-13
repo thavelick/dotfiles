@@ -3,6 +3,7 @@ PATH=$PATH:$HOME/.local/bin
 HISTSIZE=100000
 SAVEHIST=100000
 HISTFILE=~/.cache/zsh/history
+HISTIGNORE=" *"
 
 export DOTFILES_HOME=$HOME/Projects/dotfiles
 export EDITOR=nvim
@@ -40,6 +41,7 @@ alias nc="busybox nc"
 alias nslookup="busybox nslookup"
 alias mailsync="mbsync primary && notmuch new"
 alias llm4="/home/tristan/src/llm/venv/bin/llm --model 4o"
+alias namedcat='awk '\''FNR==1 {print "==> " FILENAME " <=="} {print}'\'
 qr-paste () {
   [[ -f /usr/sbin/wl-paste ]] && /usr/sbin/wl-paste | \
     qrencode -o - -t PNG | imv -

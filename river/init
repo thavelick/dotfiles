@@ -4,6 +4,7 @@ set -e
 mod="Mod1"
 for mode in normal locked
 do
+  # arch/surfacepro
   riverctl map $mode None XF86AudioRaiseVolume  spawn 'pamixer -i 5'
   riverctl map $mode None XF86AudioLowerVolume  spawn 'pamixer -d 5'
   riverctl map $mode None XF86AudioMute         spawn 'pamixer --toggle-mute'
@@ -15,6 +16,14 @@ do
   riverctl map $mode None XF86AudioPlay  spawn 'playerctl play-pause'
   riverctl map $mode None XF86AudioPrev  spawn 'playerctl previous'
   riverctl map $mode None XF86AudioNext  spawn 'playerctl next'
+
+  # debian/mnt-reform
+  riverctl map $mode $mod F1 spawn 'brightnessctl s 1+'
+  riverctl map $mode $mod F2 spawn 'brightnessctl s 1-'
+  riverctl map $mode $mod F3 spawn 'playerctl play-pause'
+  riverctl map $mode $mod F4 spawn 'pactl set-sink-mute @DEFAULT_SINK@ toggle'
+  riverctl map $mode $mod F5 spawn 'pactl set-sink-volume @DEFAULT_SINK@ -5%'
+  riverctl map $mode $mod F6 spawn 'pactl set-sink-volume @DEFAULT_SINK@ +5%'
 done
 # Mod+Shift+Return to start an instance of foot
 riverctl map normal $mod+Shift Return spawn foot
@@ -22,6 +31,8 @@ riverctl map normal $mod+Shift Return spawn foot
 # Mod+P to start the launcher
 riverctl map normal $mod P spawn "foot --app-id float -- zsh -ic $DOTFILES_HOME/river/launcher.sh"
 
+# Mod+E to start an emoji/unicode picker
+riverctl map normal $mod E spawn "foot --app-id float -- zsh -ic $DOTFILES_HOME/river/emoji.sh"
 
 # rewrite the above line to show in a smaller window
 # Mod+Q to close the focused view
@@ -135,12 +146,13 @@ riverctl border-color-unfocused 0x586e75
 # Set keyboard repeat rate
 riverctl set-repeat 50 300
 
-# Make certain views start floating
-riverctl float-filter-add app-id float
-riverctl float-filter-add title "popup title with spaces"
 
+# Make certain views start floating
+# riverctl float-filter-add app-id float
+# riverctl float-filter-add title "popup title with spaces"
+riverctl float-filter-add app-id float || riverctl rule-add -app-id 'float*' float
 # Set app-ids and titles of views which should use client side decorations
-riverctl csd-filter-add app-id "gedit"
+# riverctl csd-filter-add app-id "gedit"
 
 # Set and exec into the default layout generator, rivertile.
 # River will send the process group of the init executable SIGTERM on exit.
@@ -152,6 +164,7 @@ riverctl spawn waybar
 riverctl spawn $DOTFILES_HOME/river/background.sh
 riverctl spawn udiskie
 
+riverctl spawn 'swayidle -w before-sleep "swaylock -c 000033"'
 export QT_QPA_PLATFORM="wayland"
 
 [ -n "$HIDPI" ] && wlr-randr --output eDP-1 --scale 1.75

@@ -3,11 +3,13 @@ PATH=$PATH:$HOME/.local/bin
 HISTSIZE=100000
 SAVEHIST=100000
 HISTFILE=~/.cache/zsh/history
+HISTIGNORE=" *"
 
 export DOTFILES_HOME=$HOME/Projects/dotfiles
 export EDITOR=nvim
-export BROWSER=qutebrowser
+export BROWSER=firefox
 export GPG_TTY=$TTY
+export PYTHONPATH=.
 export MOZ_ENABLE_WAYLAND="1"
 export XKB_DEFAULT_LAYOUT="us(colemak)"
 export XKB_DEFAULT_OPTIONS=ctrl:nocaps
@@ -15,6 +17,8 @@ export XKB_DEFAULT_OPTIONS=ctrl:nocaps
 source "$DOTFILES_HOME/zsh/keys.zsh"
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+ZSH_HIGHLIGHT_STYLES[comment]='fg=blue'
 
 [[ -n $(diff --version | grep GNU) ]] && alias diff='diff --color'
 [[ ! -f /opt/homebrew/bin/gdate ]] && alias gdate='date'
@@ -35,7 +39,9 @@ alias mpvi="mpv --no-terminal --loop-file"
 alias ed="busybox ed"
 alias nc="busybox nc"
 alias nslookup="busybox nslookup"
-
+alias mailsync="mbsync primary && notmuch new"
+alias llm4="/home/tristan/src/llm/venv/bin/llm --model 4o"
+alias namedcat='awk '\''FNR==1 {print "==> " FILENAME " <=="} {print}'\'
 qr-paste () {
   [[ -f /usr/sbin/wl-paste ]] && /usr/sbin/wl-paste | \
     qrencode -o - -t PNG | imv -
@@ -72,7 +78,7 @@ fi
 source $DOTFILES_HOME/gemini.zsh
 
 setopt interactive_comments
-$HOME/Projects/nag-runner/nag_runner.py
+# $HOME/Projects/nag-runner/nag_runner.py
 
 
 # prompt
@@ -130,8 +136,11 @@ precmd() {
   untracked_files=''
   if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
     # we're in a git project, show git info in the prompt
-    unpushed_count=$(git rev-list --count @{u}..)
-    if [[ $unpushed_count -gt 0 ]]; then
+    unpushed_count=$(git rev-list --count @{u}.. 2>/dev/null || echo -1)
+    if [[ $unpushed_count -eq -1 ]]; then
+      # if we can't get the count, assume we're not tracking a remote
+      unpushed_commits='📤'
+    elif [[ $unpushed_count -gt 0 ]]; then
       unpushed_commits='🔥'
     fi
     if [[ -n $(git ls-files --others --exclude-standard) ]]; then

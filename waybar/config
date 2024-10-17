@@ -14,6 +14,7 @@
 		"clock#3",
 	],
 	"modules-right": [
+		"custom/network",
 		"pulseaudio",
 		"custom/divider",
 		"memory",
@@ -25,14 +26,23 @@
 		"disk",
 		"custom/divider",
 		"backlight",
-		"custom/divider",
-		"tray"
 	],
 	"sway/workspaces": {
 		"num-workspaces": 9
 	},
 	"river/tags": {
-		"num-tags": 9
+		"num-tags": 9,
+		"tag-labels": [
+			"1 🖥️",
+			"2 🌐",
+			"3 🗒️",
+			"4 🔐",
+			"5",
+			"6",
+			"7",
+			"8",
+			"9"
+		]
 	},
 	"custom/divider": {
                 "format": "",
@@ -79,7 +89,9 @@
 			"warning": 30,
 			"critical": 15
 		},
+		"full-at": 80,
 		"format": "{icon} {capacity}%",
+		"format-charging": " {icon} {capacity}%",
 		"format-icons": [
 			"",
 			"",
@@ -88,17 +100,18 @@
 			""
 		]
 	},
+	"custom/network": {
+		"interval": 5,
+		"exec": "ip link show wlan0 | grep -q 'state UP' && echo '📡' || echo '❌'"
+	},
 	"disk": {
 		"interval": 5,
 		"format": "Disk {percentage_used:2}%",
 		"path": "/"
 	},
-	"tray": {
-		"icon-size": 20
-	},
 	"backlight": {
 		"device": "intel_backlight",
 		"format": "{percent}% {icon}",
-		"format-icons": ["", ""]
+		"format-icons": ["☁", "⛅", "🌞"]
 	}
 }

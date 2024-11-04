@@ -30,6 +30,29 @@ vim.o.timeoutlen = 250
 vim.wo.number = true
 vim.wo.relativenumber = true
 
+-- disable the arrow keys so I actually learn to use hjkl
+vim.api.nvim_set_keymap('n', '<up>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<down>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<left>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<right>', '<nop>', { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap('v', '<up>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<down>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<left>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<right>', '<nop>', { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap('i', '<up>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<down>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<left>', '<nop>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<right>', '<nop>', { noremap = true, silent = true })
+
+-- replace [ ] with [x] on the current line when pressing <leader>xx
+
+vim.api.nvim_set_keymap('n', '<leader>xx', '0:s/\\[ \\]/[x]/<cr>:nohlsearch<cr>:ccl<cr>', { noremap = true, silent = true })
+
+-- map escape in normal mode to clear search highlights and close the quickfix window
+vim.api.nvim_set_keymap('n', '<esc>', ':nohlsearch<cr>:ccl<cr>', { noremap = true, silent = true })
+
 -- Configure which-key
 local which_key = require('which-key')
 which_key.setup({})

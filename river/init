@@ -153,6 +153,7 @@ riverctl set-repeat 50 300
 riverctl float-filter-add app-id float || riverctl rule-add -app-id 'float*' float
 # Set app-ids and titles of views which should use client side decorations
 # riverctl csd-filter-add app-id "gedit"
+riverctl rule-add -app-id mgba float
 
 # Set and exec into the default layout generator, rivertile.
 # River will send the process group of the init executable SIGTERM on exit.

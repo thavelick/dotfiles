@@ -155,7 +155,7 @@ lspconfig.esbonio.setup {
 
   end,
 }
-lspconfig.tsserver.setup {}
+lspconfig.ts_ls.setup {}
 lspconfig.lua_ls.setup {
   settings = {
     Lua = {

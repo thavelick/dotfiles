@@ -40,8 +40,14 @@ alias ed="busybox ed"
 alias nc="busybox nc"
 alias nslookup="busybox nslookup"
 alias mailsync="mbsync primary && notmuch new"
-alias llm4="/home/tristan/src/llm/venv/bin/llm --model 4o"
+alias llmt="llm --model o1-mini"
+alias llmg="llm --model gemini-2.0-flash -o google_search 1"
+alias llmp="llm --model gemini-2.0-pro-exp-02-05"
+
 alias namedcat='awk '\''FNR==1 {print "==> " FILENAME " <=="} {print}'\'
+summary () {
+  curl -s "https://r.jina.ai/$1" | llm "summarize this text" | pandoc -f markdown -t html > /tmp/summary.html && firefox /tmp/summary.html
+}
 qr-paste () {
   [[ -f /usr/sbin/wl-paste ]] && /usr/sbin/wl-paste | \
     qrencode -o - -t PNG | imv -
@@ -57,6 +63,46 @@ uniclip() {
 
 foreground() {
     fg
+}
+
+q() {
+  local url="$1"
+  local question="$2"
+
+  # Fetch the URL content through Jina
+  local content=$(curl -s "https://r.jina.ai/$url")
+
+  # Check if the content was retrieved successfully
+  if [ -z "$content" ]; then
+    echo "Failed to retrieve content from the URL."
+    return 1
+  fi
+
+  system="
+  You are a helpful assistant that can answer questions about the content.
+  Reply concisely, in a few sentences.
+
+  The content:
+  ${content}
+  "
+
+  # Use llm with the fetched content as a system prompt
+  llm prompt "$question" -s "$system"
+}
+
+qv() {
+  local url="$1"
+  local question="$2"
+
+  # Fetch the URL content through Jina
+  local subtitle_url=$(yt-dlp -q --skip-download --convert-subs srt --write-sub --sub-langs "en" --write-auto-sub --print "requested_subtitles.en.url" "$url")
+  local content=$(curl -s "$subtitle_url" | sed '/^$/d' | grep -v '^[0-9]*$' | grep -v '\-->' | sed 's/<[^>]*>//g' | tr '\n' ' ')
+
+  # Check if the content was retrieved successfully
+  if [ -z "$content" ]; then
+    echo "Failed to retrieve content from the URL."
+    return 1
+  fi
 }
 
 zle -N foreground

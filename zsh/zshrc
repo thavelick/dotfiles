@@ -43,6 +43,7 @@ alias mailsync="mbsync primary && notmuch new"
 alias llmt="llm --model o1-mini"
 alias llmg="llm --model gemini-2.0-flash -o google_search 1"
 alias llmp="llm --model gemini-2.0-pro-exp-02-05"
+alias llmb="llm --model gemini-2.0-flash -s 'be relatively brief. Your answer should fit on a standard 80x25 terminal screen.'"
 
 alias namedcat='awk '\''FNR==1 {print "==> " FILENAME " <=="} {print}'\'
 summary () {

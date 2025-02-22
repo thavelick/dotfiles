@@ -2,3 +2,4 @@ autoconfig.yml
 QtProject.conf
 .vscode
 .uuid
+.aider*

@@ -139,9 +139,9 @@ lspconfig.pyright.setup {
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = 0, desc = "Go to definition"})
     vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = 0, desc = "Show references"})
 
-    which_key.register({
-      { "<leader>d", group = "Diagnostics" },
-    })
+    -- which_key.register({
+    --   { "<leader>d", group = "Diagnostics" },
+    -- })
     vim.keymap.set("n", "<leader>df", vim.diagnostic.goto_next, { buffer = 0, desc = "Go to next diagnostic"})
     vim.keymap.set("n", "<leader>db", vim.diagnostic.goto_prev, { buffer = 0, desc = "Go to previous diagnostic"})
     vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, { buffer = 0, desc = "Show diagnostics in loclist"})

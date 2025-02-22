@@ -124,7 +124,7 @@ fi
 source $DOTFILES_HOME/gemini.zsh
 
 setopt interactive_comments
-# $HOME/Projects/nag-runner/nag_runner.py
+$HOME/Projects/nag-runner/nag_runner.py
 
 
 # prompt

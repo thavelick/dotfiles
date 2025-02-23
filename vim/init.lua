@@ -21,7 +21,7 @@ require('packer').startup(function(use)
   use 'tpope/vim-sleuth'
   use 'wbthomason/packer.nvim'
   use {'folke/tokyonight.nvim', tag = 'v2.2.0'}
-  use 'haxe-vim/haxe' -- Add haxe syntax highlighting
+  use 'jdonaldson/vaxe'
 end)
 
 -- Key timeout

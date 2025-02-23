@@ -21,6 +21,7 @@ require('packer').startup(function(use)
   use 'tpope/vim-sleuth'
   use 'wbthomason/packer.nvim'
   use {'folke/tokyonight.nvim', tag = 'v2.2.0'}
+  use 'haxe-vim/haxe' -- Add haxe syntax highlighting
 end)
 
 -- Key timeout
@@ -184,3 +185,8 @@ vim.keymap.set("n", "<C-e>", function() harpoon:list():select(4) end)
 -- Toggle previous & next buffers stored within Harpoon list
 vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
 vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
+
+-- Auto-detect file type for .hx files
+vim.cmd [[
+  au BufNewFile,BufRead *.hx set filetype=haxe
+]]

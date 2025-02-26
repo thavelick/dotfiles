@@ -1,9 +1,36 @@
+# Profiling via:
+# https://kev.inburke.com/kevin/profiling-zsh-startup-time/
+: "${PROFILE_STARTUP:=false}"
+: "${PROFILE_ALL:=false}"
+# Run this to get a profile trace and exit: time zsh -i -c echo
+# Or: time PROFILE_STARTUP=true /bin/zsh -i --login -c echo
+if [[ "$PROFILE_STARTUP" == true || "$PROFILE_ALL" == true ]]; then
+    # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
+    PS4=$'%D{%H:%M:%S.%.} %N:%i> '
+    #zmodload zsh/datetime
+    #PS4='+$EPOCHREALTIME %N:%i> '
+    exec 3>&2 2>/tmp/zsh_profile.$$
+    setopt xtrace prompt_subst
+fi
+#
 PATH=$PATH:$HOME/.local/bin
 
 HISTSIZE=100000
 SAVEHIST=100000
 HISTFILE=~/.cache/zsh/history
-HISTIGNORE=" *"
+HISTORY_IGNORE="(ls|cd|pwd|exit|cd)*"
+
+setopt EXTENDED_HISTORY      # Write the history file in the ':start:elapsed;command' format.
+setopt INC_APPEND_HISTORY    # Write to the history file immediately, not when the shell exits.
+setopt SHARE_HISTORY         # Share history between all sessions.
+setopt HIST_IGNORE_DUPS      # Do not record an event that was just recorded again.
+setopt HIST_IGNORE_ALL_DUPS  # Delete an old recorded event if a new event is a duplicate.
+setopt HIST_IGNORE_SPACE     # Do not record an event starting with a space.
+setopt HIST_SAVE_NO_DUPS     # Do not write a duplicate event to the history file.
+setopt HIST_VERIFY           # Do not execute immediately upon history expansion.
+setopt APPEND_HISTORY        # append to history file (Default)
+setopt HIST_NO_STORE         # Don't store history commands
+setopt HIST_REDUCE_BLANKS    # Remove superfluous blanks from each command line being added to the history.
 
 export DOTFILES_HOME=$HOME/Projects/dotfiles
 export EDITOR=nvim
@@ -219,5 +246,9 @@ fi
 autoload -z edit-command-line
 zle -N edit-command-line
 bindkey "^X^E" edit-command-line
+source <(fzf --zsh)
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+if [[ "$PROFILE_STARTUP" == true ]]; then
+    unsetopt xtrace
+    exec 2>&3 3>&-
+fi

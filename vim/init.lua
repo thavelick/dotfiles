@@ -14,7 +14,6 @@ require('packer').startup(function(use)
   use {'ThePrimeagen/harpoon', branch = 'harpoon2', requires = 'nvim-lua/plenary.nvim'}
   use 'dense-analysis/ale'
   use 'folke/which-key.nvim'
-  use 'github/copilot.vim'
   use 'neovim/nvim-lspconfig'
   use {'nvim-telescope/telescope.nvim', requires = 'nvim-lua/plenary.nvim'}
   use 'tpope/vim-commentary'
@@ -120,11 +119,6 @@ end
 
 -- Autocommand to trim whitespace before saving
 vim.cmd([[autocmd BufWritePre * lua _G.trim_whitespace()]])
-
--- enable yaml for copilot
-vim.g.copilot_filetypes = {
-    yaml = 1,
-}
 
 -- highlight all search matches
 vim.o.hlsearch = true

@@ -185,3 +185,5 @@ vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
 vim.g.free_pilot_backend = 'openrouter'
 vim.g.free_pilot_openrouter_model = 'qwen/qwen-2.5-coder-32b-instruct'
 vim.g.free_pilot_openrouter_api_key = os.getenv('OPENROUTER_API_KEY')
+vim.g.free_pilot_autostart = 1
+

@@ -19,6 +19,7 @@ require('packer').startup(function(use)
   use 'tpope/vim-commentary'
   use 'tpope/vim-sleuth'
   use 'wbthomason/packer.nvim'
+  use 'freepilot/vim-free-pilot'
   use {'folke/tokyonight.nvim', tag = 'v2.2.0'}
   use 'jdonaldson/vaxe'
 end)

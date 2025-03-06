@@ -322,7 +322,7 @@ entries_per_page = 20
 # Available keys to set:
 
 # bg: background for pages, tab row, app in general
-# bg = 'default'
+bg = 'black'
 # tab_num: The number/highlight of the tabs at the top
 # tab_divider: The color of the divider character between tab numbers: |
 # bottombar_label: The color of the prompt that appears when you press space

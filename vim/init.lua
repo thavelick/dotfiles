@@ -21,7 +21,6 @@ require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
   use {'folke/tokyonight.nvim', tag = 'v2.2.0'}
   use 'jdonaldson/vaxe'
-  use 'whatever555/free-pilot-vim'
 end)
 
 -- Key timeout
@@ -82,6 +81,9 @@ vim.keymap.set('n', '<esc>', ':nohlsearch<cr>:ccl<cr>')
 vim.keymap.set('n', '<leader>mt', ':make test<cr>', {desc = 'Run make test'})
 -- vertical split, then focus the new window
 vim.keymap.set('n', '<leader>wv', ':vsp<cr><c-w>l', {desc = 'Vertical split (with focus)'})
+
+-- insert comment with ai!
+vim.keymap.set('i', '<leader>aa', 'ai! ', {desc = 'Insert ai! comment'})
 
 
 -- Telescope configuration
@@ -180,10 +182,3 @@ vim.keymap.set("n", "<C-e>", function() harpoon:list():select(4) end)
 -- Toggle previous & next buffers stored within Harpoon list
 vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
 vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
-
--- Configure Free Pilot
-vim.g.free_pilot_backend = 'openrouter'
-vim.g.free_pilot_openrouter_model = 'qwen/qwen-2.5-coder-32b-instruct'
-vim.g.free_pilot_openrouter_api_key = os.getenv('OPENROUTER_API_KEY')
-vim.g.free_pilot_autostart = 1
-

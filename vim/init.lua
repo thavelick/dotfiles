@@ -19,13 +19,12 @@ require('packer').startup(function(use)
   use 'tpope/vim-commentary'
   use 'tpope/vim-sleuth'
   use 'wbthomason/packer.nvim'
-  use 'freepilot/vim-free-pilot'
   use {'folke/tokyonight.nvim', tag = 'v2.2.0'}
   use 'jdonaldson/vaxe'
 end)
 
 -- Key timeout
-vim.o.timeoutlen = 250
+vim.o.timeoutlen = 50
 
 -- enable line numbers
 vim.wo.number = true
@@ -57,13 +56,6 @@ vim.api.nvim_set_keymap('n', '<esc>', ':nohlsearch<cr>:ccl<cr>', { noremap = tru
 -- Configure which-key
 local which_key = require('which-key')
 which_key.setup({})
-
---- Configure Free Pilot
-vim.g.free_pilot_backend = 'openrouter'
-vim.g.free_pilot_openrouter_model = 'qwen/qwen-2.5-coder-32b-instruct'
-vim.g.free_pilot_openrouter_api_key = os.getenv('OPENROUTER_API_KEY')
-vim.g.free_pilot_autostart = 1
-
 
 -- disable the arrow keys so I actually learn to use hjkl
 for _, key in ipairs({'<up>', '<down>', '<left>', '<right>'}) do

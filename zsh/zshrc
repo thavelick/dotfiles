@@ -67,10 +67,9 @@ alias ed="busybox ed"
 alias nc="busybox nc"
 alias nslookup="busybox nslookup"
 alias mailsync="mbsync primary && notmuch new"
-alias llmt="llm --model o1-mini"
-alias llmg="llm --model gemini-2.0-flash -o google_search 1"
-alias llmp="llm --model gemini-2.0-pro-exp-02-05"
-alias llmb="llm --model gemini-2.0-flash -s 'be relatively brief. Your answer should fit on a standard 80x25 terminal screen.'"
+alias llmt="llm --model openrouter/google/gemini-2.5-pro-exp-03-25:free"
+alias llmg="llm --model openrouter/google/gemini-2.0-flash-001 -o google_search 1"
+alias llmb="llm --model openrouter/google/gemini-2.0-flash-lite-001 -s 'be relatively brief. Your answer should fit on a standard 80x25 terminal screen.'"
 
 alias namedcat='awk '\''FNR==1 {print "==> " FILENAME " <=="} {print}'\'
 summary () {

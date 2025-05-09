@@ -40,6 +40,7 @@ export PYTHONPATH=.
 export MOZ_ENABLE_WAYLAND="1"
 export XKB_DEFAULT_LAYOUT="us(colemak)"
 export XKB_DEFAULT_OPTIONS=ctrl:nocaps
+export MANPAGER='nvim +Man!'
 
 source "$DOTFILES_HOME/zsh/keys.zsh"
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

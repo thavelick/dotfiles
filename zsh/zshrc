@@ -68,11 +68,16 @@ alias ed="busybox ed"
 alias nc="busybox nc"
 alias nslookup="busybox nslookup"
 alias mailsync="mbsync primary && notmuch new"
-alias llmt="llm --model openrouter/google/gemini-2.5-pro-exp-03-25:free"
-alias llmg="llm --model openrouter/google/gemini-2.0-flash-001 -o google_search 1"
-alias llmb="llm --model openrouter/google/gemini-2.0-flash-lite-001 -s 'be relatively brief. Your answer should fit on a standard 80x25 terminal screen.'"
-
+alias llmt="llm --model thinking"
+alias llmg="llm --model grounded -o google_search 1"
+alias llmb="llm --model fast -s 'be relatively brief. Your answer should fit on a standard 80x25 terminal screen.'"
 alias namedcat='awk '\''FNR==1 {print "==> " FILENAME " <=="} {print}'\'
+
+llmc () {
+  llm --model thinking -s 'code in python (preferred) or zsh (for archlinux, when it seems like a thing that makes a good one liner) unless otherwise specified. Keep it as simple and brief as possible. Output only the code requested, no commentary. Only one example.' --xl "$@" |
+  sed 's/^[[:space:]]*//;s/[[:space:]]*$//' |
+  tee >(wl-copy -n)
+}
 summary () {
   curl -s "https://r.jina.ai/$1" | llm "summarize this text" | pandoc -f markdown -t html > /tmp/summary.html && firefox /tmp/summary.html
 }

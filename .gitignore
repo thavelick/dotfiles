@@ -5,4 +5,5 @@ QtProject.conf
 .aider*
 .DS_Store
 .claude
+CLAUDE.local.md
 scratch/

@@ -1,4 +1,5 @@
 name: CI
+# Testing Docker layer caching performance
 
 on:
   push:

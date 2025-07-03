@@ -9,6 +9,18 @@ This repository contains a modular, portable zsh configuration.
 - Claude can create and run scripts in `scratch/` for debugging
 - Example: `scratch/debug_fzf.zsh` - script to debug FZF loading issues
 
+### Development Workflow
+- Always do work on a new branch, not main
+- When user says "Review time":
+  a. Make sure we're not on main branch
+  b. Commit what we've done
+  c. Push to remote
+  d. Create a PR with `gh`
+- When user says "made suggestions on the pr":
+  - Get PR comments with `gh api repos/OWNER/REPO/pulls/PULL_NUMBER/comments`
+  - Address those comments
+  - Watch out for multiple PR comments on one code line
+
 ## Testing
 - After making changes to zsh config, test by sourcing `.zshrc` and running manual tests
 - Check FZF integration with Ctrl+R for history search

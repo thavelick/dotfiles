@@ -7,19 +7,19 @@ trim_string() {
     # Remove all leading white-space.
     # '${1%%[![:space:]]*}': Strip everything but leading white-space.
     # '${1#${XXX}}': Remove the white-space from the start of the string.
-    trim=${1#${1%%[![:space:]]*}}
+    trim=${1#"${1%%[![:space:]]*}"}
 
     # Remove all trailing white-space.
     # '${trim##*[![:space:]]}': Strip everything but trailing white-space.
     # '${trim%${XXX}}': Remove the white-space from the end of the string.
-    trim=${trim%${trim##*[![:space:]]}}
+    trim=${trim%"${trim##*[![:space:]]}"}
 
     printf '%s\n' "${trim}"
 }
 
 while true; do
     upower_output=$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep percentage: | cut -f2 -d ":")
-    battery_percent=$(trim_string $upower_output)
+    battery_percent=$(trim_string "$upower_output")
     clock="$(date +'%a %I:%M %p %m-%d')"
     cpu="$(top -bn1 | grep Cpu | awk '{print $2}')"
     mem="$(free -h | awk '/^Mem/ {print $3 "/" $2}')"

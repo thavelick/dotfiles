@@ -48,12 +48,12 @@ jobs:
     - name: Check shellcheck ratchet
       run: |
         # Count issues in PR branch (current)
-        CURRENT_COUNT=$(find . -name "*.sh" -o -name "*.zsh" | grep -v ".git" | grep -v "scratch" | xargs shellcheck 2>/dev/null | wc -l)
+        CURRENT_COUNT=$(find . -name "*.sh" -o -name "init" | grep -v ".git" | grep -v "scratch" | xargs shellcheck 2>/dev/null | wc -l)
         echo "PR branch issues: $CURRENT_COUNT"
         
         # Switch to main and count issues
         git checkout origin/main
-        MAIN_COUNT=$(find . -name "*.sh" -o -name "*.zsh" | grep -v ".git" | grep -v "scratch" | xargs shellcheck 2>/dev/null | wc -l)
+        MAIN_COUNT=$(find . -name "*.sh" -o -name "init" | grep -v ".git" | grep -v "scratch" | xargs shellcheck 2>/dev/null | wc -l)
         echo "Main branch issues: $MAIN_COUNT"
         
         # Compare and report

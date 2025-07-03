@@ -33,36 +33,14 @@ jobs:
     - name: Run tests
       run: make test
 
-  shellcheck-ratchet:
+  shellcheck:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
         
     - name: Install shellcheck
       run: sudo apt-get update && sudo apt-get install -y shellcheck
       
-    - name: Check shellcheck ratchet
-      run: |
-        # Count issues in PR branch (current)
-        CURRENT_COUNT=$(find . -name "*.sh" -o -path "./river/init" | grep -v ".git" | grep -v "scratch" | xargs shellcheck 2>/dev/null | wc -l)
-        echo "PR branch issues: $CURRENT_COUNT"
-        
-        # Switch to main and count issues
-        git checkout origin/main
-        MAIN_COUNT=$(find . -name "*.sh" -o -path "./river/init" | grep -v ".git" | grep -v "scratch" | xargs shellcheck 2>/dev/null | wc -l)
-        echo "Main branch issues: $MAIN_COUNT"
-        
-        # Compare and report
-        if [ "$CURRENT_COUNT" -gt "$MAIN_COUNT" ]; then
-          echo "❌ Shellcheck issues increased from $MAIN_COUNT to $CURRENT_COUNT"
-          echo "Please fix new shellcheck issues before merging"
-          exit 1
-        elif [ "$CURRENT_COUNT" -lt "$MAIN_COUNT" ]; then
-          echo "🎉 Shellcheck issues decreased from $MAIN_COUNT to $CURRENT_COUNT - great job!"
-        else
-          echo "✅ Shellcheck issues unchanged: $CURRENT_COUNT"
-        fi
+    - name: Run shellcheck
+      run: make shellcheck

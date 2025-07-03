@@ -17,7 +17,7 @@ elif grep -qF Debian /etc/issue; then
   debian/install.sh
 else # Assume Arch or derivatives
   sudo pacman -Syu
-  missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort arch/packages))
+  missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort <(cat arch/packages-gui arch/packages-cli)))
   if ! pacman -Qq yay > /dev/null; then
     echo "yay block"
     sudo pacman -S --needed git base-devel

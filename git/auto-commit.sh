@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 echo "staging files"
 git add --intent-to-add .
 git add -p

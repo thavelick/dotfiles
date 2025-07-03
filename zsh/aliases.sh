@@ -1,3 +1,4 @@
+#!/bin/bash
 # Ensure DOTFILES_HOME is set
 [[ -z "$DOTFILES_HOME" ]] && echo "Warning: DOTFILES_HOME not set" >&2
 
@@ -8,7 +9,7 @@ alias ls='ls --color=auto'
 command_exists nvim && alias vim='nvim'
 
 # Diff alias - use GNU diff color if available
-[[ -n $(diff --version 2>/dev/null | grep GNU) ]] && alias diff='diff --color'
+diff --version 2>/dev/null | grep -q GNU && alias diff='diff --color'
 
 # Date alias for macOS compatibility
 [[ ! -f /opt/homebrew/bin/gdate ]] && alias gdate='date'
@@ -24,13 +25,13 @@ if command_exists python3; then
 fi
 
 # Project-specific aliases
-[[ -f "$HOME/Projects/ai-asker/ask.py" ]] && alias ask="$HOME/Projects/ai-asker/ask.py"
-[[ -f "$HOME/Projects/ai-asker/ask.py" ]] && alias ask4="$HOME/Projects/ai-asker/ask.py --model gpt-4"
-[[ -f "$HOME/Projects/dotfiles/git/auto-commit.zsh" ]] && alias autocommit="$HOME/Projects/dotfiles/git/auto-commit.zsh"
-[[ -f "$DOTFILES_HOME/ghreadme.sh" ]] && alias ghreadme="$DOTFILES_HOME/ghreadme.sh"
+[[ -f "$HOME/Projects/ai-asker/ask.py" ]] && alias ask='$HOME/Projects/ai-asker/ask.py'
+[[ -f "$HOME/Projects/ai-asker/ask.py" ]] && alias ask4='$HOME/Projects/ai-asker/ask.py --model gpt-4'
+[[ -f "$HOME/Projects/dotfiles/git/auto-commit.sh" ]] && alias autocommit='$HOME/Projects/dotfiles/git/auto-commit.sh'
+[[ -f "$DOTFILES_HOME/ghreadme.sh" ]] && alias ghreadme='$DOTFILES_HOME/ghreadme.sh'
 
 if [[ -f "$HOME/Projects/stock-tsv/venv/bin/python3" ]] && [[ -f "$HOME/Projects/stock-tsv/stock_tsv.py" ]] && command_exists wl-copy; then
-    alias clipstocks="SYMBOLS=VFIAX,VTIVX,VTSAX $HOME/Projects/stock-tsv/venv/bin/python3 $HOME/Projects/stock-tsv/stock_tsv.py | wl-copy"
+    alias clipstocks='SYMBOLS=VFIAX,VTIVX,VTSAX $HOME/Projects/stock-tsv/venv/bin/python3 $HOME/Projects/stock-tsv/stock_tsv.py | wl-copy'
 fi
 
 # Media player aliases

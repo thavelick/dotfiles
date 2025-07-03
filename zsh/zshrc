@@ -11,11 +11,11 @@ if [[ "$PROFILE_STARTUP" == true || "$PROFILE_ALL" == true ]]; then
 fi
 
 # Source helper functions first - needed by other modules
-source "$HOME/Projects/dotfiles/zsh/helpers.zsh"
+source "$HOME/Projects/dotfiles/zsh/helpers.sh"
 
 # Source all modular configuration files
 source "$DOTFILES_HOME/zsh/core.zsh"      # Core settings and environment
-source "$DOTFILES_HOME/zsh/aliases.zsh"   # Command aliases
+source "$DOTFILES_HOME/zsh/aliases.sh"   # Command aliases
 source "$DOTFILES_HOME/zsh/functions.zsh" # Functions
 source "$DOTFILES_HOME/zsh/prompt.zsh"    # Prompt configuration
 source "$DOTFILES_HOME/zsh/plugins.zsh"   # Plugin loading

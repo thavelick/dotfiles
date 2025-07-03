@@ -1,7 +1,6 @@
-#!/bin/zsh 
+#!/bin/bash 
 # Copyright (C) 2001-2020  Alex Schroeder <alex@gnu.org>
-# Copyright (C) 2022 Tristan Havelick (tristan@havelick.com) 
-#  for modifications to work with zsh
+# Copyright (C) 2025 Tristan Havelick (tristan@havelick.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,10 +29,9 @@
 
 # To install, source this file from your ~/.zshrc file:
 #
-#     source gemini.zsh
+#     source gemini.sh
 
 gemini () {
-    setopt local_options BASH_REMATCH
     if [[ $1 =~ ^((gemini)://)?([^/:]+)(:([0-9]+))?/(.*)$ ]]; then
 	  schema=${BASH_REMATCH[3]:-gemini}
 	  echo "schema: $schema"
@@ -43,11 +41,11 @@ gemini () {
 	  echo "port: $port"
 	  url_path=${BASH_REMATCH[7]}
 	  echo "url path: $url_path"
-	  echo Contacting $host:$port...
+	  echo Contacting "$host":"$port"...
 	  echo -e "$schema://$host:$port/$url_path\r\n" \
 	    | openssl s_client -quiet -connect "$host:$port" 2>/dev/null
     else
-	  echo $1 is not a Gemini URL
+	  echo "$1" is not a Gemini URL
     fi
 }
 

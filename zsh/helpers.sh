@@ -1,4 +1,5 @@
-# Helper functions for portable zsh configuration
+#!/bin/bash
+# Helper functions for portable shell configuration
 
 # Check if a command exists
 command_exists() {
@@ -7,7 +8,8 @@ command_exists() {
 
 # Source a file if it exists
 source_if_exists() {
-    [[ -f "$1" ]] && source "$1"
+    # shellcheck disable=SC1090  # Dynamic source paths can't be statically analyzed
+    [[ -f "$1" ]] && . "$1"
 }
 
 # Get clipboard command based on what's available

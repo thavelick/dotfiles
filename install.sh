@@ -32,7 +32,7 @@ elif grep -qF Raspbian /etc/issue; then
 elif grep -qF Debian /etc/issue; then
   debian/install.sh
 else # Assume Arch or derivatives
-  sudo pacman -Syu
+  sudo pacman -Syu --noconfirm
   
   # Choose package list based on GUI flag
   if [ "$NO_GUI" = true ]; then
@@ -43,7 +43,7 @@ else # Assume Arch or derivatives
   
   if ! pacman -Qq yay > /dev/null; then
     echo "yay block"
-    sudo pacman -S --needed git base-devel
+    sudo pacman -S --needed --noconfirm git base-devel
     mkdir -p "$HOME/src"
     [[ -d $HOME/src/yay ]] || git clone https://aur.archlinux.org/yay.git ~/src/yay
     cd "$HOME/src/yay" || exit

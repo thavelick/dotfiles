@@ -70,5 +70,5 @@ help:
 		| grep -v help \
 		| awk 'BEGIN {FS = ":"}; \
 		{printf "    make $(bold)$(TAB)$(reset)\n", \
-			$$1}'
+			$$1}' || true
 	@echo -e ""

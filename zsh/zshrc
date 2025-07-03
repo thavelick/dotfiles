@@ -1,258 +1,34 @@
-# Profiling via:
-# https://kev.inburke.com/kevin/profiling-zsh-startup-time/
+# Portable Zsh configuration
+# This file sources modular configuration files that gracefully handle missing dependencies
+
+# Profiling support (keep at top for accurate measurements)
 : "${PROFILE_STARTUP:=false}"
 : "${PROFILE_ALL:=false}"
-# Run this to get a profile trace and exit: time zsh -i -c echo
-# Or: time PROFILE_STARTUP=true /bin/zsh -i --login -c echo
 if [[ "$PROFILE_STARTUP" == true || "$PROFILE_ALL" == true ]]; then
-    # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
     PS4=$'%D{%H:%M:%S.%.} %N:%i> '
-    #zmodload zsh/datetime
-    #PS4='+$EPOCHREALTIME %N:%i> '
     exec 3>&2 2>/tmp/zsh_profile.$$
     setopt xtrace prompt_subst
 fi
-#
-PATH=$PATH:$HOME/.local/bin
 
-HISTSIZE=100000
-SAVEHIST=100000
-HISTFILE=~/.cache/zsh/history
-HISTORY_IGNORE="(ls|cd|pwd|exit|cd)*"
+# Source helper functions first - needed by other modules
+source "$HOME/Projects/dotfiles/zsh/helpers.zsh"
 
-setopt EXTENDED_HISTORY      # Write the history file in the ':start:elapsed;command' format.
-setopt INC_APPEND_HISTORY    # Write to the history file immediately, not when the shell exits.
-setopt SHARE_HISTORY         # Share history between all sessions.
-setopt HIST_IGNORE_DUPS      # Do not record an event that was just recorded again.
-setopt HIST_IGNORE_ALL_DUPS  # Delete an old recorded event if a new event is a duplicate.
-setopt HIST_IGNORE_SPACE     # Do not record an event starting with a space.
-setopt HIST_SAVE_NO_DUPS     # Do not write a duplicate event to the history file.
-setopt HIST_VERIFY           # Do not execute immediately upon history expansion.
-setopt APPEND_HISTORY        # append to history file (Default)
-setopt HIST_NO_STORE         # Don't store history commands
-setopt HIST_REDUCE_BLANKS    # Remove superfluous blanks from each command line being added to the history.
+# Source all modular configuration files
+source "$DOTFILES_HOME/zsh/core.zsh"      # Core settings and environment
+source "$DOTFILES_HOME/zsh/aliases.zsh"   # Command aliases
+source "$DOTFILES_HOME/zsh/functions.zsh" # Functions
+source "$DOTFILES_HOME/zsh/prompt.zsh"    # Prompt configuration
+source "$DOTFILES_HOME/zsh/plugins.zsh"   # Plugin loading
 
-export DOTFILES_HOME=$HOME/Projects/dotfiles
-export EDITOR=nvim
-export BROWSER=firefox
-export GPG_TTY=$TTY
-export PYTHONPATH=.
-export MOZ_ENABLE_WAYLAND="1"
-export XKB_DEFAULT_LAYOUT="us(colemak)"
-export XKB_DEFAULT_OPTIONS=ctrl:nocaps
-export MANPAGER='nvim +Man!'
+# Source key bindings (if exists)
+source_if_exists "$DOTFILES_HOME/zsh/keys.zsh"
 
-source "$DOTFILES_HOME/zsh/keys.zsh"
-source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-ZSH_HIGHLIGHT_STYLES[comment]='fg=blue'
-
-[[ -n $(diff --version | grep GNU) ]] && alias diff='diff --color'
-[[ ! -f /opt/homebrew/bin/gdate ]] && alias gdate='date'
-alias vat="vim -R -c 'set nomodifiable' -c 'nmap q :q!<CR>' -c 'set norelativenumber'"
-alias bat='echo "just use vat"'
-alias batp='echo "just use vat"'
-alias count_tokens='python3 -c '\''import tiktoken, sys; encoding = tiktoken.encoding_for_model("gpt-3.5-turbo"); token_count = len(encoding.encode(sys.stdin.read())); print(token_count)'\'''
-
-which nvim > /dev/null && alias vim='nvim'
-alias ls='ls --color=auto'
-alias ask="$HOME/Projects/ai-asker/ask.py"
-alias ask4="$HOME/Projects/ai-asker/ask.py --model gpt-4"
-alias autocommit="$HOME/Projects/dotfiles/git/auto-commit.zsh"
-alias clipstocks="SYMBOLS=VFIAX,VTIVX,VTSAX $HOME/Projects/stock-tsv/venv/bin/python3 $HOME/Projects/stock-tsv/stock_tsv.py | wl-copy"
-alias ghreadme="$DOTFILES_HOME/ghreadme.sh"
-alias mpv="mpv --no-terminal"
-alias mpvi="mpv --no-terminal --loop-file"
-alias ed="busybox ed"
-alias nc="busybox nc"
-alias nslookup="busybox nslookup"
-alias mailsync="mbsync primary && notmuch new"
-alias llmt="llm --model thinking"
-alias llmg="llm --model grounded -o google_search 1"
-alias llmb="llm --model fast -s 'be relatively brief. Your answer should fit on a standard 80x25 terminal screen.'"
-alias namedcat='awk '\''FNR==1 {print "==> " FILENAME " <=="} {print}'\'
-
-llmc () {
-  llm --model thinking -s 'code in python (preferred) or zsh (for archlinux, when it seems like a thing that makes a good one liner) unless otherwise specified. Keep it as simple and brief as possible. Output only the code requested, no commentary. Only one example.' --xl "$@" |
-  sed 's/^[[:space:]]*//;s/[[:space:]]*$//' |
-  tee >(wl-copy -n)
-}
-summary () {
-  curl -s "https://r.jina.ai/$1" | llm "summarize this text" | pandoc -f markdown -t html > /tmp/summary.html && firefox /tmp/summary.html
-}
-qr-paste () {
-  [[ -f /usr/sbin/wl-paste ]] && /usr/sbin/wl-paste | \
-    qrencode -o - -t PNG | imv -
-}
-
-def() {
-  sdcv -n --utf8-output "$@" 2>&1 | sed 's/-->/<p>-->/g' | elinks -dump | less -EXFRfM
-}
-
-uniclip() {
-    cat $DOTFILES_HOME/zsh/latex_symbols.txt| fzf --query $1 | tr -s ' ' | cut -d ' ' -f2 | tr -d "\n" | wl-copy
-}
-
-foreground() {
-    fg
-}
-
-q() {
-  local url="$1"
-  local question="$2"
-
-  # Fetch the URL content through Jina
-  local content=$(curl -s "https://r.jina.ai/$url")
-
-  # Check if the content was retrieved successfully
-  if [ -z "$content" ]; then
-    echo "Failed to retrieve content from the URL."
-    return 1
-  fi
-
-  system="
-  You are a helpful assistant that can answer questions about the content.
-  Reply concisely, in a few sentences.
-
-  The content:
-  ${content}
-  "
-
-  # Use llm with the fetched content as a system prompt
-  llm prompt "$question" -s "$system"
-}
-
-qv() {
-  local url="$1"
-  local question="$2"
-
-  # Fetch the URL content through Jina
-  local subtitle_url=$(yt-dlp -q --skip-download --convert-subs srt --write-sub --sub-langs "en" --write-auto-sub --print "requested_subtitles.en.url" "$url")
-  local content=$(curl -s "$subtitle_url" | sed '/^$/d' | grep -v '^[0-9]*$' | grep -v '\-->' | sed 's/<[^>]*>//g' | tr '\n' ' ')
-
-  # Check if the content was retrieved successfully
-  if [ -z "$content" ]; then
-    echo "Failed to retrieve content from the URL."
-    return 1
-  fi
-}
-
-zle -N foreground
-# use ctrl-z to toggle in and out of bg
-if [[ $- == *i* ]]; then
-  stty susp undef
-  bindkey "^Z" foreground
+# River auto-start on tty1 (only if river is installed)
+if [[ $(tty) == /dev/tty1 ]] && command_exists river; then
+    exec river
 fi
 
-# If windows defaults us to it's home directory, swtich to the unix one
-[ $(pwd) = "/mnt/c/Users/trist" ] && cd $HOME || true
-
-# store secrets outside of source control
-[ -f $HOME/secrets.zsh ] && source $HOME/secrets.zsh || true
-
-# If this is a work computer, include work specific stuff
-[ -f $HOME/work.zsh ] && source $HOME/work.zsh && source $DOTFILES_HOME/work/github.zsh || true
-
-source $DOTFILES_HOME/gemini.zsh
-
-setopt interactive_comments
-$HOME/Projects/nag-runner/nag_runner.py
-
-
-# prompt
-autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' unstagedstr '🚧'
-zstyle ':vcs_info:*' stagedstr '💾'
-
-preexec() {
-  exec_start_time=$(gdate +%s%3N) # Record start time of the command in milliseconds
-}
-
-set_prompt_time() {
-  # Set prompt_time to show how long the last command took to run: 🐢 1m2s
-  # It will only show if the command took longer than 5 seconds.
-  # If the command took longer than 60 seconds, it will show minutes and
-  # seconds.
-
-  prompt_time=''
-  if [ "$exec_start_time" ]; then
-    exec_end_time=$(gdate +%s%3N) # Record end time of the command in milliseconds
-    exec_duration=$((exec_end_time - exec_start_time)) # Calculate command duration in milliseconds
-    exec_duration_seconds=$((exec_duration / 1000)) # Convert duration to seconds
-
-    if (( exec_duration_seconds >= 5 )); then
-      clock_icon="🐢"
-      if (( exec_duration_seconds >= 60 )); then
-        exec_duration_minutes=$((exec_duration_seconds / 60))
-        exec_duration_seconds=$((exec_duration_seconds % 60))
-        prompt_time="${clock_icon} ${exec_duration_minutes}m${exec_duration_seconds}s "
-      else
-        prompt_time="${clock_icon} ${exec_duration_seconds}s "
-      fi
-    fi
-  fi
-  exec_start_time=''
-}
-
-precmd() {
-  set_prompt_time
-
-  current_directory=$(pwd)
-  if [[ $current_directory != $HOME/Projects/* ]]; then
-    # skip doing stuff with git prompts if we're outside of ~/Projects
-    # to avoid running rogue payloads in untrusted folders when we automatically
-    # run git commands
-
-    # make sure any previous prompts from within ~/Projects are cleared out
-    vcs_info_msg_0_=''
-    return
-  fi
-
-  unpushed_commits=''
-  untracked_files=''
-  if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
-    # we're in a git project, show git info in the prompt
-    unpushed_count=$(git rev-list --count @{u}.. 2>/dev/null || echo -1)
-    if [[ $unpushed_count -eq -1 ]]; then
-      # if we can't get the count, assume we're not tracking a remote
-      unpushed_commits='📤'
-    elif [[ $unpushed_count -gt 0 ]]; then
-      unpushed_commits='🔥'
-    fi
-    if [[ -n $(git ls-files --others --exclude-standard) ]]; then
-      untracked_files='🌱'
-    fi
-  fi
-  zstyle ':vcs_info:git:*' formats "(%b%u%c${unpushed_commits}${untracked_files})%m "
-  vcs_info
-}
-
-distro_icon() {
-  if [ ! -f /etc/os-release ]; then
-    echo ""
-  elif grep -q 'ID=debian' /etc/os-release; then
-    echo "꩜"
-  elif grep -q 'ID=arch' /etc/os-release; then
-    echo "⮝"
-  else
-    echo ""
-  fi
-}
-setopt prompt_subst
-PROMPT='${prompt_time}%~ $(distro_icon) ${vcs_info_msg_0_}% ➜ '
-
-if [[ $(tty) == /dev/tty1 ]]; then
-  exec river
-fi
-
-autoload -z edit-command-line
-zle -N edit-command-line
-bindkey "^X^E" edit-command-line
-source <(fzf --zsh)
-
+# End profiling
 if [[ "$PROFILE_STARTUP" == true ]]; then
     unsetopt xtrace
     exec 2>&3 3>&-

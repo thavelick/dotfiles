@@ -1,0 +1,24 @@
+FROM archlinux:latest
+
+# Install only what's needed to run install.sh
+RUN pacman -Syu --noconfirm && \
+    pacman -S --noconfirm \
+        sudo \
+        zsh \
+        && pacman -Scc --noconfirm
+
+# Create a test user with sudo privileges
+RUN useradd -m -G wheel -s /bin/zsh testuser && \
+    echo '%wheel ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+# Set up environment
+USER testuser
+WORKDIR /home/testuser
+ENV DOTFILES_HOME=/home/testuser/Projects/dotfiles
+ENV PATH="/home/testuser/.local/bin:$PATH"
+
+# Create the Projects directory
+RUN mkdir -p /home/testuser/Projects
+
+# Let install.sh do all the heavy lifting
+CMD ["sh", "-c", "cd $DOTFILES_HOME && ./install.sh --no-gui && exec /bin/zsh -l"]

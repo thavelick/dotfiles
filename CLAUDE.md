@@ -20,6 +20,7 @@ This repository contains a modular, portable zsh configuration.
   - Get PR comments with `gh api repos/OWNER/REPO/pulls/PULL_NUMBER/comments`
   - Address those comments
   - Watch out for multiple PR comments on one code line
+- When user says "merge", do a gh pr merge with a merge commit and use the option to delete local and remote branches
 
 ## Testing
 - After making changes to zsh config, test by sourcing `.zshrc` and running manual tests

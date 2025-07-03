@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # # Sync offpunk
-cd $HOME/src/AV-98-offline
+cd "$HOME"/src/AV-98-offline || exit
 python3 offpunk.py --sync
 
 # Sync email

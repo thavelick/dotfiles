@@ -7,12 +7,6 @@ if [ "$(uname)" = 'Darwin' ]; then
   if [ -n "$missing_packages" ]; then
     brew install "$missing_packages"
   fi
-elif grep -qF Raspbian /etc/issue; then
-  sudo apt-get update
-  sudo apt-get upgrade
-  missing_packages=$(comm  -13 <(dpkg-query -f '${Package}\n' -W| sort) <(sort raspbian/packages))
-  sudo apt-get install "$missing_packages"
-  git/setup.sh
 elif grep -qF Debian /etc/issue; then
   debian/install.sh
 else # Assume Arch or derivatives

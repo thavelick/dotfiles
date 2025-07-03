@@ -11,6 +11,7 @@ This repository contains a modular, portable zsh configuration.
 
 ### Development Workflow
 - Always do work on a new branch, not main
+- When working on a ticket, put the ticket number in commit message and PR
 - When user says "Review time":
   a. Make sure we're not on main branch
   b. Commit what we've done

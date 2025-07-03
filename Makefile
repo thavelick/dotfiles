@@ -20,6 +20,10 @@ test: # Run automated tests in container
 	@echo "Running zshrc tests.."
 	docker run --rm -v "$(shell pwd)":/home/testuser/Projects/dotfiles zshrc-test /bin/zsh -c "ln -sf \$$DOTFILES_HOME/zsh/zshrc ~/.zshrc && source ~/.zshrc && source /home/testuser/Projects/dotfiles/zsh/test.zsh"
 
+shellcheck: # Run shellcheck on all shell files
+	@echo "Running shellcheck on shell files.."
+	find . -name "*.sh" -o -path "./river/init" | grep -v ".git" | grep -v "scratch" | xargs shellcheck
+
 # -----------------------------------------------------------
 # CAUTION: If you have a file with the same name as make
 # command, you need to add it to .PHONY below, otherwise it

@@ -44,10 +44,8 @@ isync
 iwd
 jdk8-openjdk
 kiwix-tools
-libffi7
 libqalculate
 libretro-mesen
-libwebp0.5
 linux
 linux-firmware
 lua51-busted

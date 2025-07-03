@@ -3,8 +3,6 @@
 zsh_plugins_path=$HOME/.zsh
 mkdir -p $zsh_plugins_path
 
-# Make the cache folder for history
-mkdir -p "$HOME/.cache/zsh"
 
 # install syntax highlighting
 syntax_highlight_path=$zsh_plugins_path/zsh-syntax-highlighting

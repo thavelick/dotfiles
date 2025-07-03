@@ -10,6 +10,8 @@ if [[ "$PROFILE_STARTUP" == true || "$PROFILE_ALL" == true ]]; then
     setopt xtrace prompt_subst
 fi
 
+export DOTFILES_HOME="$HOME/Projects/dotfiles"
+
 # Source helper functions first - needed by other modules
 source "$HOME/Projects/dotfiles/zsh/helpers.sh"
 

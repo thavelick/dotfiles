@@ -1,0 +1,21 @@
+# Claude Code Usage Notes
+
+## Project Structure
+This repository contains a modular, portable zsh configuration.
+
+## Development
+- Use the `scratch/` directory for one-off debugging scripts and temporary files
+- `scratch/` is gitignored, so it's safe for experimentation
+- Claude can create and run scripts in `scratch/` for debugging
+- Example: `scratch/debug_fzf.zsh` - script to debug FZF loading issues
+
+## Testing
+- After making changes to zsh config, test by sourcing `.zshrc` and running manual tests
+- Check FZF integration with Ctrl+R for history search
+- Test aliases like `ls`, `vim`, `namedcat`
+- Verify prompt shows correct OS icons and git status
+
+## Code Style
+- Use comments sparingly to explain intent (answer "why") for future readers
+- Avoid comments that explain what Claude is doing or what the code does
+- Comments should add value, not state the obvious

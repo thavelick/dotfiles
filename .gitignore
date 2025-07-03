@@ -4,3 +4,5 @@ QtProject.conf
 .uuid
 .aider*
 .DS_Store
+.claude
+scratch/

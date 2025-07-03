@@ -1,7 +1,6 @@
 #!/bin/bash 
 # Copyright (C) 2001-2020  Alex Schroeder <alex@gnu.org>
-# Copyright (C) 2022 Tristan Havelick (tristan@havelick.com) 
-#  for modifications to work with bash
+# Copyright (C) 2025 Tristan Havelick (tristan@havelick.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

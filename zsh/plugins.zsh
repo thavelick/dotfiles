@@ -1,5 +1,3 @@
-# Plugin loading with existence checks
-
 # Zsh syntax highlighting
 source_if_exists $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 if [[ -f $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
@@ -18,7 +16,7 @@ if command_exists fzf; then
         source /usr/local/opt/fzf/shell/key-bindings.zsh
     elif [[ -f $HOME/.fzf/shell/key-bindings.zsh ]]; then
         source $HOME/.fzf/shell/key-bindings.zsh
-    elif command_exists fzf; then
+    else
         # Try to source using fzf --zsh if available (newer versions)
         eval "$(fzf --zsh 2>/dev/null || true)"
     fi

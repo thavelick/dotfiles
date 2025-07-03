@@ -49,7 +49,3 @@ is_wayland() {
     [[ -n "$WAYLAND_DISPLAY" ]]
 }
 
-# Check if running under X11
-is_x11() {
-    [[ -n "$DISPLAY" && -z "$WAYLAND_DISPLAY" ]]
-}

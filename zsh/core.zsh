@@ -1,5 +1,3 @@
-# Core universal settings that work on all platforms
-
 # PATH
 export PATH=$PATH:$HOME/.local/bin
 
@@ -30,8 +28,10 @@ export PYTHONPATH=.
 if command_exists nvim; then
     export EDITOR=nvim
     export MANPAGER='nvim +Man!'
-else
+elif command_exists vim; then
     export EDITOR=vim
+else
+    export EDITOR=vi
 fi
 
 # Browser detection - use first available

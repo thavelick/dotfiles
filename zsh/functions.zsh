@@ -1,5 +1,3 @@
-# Functions with dependency checks for portability
-
 # LLM code function
 if command_exists llm; then
     llmc() {

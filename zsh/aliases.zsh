@@ -1,4 +1,5 @@
-# Aliases with existence checks for portability
+# Ensure DOTFILES_HOME is set
+[[ -z "$DOTFILES_HOME" ]] && echo "Warning: DOTFILES_HOME not set" >&2
 
 # Basic aliases that should work everywhere
 alias ls='ls --color=auto'
@@ -28,7 +29,6 @@ fi
 [[ -f "$HOME/Projects/dotfiles/git/auto-commit.zsh" ]] && alias autocommit="$HOME/Projects/dotfiles/git/auto-commit.zsh"
 [[ -f "$DOTFILES_HOME/ghreadme.sh" ]] && alias ghreadme="$DOTFILES_HOME/ghreadme.sh"
 
-# Stock clipboard alias with dependency checks
 if [[ -f "$HOME/Projects/stock-tsv/venv/bin/python3" ]] && [[ -f "$HOME/Projects/stock-tsv/stock_tsv.py" ]] && command_exists wl-copy; then
     alias clipstocks="SYMBOLS=VFIAX,VTIVX,VTSAX $HOME/Projects/stock-tsv/venv/bin/python3 $HOME/Projects/stock-tsv/stock_tsv.py | wl-copy"
 fi
@@ -56,5 +56,4 @@ if command_exists llm; then
     alias llmb="llm --model fast -s 'be relatively brief. Your answer should fit on a standard 80x25 terminal screen.'"
 fi
 
-# AWK utility
 alias namedcat='awk '\''FNR==1 {print "==> " FILENAME " <=="} {print}'\'

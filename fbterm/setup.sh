@@ -1,5 +1,5 @@
 #!/bin/sh
-mkdir -p $HOME/.config/fbterm
+mkdir -p "$HOME"/.config/fbterm
 
-ln -svf $DOTFILES_HOME/fbterm/fbtermrc $HOME/.config/fbterm/fbtermrc
+ln -svf "$DOTFILES_HOME"/fbterm/fbtermrc "$HOME"/.config/fbterm/fbtermrc
 

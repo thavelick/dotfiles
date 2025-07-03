@@ -21,14 +21,13 @@ GUI_PATTERNS=(
     "fontconfig"
     "zenity"
     "lib32-libx"
+    "sdl"
+    "libgl"
+    "glu"
+    "libxss"
+    "libxtst"
 )
 
-# Manual overrides (use sparingly, with justification)
-# Format: package_name:category:reason
-MANUAL_OVERRIDES=(
-    # Add here only if dependency detection fails
-    # Example: "some-package:gui:uses GUI but deps not detected"
-)
 
 # Output files
 GUI_PACKAGES_FILE="arch/packages-gui"
@@ -43,8 +42,8 @@ is_gui_package() {
     local package="$1"
     local deps
     
-    # Get package dependencies
-    if ! deps=$(pacman -Si "$package" 2>/dev/null | grep "^Depends On" | cut -d: -f2-); then
+    # Get package dependencies from installed package (not repository)
+    if ! deps=$(pacman -Qi "$package" 2>/dev/null | grep "^Depends On" | cut -d: -f2-); then
         echo "Warning: Could not get dependencies for $package" >&2
         return 1
     fi
@@ -61,32 +60,6 @@ is_gui_package() {
     return 1
 }
 
-# Function to apply manual overrides
-apply_manual_overrides() {
-    local package="$1"
-    local detected_category="$2"
-    
-    for override in "${MANUAL_OVERRIDES[@]}"; do
-        local pkg_name
-        local category
-        local reason
-        pkg_name=$(echo "$override" | cut -d: -f1)
-        category=$(echo "$override" | cut -d: -f2)
-        reason=$(echo "$override" | cut -d: -f3)
-        
-        if [[ "$package" == "$pkg_name" ]]; then
-            if [[ "$detected_category" != "$category" ]]; then
-                echo "INFO: Manual override for $package: $detected_category -> $category ($reason)" >&2
-            else
-                echo "WARNING: Manual override for $package may be outdated (detection now works)" >&2
-            fi
-            echo "$category"
-            return 0
-        fi
-    done
-    
-    echo "$detected_category"
-}
 
 # Main processing
 echo "Categorizing packages based on dependencies..."
@@ -100,16 +73,6 @@ while IFS= read -r line; do
     
     # Determine category
     if is_gui_package "$package"; then
-        detected_category="gui"
-    else
-        detected_category="cli"
-    fi
-    
-    # Apply manual overrides if any
-    final_category=$(apply_manual_overrides "$package" "$detected_category")
-    
-    # Add to appropriate array
-    if [[ "$final_category" == "gui" ]]; then
         gui_packages+=("$package")
     else
         cli_packages+=("$package")

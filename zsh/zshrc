@@ -28,6 +28,7 @@ if [[ $(tty) == /dev/tty1 ]] && command_exists river; then
     exec river
 fi
 
+
 # End profiling
 if [[ "$PROFILE_STARTUP" == true ]]; then
     unsetopt xtrace

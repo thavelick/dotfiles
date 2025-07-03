@@ -55,7 +55,6 @@ bindkey -M emacs '^[[1;5C' forward-word
 bindkey -M emacs '^[[1;5D' backward-word
 
 
-bindkey '^r' history-incremental-search-backward      # [Ctrl-r] - Search backward incrementally for a specified string. The string may begin with ^ to anchor the search to the beginning of the line.
 bindkey ' ' magic-space                               # [Space] - don't do history expansion
 
 

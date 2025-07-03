@@ -4,6 +4,8 @@ export PATH=$PATH:$HOME/.local/bin
 # History settings
 export HISTSIZE=100000
 export SAVEHIST=100000
+
+mkdir -p ~/.cache/zsh
 export HISTFILE=~/.cache/zsh/history
 export HISTORY_IGNORE="(ls|cd|pwd|exit|cd)*"
 

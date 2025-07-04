@@ -37,7 +37,7 @@ test-all: # Run both minimal and core tests
 	make test
 	make test-core
 
-shellcheck: # Run shellcheck on all shell files
+lint: # Run shellcheck on all shell files
 	@echo "Running shellcheck on shell files.."
 	find . -name "*.sh" -o -path "./river/init" | grep -v ".git" | grep -v "scratch" | xargs shellcheck
 

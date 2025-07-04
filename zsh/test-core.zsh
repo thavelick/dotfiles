@@ -3,7 +3,7 @@
 # Maximal test script for comprehensive zshrc functionality
 set -e
 
-echo "Testing maximal zshrc functionality after full install..."
+echo "Testing core zshrc functionality after core install..."
 
 # Check what shell we're running
 echo "Current shell: $0"
@@ -60,11 +60,11 @@ fi
 echo -n "Testing basic prompt rendering... "
 cd ~
 prompt_output=$(print -P '%~ $(distro_icon)')
-if [[ "$prompt_output" =~ "~" ]] && [[ "$prompt_output" =~ "󰣇" ]]; then
+if [[ "$prompt_output" =~ "~" ]] && [[ "$prompt_output" =~ "⮝" ]]; then
     echo "✓"
 else
     echo "✗"
-    echo "Expected: ~ with 󰣇 (Arch icon)"
+    echo "Expected: ~ with ⮝ (container icon)"
     echo "Got: $prompt_output"
     exit 1
 fi
@@ -78,9 +78,10 @@ else
     exit 1
 fi
 
-# Test 8: Ripgrep installation
-echo -n "Testing ripgrep installation... "
-if command -v rg >/dev/null 2>&1; then
+# Test 8: Core package functionality
+echo -n "Testing core package functionality... "
+# Test that core packages are working properly
+if command -v curl >/dev/null 2>&1 && command -v python3 >/dev/null 2>&1; then
     echo "✓"
 else
     echo "✗"
@@ -162,7 +163,7 @@ fi
 
 # Test 17: Package installation verification
 echo -n "Testing CLI package installation... "
-packages_to_check=("git" "tmux" "fzf" "rg" "nvim")
+packages_to_check=("git" "tmux" "fzf" "nvim" "curl" "python3")
 all_installed=true
 for pkg in "${packages_to_check[@]}"; do
     if ! command -v "$pkg" >/dev/null 2>&1; then
@@ -178,5 +179,5 @@ else
     exit 1
 fi
 
-echo "All maximal tests passed! ✓"
-echo "Comprehensive installation and configuration verification complete."
+echo "All core tests passed! ✓"
+echo "Core installation and configuration verification complete."

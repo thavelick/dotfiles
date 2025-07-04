@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
-DOTFILES_HOME=$(pwd)
+# Use environment variable if set, otherwise use current directory
+DOTFILES_HOME=${DOTFILES_HOME:-$(pwd)}
 export DOTFILES_HOME
 
 # Parse command line arguments
@@ -59,18 +60,18 @@ else # Assume Arch or derivatives
   
   # Run setup scripts based on GUI flag
   if [ "$NO_GUI" = false ] && [ "$CORE_ONLY" = false ]; then
-    waybar/setup.sh
-    river/setup.sh
-    foot/setup.sh
-    font/setup.sh
+    "$DOTFILES_HOME"/waybar/setup.sh
+    "$DOTFILES_HOME"/river/setup.sh
+    "$DOTFILES_HOME"/foot/setup.sh
+    "$DOTFILES_HOME"/font/setup.sh
   fi
   
-  git/setup.sh
-  nag_runner/setup.sh
-  amfora/setup.sh
-  tidy/setup.sh
-  tmux/setup.sh
+  "$DOTFILES_HOME"/git/setup.sh
+  "$DOTFILES_HOME"/nag_runner/setup.sh
+  "$DOTFILES_HOME"/amfora/setup.sh
+  "$DOTFILES_HOME"/tidy/setup.sh
+  "$DOTFILES_HOME"/tmux/setup.sh
 fi
 
-vim/setup.sh
-zsh/setup.sh
+"$DOTFILES_HOME"/vim/setup.sh
+"$DOTFILES_HOME"/zsh/setup.sh

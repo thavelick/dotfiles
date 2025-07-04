@@ -7,7 +7,6 @@ ansible
 aspell
 aspell-en
 base
-base-devel
 borg
 brother-hl2170w
 btop
@@ -29,8 +28,6 @@ efibootmgr
 emulationstation-themes
 eslint
 fastfetch
-fzf
-git
 github-cli
 google-gemini-cli
 grub
@@ -60,7 +57,6 @@ msmtp
 msmtp-mta
 mypy
 nasm
-neovim
 nmap
 nodejs
 noto-fonts
@@ -69,7 +65,6 @@ npm
 obsidian
 ollama
 openai-codex
-openssh
 openvpn
 pacman-contrib
 pamixer
@@ -107,9 +102,7 @@ syncthing
 tesseract
 tesseract-data-eng
 texlive-basic
-tidy
 tlp
-tmux
 tokei
 torsocks
 tree
@@ -120,8 +113,6 @@ wavemon
 words
 xq
 yamllint
-yay
 yt-dlp
 zig
 zram-generator
-zsh

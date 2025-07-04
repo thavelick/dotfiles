@@ -5,15 +5,20 @@ export DOTFILES_HOME
 
 # Parse command line arguments
 NO_GUI=false
+CORE_ONLY=false
 while [[ $# -gt 0 ]]; do
   case $1 in
     --no-gui|--cli-only)
       NO_GUI=true
       shift
       ;;
+    --core)
+      CORE_ONLY=true
+      shift
+      ;;
     *)
       echo "Unknown option: $1"
-      echo "Usage: $0 [--no-gui|--cli-only]"
+      echo "Usage: $0 [--no-gui|--cli-only] [--core]"
       exit 1
       ;;
   esac
@@ -34,8 +39,10 @@ elif grep -qF Debian /etc/issue; then
 else # Assume Arch or derivatives
   sudo pacman -Syu --noconfirm
   
-  # Choose package list based on GUI flag
-  if [ "$NO_GUI" = true ]; then
+  # Choose package list based on flags
+  if [ "$CORE_ONLY" = true ]; then
+    missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort arch/packages-core))
+  elif [ "$NO_GUI" = true ]; then
     missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort arch/packages-cli))
   else
     missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort <(cat arch/packages-gui arch/packages-cli)))

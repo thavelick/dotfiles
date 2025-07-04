@@ -33,7 +33,7 @@ jobs:
     - name: Run minimal tests
       run: make test
 
-  test-maximal:
+  test-core:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -42,22 +42,22 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
       
-    - name: Build and test maximal (Arch)
+    - name: Build and test core (Arch)
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: ./Dockerfile.arch
+        file: ./Dockerfile.core
         push: false
-        tags: zshrc-test-arch:latest
+        tags: zshrc-test-core:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        outputs: type=docker,dest=/tmp/zshrc-test-arch.tar
+        outputs: type=docker,dest=/tmp/zshrc-test-core.tar
         
     - name: Load Docker image
-      run: docker load -i /tmp/zshrc-test-arch.tar
+      run: docker load -i /tmp/zshrc-test-core.tar
       
-    - name: Run maximal tests
-      run: make test-arch
+    - name: Run core tests
+      run: make test-core
 
   shellcheck:
     runs-on: ubuntu-latest

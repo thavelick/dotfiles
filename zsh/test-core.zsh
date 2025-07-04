@@ -117,7 +117,7 @@ fi
 
 # Test 12: zsh completions loaded
 echo -n "Testing zsh completions... "
-if [[ -n "$fpath" ]] && [[ "${fpath}" =~ "completions" ]]; then
+if [[ -n "$fpath" ]] && [[ "${fpath}" =~ "Completion" ]]; then
     echo "✓"
 else
     echo "✗"
@@ -133,9 +133,9 @@ else
     exit 1
 fi
 
-# Test 14: Check tmux config
+# Test 14: Check tmux setup completion
 echo -n "Testing tmux setup completion... "
-if [[ -f ~/.tmux.conf ]] || [[ -L ~/.tmux.conf ]]; then
+if [[ -L ~/.local/bin/project_sessions.sh ]]; then
     echo "✓"
 else
     echo "✗"

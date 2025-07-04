@@ -20,5 +20,5 @@ ENV PATH="/home/testuser/.local/bin:$PATH"
 # Create the Projects directory
 RUN mkdir -p /home/testuser/Projects
 
-# Let install.sh do all the heavy lifting
-CMD ["sh", "-c", "cd $DOTFILES_HOME && ./install.sh --no-gui && exec /bin/zsh -l"]
+# Default shell for interactive use
+CMD ["/bin/zsh", "-l"]

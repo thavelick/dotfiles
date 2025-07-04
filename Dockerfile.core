@@ -17,8 +17,12 @@ WORKDIR /home/testuser
 ENV DOTFILES_HOME=/home/testuser/Projects/dotfiles
 ENV PATH="/home/testuser/.local/bin:$PATH"
 
-# Create the Projects directory
+# Create the Projects directory and copy dotfiles
 RUN mkdir -p /home/testuser/Projects
+COPY --chown=testuser:testuser . /home/testuser/Projects/dotfiles
+
+# Run the core installation
+RUN cd $DOTFILES_HOME && ./install.sh --core
 
 # Default shell for interactive use
 CMD ["/bin/zsh", "-l"]

@@ -41,6 +41,14 @@ lint: # Run shellcheck on all shell files
 	@echo "Running shellcheck on shell files.."
 	find . -name "*.sh" -o -path "./river/init" | grep -v ".git" | grep -v "scratch" | xargs shellcheck
 
+check-secret: # Check file or directory for secrets using gitleaks (Usage: make check-secret TARGET=path)
+	@if [ -z "$(TARGET)" ]; then \
+		echo "Usage: make check-secret TARGET=/path/to/file/or/directory"; \
+		exit 1; \
+	fi
+	@echo "Checking $(TARGET) for secrets.."
+	gitleaks dir -v --redact $(TARGET)
+
 # -----------------------------------------------------------
 # CAUTION: If you have a file with the same name as make
 # command, you need to add it to .PHONY below, otherwise it
@@ -74,9 +82,8 @@ reset := $(shell tput sgr0)
 help:
 	@printf '\n'
 	@printf '    $(underline)Available make commands:$(reset)\n\n'
-	@# Print non-check commands with comments
+	@# Print commands with comments
 	@grep -E '^([a-zA-Z0-9_-]+\.?)+:.+#.+$$' $(MAKEFILE_LIST) \
-		| grep -v '^check-' \
 		| grep -v '^env-' \
 		| grep -v '^arg-' \
 		| sed 's/:.*#/: #/g' \

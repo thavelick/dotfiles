@@ -58,7 +58,7 @@ else # Assume Arch or derivatives
   fi
   
   # Run setup scripts based on GUI flag
-  if [ "$NO_GUI" = false ]; then
+  if [ "$NO_GUI" = false ] && [ "$CORE_ONLY" = false ]; then
     waybar/setup.sh
     river/setup.sh
     foot/setup.sh

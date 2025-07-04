@@ -30,7 +30,7 @@ run-core: # Run the Arch Linux test container (core)
 
 test-core: # Run automated tests in Arch container (core)
 	@echo "Running core Arch Linux tests.."
-	docker run --rm zshrc-test-core /bin/zsh -c "source ~/.zshrc && source \$$DOTFILES_HOME/zsh/test-core.zsh"
+	docker run --rm -v "$(shell pwd)":/home/testuser/Projects/dotfiles zshrc-test-core /bin/zsh -c "source ~/.zshrc && source \$$DOTFILES_HOME/zsh/test-core.zsh"
 
 test-all: # Run both minimal and core tests
 	@echo "Running all tests.."

@@ -58,7 +58,6 @@ noto-fonts
 noto-fonts-emoji
 npm
 ollama
-openai-codex
 openvpn
 pamixer
 pandoc-cli

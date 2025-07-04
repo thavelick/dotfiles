@@ -80,7 +80,7 @@ while IFS= read -r line; do
     
     # Determine category
     # Check if package is in core list first
-    if [[ " ${core_packages[*]} " =~ " $package " ]]; then
+    if [[ " ${core_packages[*]} " == *" ${package} "* ]]; then
         # Skip core packages - they're manually maintained
         continue
     elif is_gui_package "$package"; then

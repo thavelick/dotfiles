@@ -10,7 +10,6 @@ if [ -n "$missing_packages" ]; then
   sudo apt install $missing_packages
 fi
 
-zig/install.sh
 river/install.sh
 river/setup.sh
 amfora/setup.sh
@@ -19,4 +18,3 @@ foot/setup.sh
 git/setup.sh
 nag_runner/setup.sh
 waybar/setup.sh
-sway/setup.sh

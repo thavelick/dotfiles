@@ -96,8 +96,15 @@ distro_icon() {
     fi
 }
 
+# Docker container detection
+docker_indicator() {
+    if [ -f /.dockerenv ]; then
+        echo "🐋"
+    fi
+}
+
 # Enable prompt substitution
 setopt prompt_subst
 
 # Set the prompt
-PROMPT='${prompt_time}%~ $(distro_icon) ${vcs_info_msg_0_}% ➜ '
+PROMPT='${prompt_time}%~ $(distro_icon)$(docker_indicator) ${vcs_info_msg_0_}% ➜ '

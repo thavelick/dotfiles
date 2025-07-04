@@ -1,0 +1,12 @@
+base-devel
+curl
+fzf
+git
+neovim
+openssh
+openssl
+python3
+tidy
+tmux
+yay
+zsh

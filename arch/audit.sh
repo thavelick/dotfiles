@@ -32,10 +32,17 @@ GUI_PATTERNS=(
 # Output files
 GUI_PACKAGES_FILE="arch/packages-gui"
 CLI_PACKAGES_FILE="arch/packages-cli"
+CORE_PACKAGES_FILE="arch/packages-core"
 
 # Arrays to store categorized packages
 declare -a gui_packages
 declare -a cli_packages
+declare -a core_packages
+
+# Load existing core packages (manually curated list)
+if [[ -f "$CORE_PACKAGES_FILE" ]]; then
+    mapfile -t core_packages < "$CORE_PACKAGES_FILE"
+fi
 
 # Function to check if package has GUI dependencies
 is_gui_package() {
@@ -72,7 +79,11 @@ while IFS= read -r line; do
     [[ -n "$package" ]] || continue
     
     # Determine category
-    if is_gui_package "$package"; then
+    # Check if package is in core list first
+    if [[ " ${core_packages[*]} " == *" ${package} "* ]]; then
+        # Skip core packages - they're manually maintained
+        continue
+    elif is_gui_package "$package"; then
         gui_packages+=("$package")
     else
         cli_packages+=("$package")
@@ -92,6 +103,8 @@ echo "Writing $CLI_PACKAGES_FILE (${#cli_packages[@]} packages)..."
 printf '%s\n' "${cli_packages[@]}" > "$CLI_PACKAGES_FILE"
 
 echo "Categorization complete!"
+echo "Core packages: ${#core_packages[@]} (manually maintained)"
 echo "GUI packages: ${#gui_packages[@]}"
 echo "CLI packages: ${#cli_packages[@]}"
-echo "Total: $((${#gui_packages[@]} + ${#cli_packages[@]}))"
+echo "Total categorized: $((${#gui_packages[@]} + ${#cli_packages[@]}))"
+echo "Total with core: $((${#core_packages[@]} + ${#gui_packages[@]} + ${#cli_packages[@]}))"

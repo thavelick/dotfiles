@@ -23,7 +23,7 @@ This repository contains a modular, portable zsh configuration.
   - Watch out for multiple PR comments on one code line
 - When user says "merge", do a gh pr merge with a merge commit and use the option to delete local and remote branches
 - When we merge via gh, it deletes the branch on remote AND LOCAL and checks out main for us
-- Before commiting run make shellcheck to find any new problems
+- Before commiting run make lint to find any new problems
 
 ## Testing
 - After making changes to zsh config, test by sourcing `.zshrc` and running manual tests

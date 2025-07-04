@@ -8,19 +8,36 @@ MAKEFLAGS += --no-builtin-rules
 
 # ---------------------- COMMANDS ---------------------------
 
-build: # Build the Docker test image
+build: # Build the Docker test image (minimal Debian)
 	@echo "Building Docker test image.."
 	docker build -t zshrc-test .
 
-run: # Run the zshrc test container
+run: # Run the zshrc test container (minimal Debian)
 	@echo "Starting zshrc test container.."
 	docker run -it --rm -v "$(shell pwd)":/home/testuser/Projects/dotfiles zshrc-test
 
-test: # Run automated tests in container
+test: # Run automated tests in container (minimal Debian)
 	@echo "Running zshrc tests.."
 	docker run --rm -v "$(shell pwd)":/home/testuser/Projects/dotfiles zshrc-test /bin/zsh -c "ln -sf \$$DOTFILES_HOME/zsh/zshrc ~/.zshrc && source ~/.zshrc && source /home/testuser/Projects/dotfiles/zsh/test.zsh"
 
-shellcheck: # Run shellcheck on all shell files
+build-core: # Build the Arch Linux test image (core)
+	@echo "Building Arch Linux test image.."
+	docker build -f Dockerfile.core -t zshrc-test-core .
+
+run-core: # Run the Arch Linux test container (core)
+	@echo "Starting Arch Linux test container.."
+	docker run -it --rm -v "$(shell pwd)":/home/testuser/Projects/dotfiles zshrc-test-core
+
+test-core: # Run automated tests in Arch container (core)
+	@echo "Running core Arch Linux tests.."
+	docker run --rm -v "$(shell pwd)":/home/testuser/Projects/dotfiles zshrc-test-core /bin/zsh -c "source ~/.zshrc && source \$$DOTFILES_HOME/zsh/test-core.zsh"
+
+test-all: # Run both minimal and core tests
+	@echo "Running all tests.."
+	make test
+	make test-core
+
+lint: # Run shellcheck on all shell files
 	@echo "Running shellcheck on shell files.."
 	find . -name "*.sh" -o -path "./river/init" | grep -v ".git" | grep -v "scratch" | xargs shellcheck
 

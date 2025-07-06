@@ -94,12 +94,6 @@ fi
 # ZLE functions
 zle -N foreground
 
-# Ctrl-Z toggle support
-if [[ $- == *i* ]]; then
-    stty susp undef
-    bindkey "^Z" foreground
-fi
-
 # Edit command line
 autoload -z edit-command-line
 zle -N edit-command-line

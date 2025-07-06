@@ -15,6 +15,12 @@ fi
 # Use emacs key bindings
 bindkey -e
 
+# Ctrl-Z toggle support (must be after bindkey -e)
+if [[ $- == *i* ]]; then
+    stty susp undef
+    bindkey "^Z" foreground
+fi
+
 # Start typing + [Up-Arrow] - fuzzy find history forward
 if [[ -n "${terminfo[kcuu1]}" ]]; then
   autoload -U up-line-or-beginning-search

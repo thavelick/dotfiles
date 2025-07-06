@@ -40,10 +40,6 @@ if command_exists fzf; then
     }
 fi
 
-# Foreground toggle function (always available)
-foreground() {
-    fg
-}
 
 # Question function for web content
 if command_exists curl && command_exists llm; then
@@ -91,10 +87,3 @@ if command_exists yt-dlp && command_exists curl && command_exists llm; then
     }
 fi
 
-# ZLE functions
-zle -N foreground
-
-# Edit command line
-autoload -z edit-command-line
-zle -N edit-command-line
-bindkey "^X^E" edit-command-line

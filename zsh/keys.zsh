@@ -15,9 +15,15 @@ fi
 # Use emacs key bindings
 bindkey -e
 
+# Foreground toggle function for Ctrl-Z
+foreground() {
+    fg
+}
+
 # Ctrl-Z toggle support (must be after bindkey -e)
 if [[ $- == *i* ]]; then
     stty susp undef
+    zle -N foreground
     bindkey "^Z" foreground
 fi
 

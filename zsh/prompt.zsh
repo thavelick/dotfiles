@@ -82,7 +82,7 @@ precmd() {
 # Distribution icon function
 distro_icon() {
     if [[ "$(get_os_type)" == "macos" ]]; then
-        echo "🍎"
+        echo ""
     elif [ ! -f /etc/os-release ]; then
         echo ""
     elif grep -q 'ID=debian' /etc/os-release; then

@@ -57,4 +57,5 @@ if command_exists llm; then
     alias llmb="llm --model fast -s 'be relatively brief. Your answer should fit on a standard 80x25 terminal screen.'"
 fi
 
+
 alias namedcat='awk '\''FNR==1 {print "==> " FILENAME " <=="} {print}'\'

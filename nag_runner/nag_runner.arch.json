@@ -1,12 +1,12 @@
 [
     {
         "name": "archlinux updates",
-        "command": "sudo pacman -Syu && yay -Syu",
+        "command": "sudo pacman -Syu --noconfirm && yay -Syu --noconfirm",
         "interval": "7"
     },
     {
-        "name": "prune yay cache",
-        "command": "yay -Sc --aur",
+        "name": "prune package caches",
+        "command": "sudo pacman -Sc --noconfirm && yay -Sc --aur --noconfirm",
         "interval": "31"
     },
     {

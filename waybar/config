@@ -13,6 +13,7 @@
 		"clock#3",
 	],
 	"modules-right": [
+		"custom/nag-runner",
 		"custom/network",
 		"pulseaudio",
 		"custom/divider",
@@ -95,6 +96,12 @@
 			"",
 			""
 		]
+	},
+	"custom/nag-runner": {
+		"interval": 30,
+		"exec": "$HOME/Projects/nag-runner/nag_runner.py --check && echo '' || echo '⚠️'",
+		"tooltip": true,
+		"tooltip-format": "Nags Overdue!"
 	},
 	"custom/network": {
 		"interval": 5,

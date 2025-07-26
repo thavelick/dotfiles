@@ -29,10 +29,10 @@ done
 riverctl map normal $mod+Shift Return spawn foot
 
 # Mod+P to start the launcher
-riverctl map normal $mod P spawn "foot --app-id float -- zsh -ic $DOTFILES_HOME/river/launcher.sh"
+riverctl map normal $mod P spawn "foot --app-id float -- zsh --no-rcs -c $DOTFILES_HOME/river/launcher.sh"
 
 # Mod+E to start an emoji/unicode picker
-riverctl map normal $mod E spawn "foot --app-id float -- zsh -ic $DOTFILES_HOME/river/emoji.sh"
+riverctl map normal $mod E spawn "foot --app-id float -- zsh --no-rcs -c $DOTFILES_HOME/river/emoji.sh"
 
 # rewrite the above line to show in a smaller window
 # Mod+Q to close the focused view

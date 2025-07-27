@@ -16,8 +16,6 @@ diff --version 2>/dev/null | grep -q GNU && alias diff='diff --color'
 
 # Text viewing
 alias vat="vim -R -c 'set nomodifiable' -c 'nmap q :q!<CR>' -c 'set norelativenumber'"
-alias bat='echo "just use vat"'
-alias batp='echo "just use vat"'
 
 # Python-based aliases
 if command_exists python3; then

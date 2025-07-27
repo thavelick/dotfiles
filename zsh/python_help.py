@@ -2,11 +2,38 @@
 import sys
 import importlib
 import pkgutil
+try:
+    import importlib.metadata
+except ImportError:
+    import importlib_metadata as importlib_metadata
+
+def get_import_name(package_name):
+    """Get the import name for a package name."""
+    try:
+        # Get mapping of top-level modules to distributions
+        packages = importlib.metadata.packages_distributions()
+        # Reverse it to get package -> import mapping
+        for module, distributions in packages.items():
+            if package_name in distributions:
+                return module
+    except:
+        pass
+    
+    # Fallback: try the package name as-is
+    return package_name
+
+def import_module_smart(module_name):
+    """Import module, handling package name to import name mapping."""
+    try:
+        return importlib.import_module(module_name)
+    except ImportError:
+        import_name = get_import_name(module_name)
+        return importlib.import_module(import_name)
 
 def get_module_items(module_name):
     """Get categorized items from a module."""
     try:
-        module = importlib.import_module(module_name)
+        module = import_module_smart(module_name)
         items = [x for x in dir(module) if not x.startswith('_')]
         
         classes = []
@@ -94,7 +121,7 @@ def show_object_help(module_name, object_name):
             pass
         
         # If that fails, try as an attribute of the module
-        module = importlib.import_module(module_name)
+        module = import_module_smart(module_name)
         obj = getattr(module, object_name)
         help(obj)
     except (ImportError, AttributeError) as e:
@@ -103,13 +130,15 @@ def show_object_help(module_name, object_name):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python_help.py <module> [--fzf|--summary] or <module.object>")
+        print("Usage: python_help.py <module> [--fzf|--summary|--get-import-name] or <module.object>")
         sys.exit(1)
     
     target = sys.argv[1]
     mode = sys.argv[2] if len(sys.argv) > 2 else None
     
-    if '.' in target:
+    if mode == '--get-import-name':
+        print(get_import_name(target))
+    elif '.' in target:
         module_name, object_name = target.split('.', 1)
         show_object_help(module_name, object_name)
     elif mode == '--fzf':

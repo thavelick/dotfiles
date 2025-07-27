@@ -17,7 +17,9 @@ fi
 qr-paste() {
     local paste_cmd=$(get_clipboard_paste_cmd)
     if command_exists qrencode && command_exists imv; then
-        $paste_cmd | qrencode -o - -t PNG | imv -
+        local temp_file=$(mktemp --suffix=.png)
+        $paste_cmd | qrencode -o "$temp_file" -t PNG -d 300 && imv "$temp_file"
+        rm -f "$temp_file"
     else
         echo "qr-paste requires qrencode and imv to be installed"
     fi
@@ -87,4 +89,28 @@ fi
 
 function -() {
     cd -
+}
+
+# Enhanced help function that tries multiple sources
+help() {
+    local help_output=$(run-help "$1" 2>&1)
+    
+    # If run-help works, use it
+    [[ "$help_output" != *"No manual entry"* ]] && { run-help "$1"; return $? }
+    
+    command -v "$1" >/dev/null 2>&1 || { echo "$1: command not found"; return 1 }
+    
+    echo "No manual entry for $1, trying --help:"
+    
+    # Try --help with bat if available, otherwise plain
+    if command_exists bat; then
+        "$1" --help 2>/dev/null | bat --plain --language=help && return 0
+        echo "Trying -h:" && "$1" -h 2>/dev/null | bat --plain --language=help && return 0
+    else
+        "$1" --help 2>/dev/null && return 0
+        echo "Trying -h:" && "$1" -h 2>/dev/null && return 0
+    fi
+    
+    echo "No help available for $1"
+    return 1
 }

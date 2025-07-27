@@ -30,11 +30,17 @@ export PYTHONPATH=.
 # Platform-specific environment setup
 if command_exists nvim; then
     export EDITOR=nvim
-    export MANPAGER='nvim +Man!'
 elif command_exists vim; then
     export EDITOR=vim
 else
     export EDITOR=vi
+fi
+
+# Man pager - prefer bat, fallback to nvim
+if command_exists bat; then
+    export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
+elif command_exists nvim; then
+    export MANPAGER='nvim +Man!'
 fi
 
 # Browser detection - use first available
@@ -58,6 +64,9 @@ fi
 # Keyboard layout (only matters on systems that use it)
 export XKB_DEFAULT_LAYOUT="us(colemak)"
 export XKB_DEFAULT_OPTIONS=ctrl:nocaps
+
+# Help system
+export HELPDIR=/usr/share/zsh/"${ZSH_VERSION}"/help
 
 # Enable interactive comments
 setopt interactive_comments

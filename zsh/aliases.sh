@@ -57,3 +57,6 @@ fi
 
 
 alias namedcat='awk '\''FNR==1 {print "==> " FILENAME " <=="} {print}'\'
+
+# Help system - unalias run-help so our function can use it
+unalias run-help 2>/dev/null || true

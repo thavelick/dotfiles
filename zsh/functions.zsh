@@ -1,10 +1,8 @@
 # LLM code function
 if command_exists llm; then
     llmc() {
-        local clipboard_cmd=$(get_clipboard_copy_cmd)
-        llm --model thinking -s 'code in python (preferred) or zsh (for archlinux, when it seems like a thing that makes a good one liner) unless otherwise specified. Keep it as simple and brief as possible. Output only the code requested, no commentary. Only one example.' --xl "$@" |
-        sed 's/^[[:space:]]*//;s/[[:space:]]*$//' |
-        tee >($clipboard_cmd)
+        local code=$(llm -s 'code in zsh for archlinux. Keep it as simple and brief as possible. Output only the code requested, no commentary. No shebang. Only one example.' --xl "$@" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+        print -z "$code"
     }
 fi
 
@@ -46,24 +44,24 @@ if command_exists curl && command_exists llm; then
     q() {
         local url="$1"
         local question="$2"
-        
+
         # Fetch the URL content through Jina
         local content=$(curl -s "https://r.jina.ai/$url")
-        
+
         # Check if the content was retrieved successfully
         if [ -z "$content" ]; then
             echo "Failed to retrieve content from the URL."
             return 1
         fi
-        
+
         system="
         You are a helpful assistant that can answer questions about the content.
         Reply concisely, in a few sentences.
-        
+
         The content:
         ${content}
         "
-        
+
         # Use llm with the fetched content as a system prompt
         llm prompt "$question" -s "$system"
     }
@@ -74,11 +72,11 @@ if command_exists yt-dlp && command_exists curl && command_exists llm; then
     qv() {
         local url="$1"
         local question="$2"
-        
+
         # Fetch the URL content through Jina
         local subtitle_url=$(yt-dlp -q --skip-download --convert-subs srt --write-sub --sub-langs "en" --write-auto-sub --print "requested_subtitles.en.url" "$url")
         local content=$(curl -s "$subtitle_url" | sed '/^$/d' | grep -v '^[0-9]*$' | grep -v '\-->' | sed 's/<[^>]*>//g' | tr '\n' ' ')
-        
+
         # Check if the content was retrieved successfully
         if [ -z "$content" ]; then
             echo "Failed to retrieve content from the URL."
@@ -87,3 +85,6 @@ if command_exists yt-dlp && command_exists curl && command_exists llm; then
     }
 fi
 
+function -() {
+    cd -
+}

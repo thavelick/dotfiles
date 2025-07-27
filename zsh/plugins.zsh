@@ -1,11 +1,33 @@
-# Zsh syntax highlighting
-source_if_exists $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-if [[ -f $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+# Zsh syntax highlighting - prefer pacman install, fallback to manual
+if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     ZSH_HIGHLIGHT_STYLES[comment]='fg=blue'
+elif [[ -f $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    ZSH_HIGHLIGHT_STYLES[comment]='fg=blue'
+else
+    # Auto-install if git is available and directory doesn't exist
+    if command_exists git && [[ ! -d $HOME/.zsh/zsh-syntax-highlighting ]]; then
+        mkdir -p $HOME/.zsh
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.zsh/zsh-syntax-highlighting
+        source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+        ZSH_HIGHLIGHT_STYLES[comment]='fg=blue'
+    fi
 fi
 
-# Zsh autosuggestions
-source_if_exists $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Zsh autosuggestions - prefer pacman install, fallback to manual
+if [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+    source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [[ -f $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+    source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+else
+    # Auto-install if git is available and directory doesn't exist
+    if command_exists git && [[ ! -d $HOME/.zsh/zsh-autosuggestions ]]; then
+        mkdir -p $HOME/.zsh
+        git clone https://github.com/zsh-users/zsh-autosuggestions.git $HOME/.zsh/zsh-autosuggestions
+        source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+    fi
+fi
 
 # FZF integration
 if command_exists fzf; then

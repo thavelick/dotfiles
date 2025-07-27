@@ -105,3 +105,5 @@ xq
 yamllint
 yt-dlp
 zram-generator
+zsh-autosuggestions
+zsh-syntax-highlighting

@@ -104,8 +104,17 @@ help() {
     
     # Try --help with bat if available, otherwise plain
     if command_exists bat; then
-        "$1" --help 2>/dev/null | bat --plain --language=help && return 0
-        echo "Trying -h:" && "$1" -h 2>/dev/null | bat --plain --language=help && return 0
+        local help_text=$("$1" --help 2>/dev/null)
+        if [[ -n "$help_text" ]]; then
+            echo "$help_text" | bat --plain --language=help
+            return 0
+        fi
+        echo "Trying -h:"
+        help_text=$("$1" -h 2>/dev/null)
+        if [[ -n "$help_text" ]]; then
+            echo "$help_text" | bat --plain --language=help
+            return 0
+        fi
     else
         "$1" --help 2>/dev/null && return 0
         echo "Trying -h:" && "$1" -h 2>/dev/null && return 0

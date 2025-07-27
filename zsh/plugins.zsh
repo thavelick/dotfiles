@@ -1,8 +1,6 @@
 # Enable completions
 autoload -U compinit && compinit
 
-# Enable run-help for context-sensitive help
-autoload run-help
 
 # Zsh syntax highlighting - prefer pacman install, fallback to manual
 if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then

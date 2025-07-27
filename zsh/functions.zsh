@@ -91,35 +91,152 @@ function -() {
     cd -
 }
 
-# Enhanced help function that tries multiple sources
-help() {
-    local help_output=$(run-help "$1" 2>&1)
+# Run-help configuration
+unalias run-help 2>/dev/null || true
+autoload run-help
+
+# Python help function
+python_help() {
+    [[ $# -eq 0 ]] && { man python; return; }
     
-    # If run-help works, use it
-    [[ "$help_output" != *"No manual entry"* ]] && { run-help "$1"; return $? }
+    local target="$1"
+    local version="$2"
+    local script_path="$DOTFILES_HOME/zsh/python_help.py"
     
-    command -v "$1" >/dev/null 2>&1 || { echo "$1: command not found"; return 1 }
-    
-    echo "No manual entry for $1, trying --help:"
-    
-    # Try --help with bat if available, otherwise plain
-    if command_exists bat; then
-        local help_text=$("$1" --help 2>/dev/null)
-        if [[ -n "$help_text" ]]; then
-            echo "$help_text" | bat --plain --language=help
-            return 0
-        fi
-        echo "Trying -h:"
-        help_text=$("$1" -h 2>/dev/null)
-        if [[ -n "$help_text" ]]; then
-            echo "$help_text" | bat --plain --language=help
-            return 0
-        fi
-    else
-        "$1" --help 2>/dev/null && return 0
-        echo "Trying -h:" && "$1" -h 2>/dev/null && return 0
+    # Parse version spec (e.g., flask==2.0.0 or flask>=1.0)
+    local package_spec="$target"
+    if [[ -n "$version" ]]; then
+        package_spec="${target}${version}"
     fi
     
-    echo "No help available for $1"
-    return 1
+    # Handle dot notation like flask.Request or unittest.mock
+    if [[ "$target" == *.* ]]; then
+        local module="${target%%.*}"
+        local module_spec="$module"
+        if [[ -n "$version" ]]; then
+            module_spec="${module}${version}"
+        fi
+        # Always try local Python first, then uv as fallback
+        python "$script_path" "$target" 2>/dev/null || {
+            command_exists uv && uv run --with "$module_spec" python "$script_path" "$target"
+        }
+    else
+        # Use fzf to let user choose what to do
+        if command_exists fzf; then
+            local choice=$(echo -e "📋 Show summary\n📖 Module docs\n🔍 Browse items" | fzf --prompt="Choose help type for $target: " --height=5)
+            
+            case "$choice" in
+                *"Show summary"*)
+                    local summary_output
+                    summary_output=$(python "$script_path" "$target" --summary 2>/dev/null) || {
+                        if command_exists uv; then
+                            echo "Trying with uv and version spec: $package_spec"
+                            summary_output=$(uv run --with "$package_spec" python "$script_path" "$target" --summary 2>&1)
+                            if [[ $? -ne 0 ]]; then
+                                echo "Failed to install/run $package_spec:"
+                                echo "$summary_output" | head -10
+                                return 1
+                            fi
+                        fi
+                    }
+                    
+                    if [[ -n "$summary_output" ]]; then
+                        if command_exists glow; then
+                            echo "$summary_output" | glow --pager
+                        else
+                            echo "$summary_output"
+                        fi
+                    fi
+                    ;;
+                *"Module docs"*)
+                    python -m pydoc "$target" 2>/dev/null || { command_exists uv && uv run --with "$package_spec" python -m pydoc "$target"; }
+                    ;;
+                *"Browse items"*)
+                    local selected
+                    selected=$(python "$script_path" "$target" --fzf 2>/dev/null | fzf --prompt="Select item from $target: ") || {
+                        command_exists uv && selected=$(uv run --with "$package_spec" python "$script_path" "$target" --fzf | fzf --prompt="Select item from $target: ")
+                    }
+                    
+                    [[ -n "$selected" ]] && {
+                        local item_name="${selected#*:}"
+                        python_help "$target.$item_name"
+                    }
+                    ;;
+            esac
+        else
+            # Fallback without fzf
+            python "$script_path" "$target" --summary 2>/dev/null || {
+                command_exists uv && uv run --with "$package_spec" python "$script_path" "$target" --summary
+            }
+        fi
+    fi
+}
+
+# Enhanced help function that tries multiple sources
+help() {
+    local format_help() { command_exists bat && bat --plain --language=help || cat; }
+    
+    # Special handling for commands with broken run-help helpers
+    case "$1" in
+        git)
+            [[ $# -eq 1 ]] && man git || { shift; git help "$@" 2>/dev/null || echo "No git help available for: $*"; }
+            ;;
+        ip)
+            [[ $# -eq 1 ]] && man ip || {
+                shift
+                local subcmd="$1"
+                man "ip-$subcmd" 2>/dev/null && return
+                local match=$(man -k "ip-${subcmd}" 2>/dev/null | head -1 | cut -d' ' -f1)
+                [[ -n "$match" ]] && man "$match" || man ip
+            }
+            ;;
+        openssl)
+            [[ $# -eq 1 ]] && man openssl || { shift; man "openssl-$1" 2>/dev/null || openssl "$1" -help 2>/dev/null || man openssl; }
+            ;;
+        uv)
+            [[ $# -eq 1 ]] && uv help || { shift; uv help "$@"; }
+            ;;
+        docker)
+            if [[ $# -eq 1 ]]; then
+                man docker
+            elif [[ $# -eq 2 && "$2" == "compose" ]]; then
+                man docker-compose
+            elif [[ "$2" == "compose" ]]; then
+                shift 2
+                docker compose "$@" --help | format_help
+            else
+                shift
+                man "docker-$1" 2>/dev/null || docker help "$@"
+            fi
+            ;;
+        rclone)
+            [[ $# -eq 1 ]] && man rclone || { shift; rclone "$1" --help | format_help; }
+            ;;
+        gh)
+            [[ $# -eq 1 ]] && gh help || { shift; gh help "$@"; }
+            ;;
+        python)
+            [[ $# -eq 1 ]] && man python || { shift; python_help "$@"; }
+            ;;
+        *)
+            local help_output=$(run-help "$1" 2>&1)
+            
+            # If run-help works, use it
+            [[ "$help_output" != *"No manual entry"* ]] && { run-help "$1"; return $?; }
+            
+            command -v "$1" >/dev/null 2>&1 || { echo "$1: command not found"; return 1; }
+            
+            echo "No manual entry for $1, trying --help:"
+            
+            # Try --help with formatting
+            local help_text=$("$1" --help 2>/dev/null)
+            [[ -n "$help_text" ]] && { echo "$help_text" | format_help; return 0; }
+            echo "Trying -h:"
+            help_text=$("$1" -h 2>/dev/null)
+            [[ -n "$help_text" ]] && { echo "$help_text" | format_help; return 0; }
+            
+            echo "No help available for $1"
+            return 1
+            ;;
+    esac
 }

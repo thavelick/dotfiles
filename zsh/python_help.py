@@ -9,15 +9,19 @@ except ImportError:
 
 def get_import_name(package_name):
     """Get the import name for a package name."""
-    try:
-        # Get mapping of top-level modules to distributions
-        packages = importlib.metadata.packages_distributions()
-        # Reverse it to get package -> import mapping
-        for module, distributions in packages.items():
-            if package_name in distributions:
-                return module
-    except:
-        pass
+    # Get mapping of top-level modules to distributions
+    packages = importlib.metadata.packages_distributions()
+    # Find all modules for this package
+    matches = []
+    for module, distributions in packages.items():
+        # Case-insensitive comparison for distribution names
+        if package_name.lower() in [d.lower() for d in distributions]:
+            matches.append(module)
+    
+    if matches:
+        # Prefer public modules (no underscore prefix)
+        public_matches = [m for m in matches if not m.startswith('_')]
+        return public_matches[0] if public_matches else matches[0]
     
     # Fallback: try the package name as-is
     return package_name

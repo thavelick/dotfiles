@@ -149,7 +149,10 @@ python_help() {
                     fi
                     ;;
                 *"Module docs"*)
-                    python -m pydoc "$target" 2>/dev/null || { command_exists uv && uv run --with "$package_spec" python -m pydoc "$target"; }
+                    # Try to get the correct import name first
+                    local import_name
+                    import_name=$(python "$script_path" "$target" --get-import-name 2>/dev/null) || import_name="$target"
+                    python -m pydoc "$import_name" 2>/dev/null || { command_exists uv && uv run --with "$package_spec" python -m pydoc "$import_name"; }
                     ;;
                 *"Browse items"*)
                     local selected

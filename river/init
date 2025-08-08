@@ -34,6 +34,9 @@ riverctl map normal $mod P spawn "foot --app-id float -- zsh --no-rcs -c $DOTFIL
 # Mod+E to start an emoji/unicode picker
 riverctl map normal $mod E spawn "foot --app-id float -- zsh --no-rcs -c $DOTFILES_HOME/river/emoji.sh"
 
+# Mod+D to start the document picker
+riverctl map normal $mod D spawn "foot --app-id float -- zsh --no-rcs -c $DOTFILES_HOME/river/document_launcher.sh"
+
 # rewrite the above line to show in a smaller window
 # Mod+Q to close the focused view
 riverctl map normal $mod Q close

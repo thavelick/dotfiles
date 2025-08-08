@@ -37,6 +37,9 @@ riverctl map normal $mod E spawn "foot --app-id float -- zsh --no-rcs -c $DOTFIL
 # Mod+D to start the document picker
 riverctl map normal $mod D spawn "foot --app-id float -- zsh --no-rcs -c $DOTFILES_HOME/river/document_launcher.sh"
 
+# Mod+L to lock the screen
+riverctl map normal $mod L spawn "swaylock -c 000033"
+
 # rewrite the above line to show in a smaller window
 # Mod+Q to close the focused view
 riverctl map normal $mod Q close
@@ -119,6 +122,11 @@ all_tags=$(((1 << 32) - 1))
 riverctl map normal $mod 0 set-focused-tags $all_tags
 riverctl map normal $mod+Shift 0 set-view-tags $all_tags
 
+# Multi-monitor support
+riverctl map normal $mod O focus-output next
+riverctl map normal $mod+Shift O send-to-output next
+riverctl set-cursor-warp on-output-change
+
 # Mod+Space to toggle float
 riverctl map normal $mod Space toggle-float
 
@@ -172,6 +180,10 @@ riverctl spawn 'swayidle -w before-sleep "swaylock -c 000033"'
 export QT_QPA_PLATFORM="wayland"
 
 [ -n "$HIDPI" ] && wlr-randr --output eDP-1 --scale 1.75
+
+# Configure second monitor scaling and position
+wlr-randr --output HDMI-A-1 --scale 1.75 --pos 0,0
+wlr-randr --output eDP-1 --pos 2194,0
 
 # share wayland vars with systemd. This is needed to make screensharing work
 export XDG_CURRENT_DESKTOP=wlr

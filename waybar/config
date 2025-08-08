@@ -1,8 +1,9 @@
 // -*- mode: json -*-
 
-{
+[{
 	"layer": "top",
 	"position": "bottom",
+	"output": "eDP-1",
 
 	"modules-left": [
 		"river/tags",
@@ -117,4 +118,28 @@
 		"format": "{percent}% {icon}",
 		"format-icons": ["☁", "⛅", "🌞"]
 	}
-}
+}, {
+	"layer": "top",
+	"position": "bottom", 
+	"output": "HDMI-A-1",
+
+	"modules-left": [
+		"river/tags#secondary",
+	],
+	"modules-center": [],
+	"modules-right": [],
+	"river/tags#secondary": {
+		"num-tags": 9,
+		"tag-labels": [
+			"1",
+			"2", 
+			"3",
+			"4",
+			"5",
+			"6",
+			"7",
+			"8",
+			"9"
+		]
+	}
+}]

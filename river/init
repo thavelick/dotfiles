@@ -161,7 +161,7 @@ riverctl set-repeat 50 300
 # Make certain views start floating
 # riverctl float-filter-add app-id float
 # riverctl float-filter-add title "popup title with spaces"
-riverctl float-filter-add app-id float || riverctl rule-add -app-id 'float*' float
+riverctl rule-add -app-id 'float*' float
 # Set app-ids and titles of views which should use client side decorations
 # riverctl csd-filter-add app-id "gedit"
 riverctl rule-add -app-id mgba float
@@ -172,6 +172,7 @@ riverctl default-layout rivertile
 
 riverctl focus-follows-cursor normal
 
+pkill waybar 2>/dev/null || true
 riverctl spawn waybar
 riverctl spawn "$DOTFILES_HOME/river/background.sh"
 riverctl spawn udiskie
@@ -182,12 +183,17 @@ export QT_QPA_PLATFORM="wayland"
 [ -n "$HIDPI" ] && wlr-randr --output eDP-1 --scale 1.75
 
 # Configure second monitor scaling and position
-wlr-randr --output HDMI-A-1 --scale 1.75 --pos 0,0
-wlr-randr --output eDP-1 --pos 2194,0
+if wlr-randr | grep -q "HDMI-A-1"; then
+    wlr-randr --output HDMI-A-1 --scale 1.75 --pos 0,0
+    wlr-randr --output eDP-1 --pos 2194,0
+else
+    wlr-randr --output eDP-1 --pos 0,0
+fi
 
 # share wayland vars with systemd. This is needed to make screensharing work
 export XDG_CURRENT_DESKTOP=wlr
 systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 
-exec rivertile -view-padding 5 -outer-padding 5 -main-ratio 0.5
+pkill rivertile 2>/dev/null || true
+setsid rivertile -view-padding 5 -outer-padding 5 -main-ratio 0.5 &

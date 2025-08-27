@@ -37,6 +37,9 @@ riverctl map normal $mod E spawn "foot --app-id float -- zsh --no-rcs -c $DOTFIL
 # Mod+D to start the document picker
 riverctl map normal $mod D spawn "foot --app-id float -- zsh --no-rcs -c $DOTFILES_HOME/river/document_launcher.sh"
 
+# Mod+H to show help/keybindings
+riverctl map normal $mod H spawn "foot --app-id float -- zsh --no-rcs -c $DOTFILES_HOME/river/help.sh"
+
 # Mod+L to lock the screen
 riverctl map normal $mod L spawn "swaylock -c 000033"
 

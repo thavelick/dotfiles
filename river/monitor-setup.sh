@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 # Monitor configuration for River window manager
 
 LOGFILE="$HOME/.local/share/monitor-hotplug.log"

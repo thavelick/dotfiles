@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 # Create systemd user config directory
 mkdir -p "$HOME/.config/systemd/user"

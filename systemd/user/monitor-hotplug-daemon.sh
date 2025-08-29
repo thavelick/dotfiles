@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 # Monitor hotplug daemon - polls DRM status files for changes
 
 # Set DOTFILES_HOME if not already set

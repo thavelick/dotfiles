@@ -64,6 +64,7 @@ else # Assume Arch or derivatives
     "$DOTFILES_HOME"/river/setup.sh
     "$DOTFILES_HOME"/foot/setup.sh
     "$DOTFILES_HOME"/font/setup.sh
+    "$DOTFILES_HOME"/systemd/setup.sh
   fi
   
   "$DOTFILES_HOME"/git/setup.sh

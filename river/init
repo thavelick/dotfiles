@@ -183,15 +183,7 @@ riverctl spawn udiskie
 riverctl spawn 'swayidle -w before-sleep "swaylock -c 000033"'
 export QT_QPA_PLATFORM="wayland"
 
-[ -n "$HIDPI" ] && wlr-randr --output eDP-1 --scale 1.75
-
-# Configure second monitor scaling and position
-if wlr-randr | grep -q "HDMI-A-1"; then
-    wlr-randr --output HDMI-A-1 --scale 1.75 --pos 0,0
-    wlr-randr --output eDP-1 --pos 2194,0
-else
-    wlr-randr --output eDP-1 --pos 0,0
-fi
+riverctl spawn "$DOTFILES_HOME/river/monitor-setup.sh"
 
 # share wayland vars with systemd. This is needed to make screensharing work
 export XDG_CURRENT_DESKTOP=wlr

@@ -3,7 +3,7 @@ Description=Monitor hotplug handler
 After=graphical-session.target
 
 [Service]
-ExecStart=/bin/sh -c 'prev=$(cat /sys/class/drm/*/status 2>/dev/null | sort); while true; do sleep 2; curr=$(cat /sys/class/drm/*/status 2>/dev/null | sort); [ "$curr" != "$prev" ] && %h/Projects/dotfiles/river/monitor-setup.sh; prev="$curr"; done'
+ExecStart=%h/Projects/dotfiles/systemd/user/monitor-hotplug-daemon.sh
 Restart=always
 RestartSec=1
 

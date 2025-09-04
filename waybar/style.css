@@ -28,7 +28,8 @@ window#waybar {
 #battery,
 #disk,
 #backlight,
-#tray {
+#tray,
+#custom-controller {
 	margin-left: 10px;
 	background: #1a1a1a;
 }
@@ -62,6 +63,9 @@ window#waybar {
 #battery {
 	color: #859900;
 }
+#custom-controller {
+	color: #268bd2;
+}
 #disk {
 	color: #b58900;
 }
@@ -71,6 +75,7 @@ window#waybar {
 #memory,
 #cpu,
 #battery,
+#custom-controller,
 #disk {
 	padding: 0 10px;
 }

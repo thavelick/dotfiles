@@ -15,6 +15,7 @@
 	],
 	"modules-right": [
 		"custom/nag-runner",
+		"custom/controller",
 		"custom/network",
 		"pulseaudio",
 		"custom/divider",
@@ -103,6 +104,13 @@
 		"exec": "$HOME/Projects/nag-runner/nag_runner.py --check && echo '' || echo '⚠️'",
 		"tooltip": true,
 		"tooltip-format": "Nags Overdue!"
+	},
+	"custom/controller": {
+		"interval": 10,
+		"exec": "$HOME/Projects/dotfiles/waybar/controller_status.sh",
+		"tooltip": false,
+		"format": "{}",
+		"return-type": "text"
 	},
 	"custom/network": {
 		"interval": 5,

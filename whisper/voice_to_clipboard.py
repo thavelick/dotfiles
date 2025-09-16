@@ -4,6 +4,8 @@ import tempfile
 import os
 import time
 import sys
+import threading
+import queue
 
 def handle_key_input(key, process, temp_path):
     """Handle keyboard input during recording"""
@@ -25,6 +27,187 @@ def handle_key_input(key, process, temp_path):
         clear_cache()
         sys.exit(0)
     return 'continue'
+
+def record_and_transcribe_stream():
+    """Record audio and transcribe in real-time using streaming with threading"""
+    print("🎤 Recording and transcribing...")
+    print("Enter: stop")
+    print("Esc: quit")
+    print("C: clear cache")
+    print("")
+
+    try:
+        import select
+        import termios
+        import tty
+        from faster_whisper import WhisperModel
+
+        # Shared state between threads
+        stop_event = threading.Event()
+        transcription_queue = queue.Queue()
+        error_queue = queue.Queue()
+
+        # Create temporary file for audio buffer
+        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
+            temp_path = temp_file.name
+
+        def recording_thread():
+            """Thread for recording audio to file with silence detection"""
+            try:
+                # Try sox with silence detection first
+                try:
+                    process = subprocess.Popen([
+                        'sox', '-t', 'alsa', 'default', '-r', '44100', '-c', '2', '-b', '16',
+                        temp_path,
+                        'trim', '0',
+                        'silence', '1', '0.1', '3%', '1', '2.0', '3%'
+                    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+                    while not stop_event.is_set():
+                        if process.poll() is not None:
+                            # Sox finished naturally (silence detected)
+                            print("\nSilence detected, stopping...")
+                            stop_event.set()
+                            break
+                        time.sleep(0.1)
+
+                except (subprocess.CalledProcessError, FileNotFoundError):
+                    # Fallback to arecord if sox not available
+                    process = subprocess.Popen([
+                        'arecord', '-f', 'cd', '-t', 'wav', temp_path
+                    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+                    while not stop_event.is_set():
+                        if process.poll() is not None:
+                            break
+                        time.sleep(0.1)
+
+                if process.poll() is None:
+                    process.terminate()
+                    process.wait()
+            except Exception as e:
+                error_queue.put(f"Recording error: {e}")
+
+        def transcription_thread():
+            """Thread for transcribing audio as it's recorded"""
+            try:
+                # Use base model for better accuracy with technical terms
+                model = WhisperModel("base", device="cpu", compute_type="int8")
+
+                transcription = ""
+                last_size = 0
+
+                while not stop_event.is_set():
+                    try:
+                        # Check if file has grown
+                        if os.path.exists(temp_path):
+                            current_size = os.path.getsize(temp_path)
+                            if current_size > last_size and current_size > 1024:  # Wait for some data
+                                # Transcribe the current file content
+                                segments, info = model.transcribe(temp_path, beam_size=5)
+
+                                new_transcription = ""
+                                for segment in segments:
+                                    new_transcription += segment.text
+
+                                # Only update transcription, don't show partial results
+                                if len(new_transcription) > len(transcription):
+                                    transcription = new_transcription
+
+                                last_size = current_size
+                    except Exception as e:
+                        # Ignore transcription errors during recording
+                        pass
+
+                    time.sleep(0.5)  # Check every 500ms
+
+                # Final transcription
+                if os.path.exists(temp_path):
+                    segments, info = model.transcribe(temp_path, beam_size=5)
+                    final_transcription = ""
+                    for segment in segments:
+                        final_transcription += segment.text
+                    transcription_queue.put(final_transcription.strip())
+
+            except Exception as e:
+                error_queue.put(f"Transcription error: {e}")
+
+        def input_thread():
+            """Thread for handling keyboard input"""
+            try:
+                import select
+                import termios
+                import tty
+
+                # Save terminal settings
+                old_settings = termios.tcgetattr(sys.stdin)
+                tty.setraw(sys.stdin.fileno())
+
+                try:
+                    while not stop_event.is_set():
+                        if sys.stdin in select.select([sys.stdin], [], [], 0.1)[0]:
+                            key = sys.stdin.read(1)
+                            if key == '\r' or key == '\n':  # Enter
+                                print("\nStopping...")
+                                stop_event.set()
+                                break
+                            elif key == '\x1b':  # Escape
+                                print("\nCancelled")
+                                stop_event.set()
+                                if os.path.exists(temp_path):
+                                    os.unlink(temp_path)
+                                sys.exit(0)
+                            elif key.lower() == 'c':  # C to clear cache
+                                print("\nClearing cache...")
+                                clear_cache()
+                                stop_event.set()
+                                if os.path.exists(temp_path):
+                                    os.unlink(temp_path)
+                                sys.exit(0)
+                finally:
+                    # Restore terminal settings
+                    termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+
+            except Exception as e:
+                error_queue.put(f"Input error: {e}")
+
+        # Start all threads
+        rec_thread = threading.Thread(target=recording_thread)
+        trans_thread = threading.Thread(target=transcription_thread)
+        inp_thread = threading.Thread(target=input_thread)
+
+        rec_thread.start()
+        trans_thread.start()
+        inp_thread.start()
+
+        # Wait for threads to complete
+        inp_thread.join()
+        rec_thread.join()
+        trans_thread.join()
+
+        # Check for errors
+        if not error_queue.empty():
+            error = error_queue.get()
+            print(f"Error: {error}")
+            if os.path.exists(temp_path):
+                os.unlink(temp_path)
+            return None
+
+        # Get final transcription
+        if not transcription_queue.empty():
+            final_transcription = transcription_queue.get()
+            if os.path.exists(temp_path):
+                os.unlink(temp_path)
+            return final_transcription
+
+        # Clean up
+        if os.path.exists(temp_path):
+            os.unlink(temp_path)
+        return None
+
+    except Exception as e:
+        print(f"Streaming failed: {e}")
+        return None
 
 def record_audio():
     """Record audio with sox silence detection, fallback to manual recording"""
@@ -243,11 +426,16 @@ def main():
         target_pane = get_target_pane()
         use_tmux = target_pane is not None
 
-        # Record audio
-        audio_file = record_audio()
+        # Try streaming transcription first
+        transcription = record_and_transcribe_stream()
 
-        # Transcribe
-        transcription = transcribe_audio(audio_file)
+        # Fallback to file-based if streaming fails
+        if transcription is None:
+            audio_file = record_audio()
+            transcription = transcribe_audio(audio_file)
+            # Clean up temporary file
+            if os.path.exists(audio_file):
+                os.unlink(audio_file)
 
         # Send to tmux or copy to clipboard
         if transcription:
@@ -260,7 +448,7 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
-        # Clean up temporary file
+        # Clean up temporary file if it exists
         if 'audio_file' in locals() and os.path.exists(audio_file):
             os.unlink(audio_file)
 

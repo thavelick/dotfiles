@@ -5,8 +5,29 @@ import os
 import time
 import sys
 
+def handle_key_input(key, process, temp_path):
+    """Handle keyboard input during recording"""
+    if key == '\r' or key == '\n':  # Enter
+        process.terminate()
+        process.wait()
+        print("\nTranscribing...")
+        return 'stop'
+    elif key == '\x1b':  # Escape
+        process.terminate()
+        process.wait()
+        os.unlink(temp_path)
+        print("\nCancelled")
+        sys.exit(0)
+    elif key.lower() == 'c':  # C to clear cache
+        process.terminate()
+        process.wait()
+        os.unlink(temp_path)
+        clear_cache()
+        sys.exit(0)
+    return 'continue'
+
 def record_audio():
-    """Record audio with both silence detection and manual stop"""
+    """Record audio with sox silence detection, fallback to manual recording"""
     print("🎤 Recording...")
     print("Enter: stop")
     print("Esc: quit")
@@ -19,113 +40,81 @@ def record_audio():
 
     # Try sox with silence detection first
     try:
-        import threading
         import select
         import termios
         import tty
 
         # Start sox recording in background
-        sox_process = subprocess.Popen([
+        process = subprocess.Popen([
             'sox', '-t', 'alsa', 'default', '-r', '44100', '-c', '2', '-b', '16',
             temp_path,
             'trim', '0',
             'silence', '1', '0.1', '3%', '1', '2.0', '3%'
         ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-        # Save terminal settings
-        old_settings = termios.tcgetattr(sys.stdin)
-        tty.setraw(sys.stdin.fileno())
-
-        try:
-            # Check for user input in a non-blocking way
-            while sox_process.poll() is None:
-                if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
-                    key = sys.stdin.read(1)
-                    if key == '\r' or key == '\n':  # Enter
-                        sox_process.terminate()
-                        sox_process.wait()
-                        print("\nTranscribing...")
-                        return temp_path
-                    elif key == '\x1b':  # Escape
-                        sox_process.terminate()
-                        sox_process.wait()
-                        os.unlink(temp_path)
-                        print("\nCancelled")
-                        sys.exit(0)
-                    elif key.lower() == 'c':  # C to clear cache
-                        sox_process.terminate()
-                        sox_process.wait()
-                        os.unlink(temp_path)
-                        clear_cache()
-                        sys.exit(0)
-
-                time.sleep(0.1)
-        finally:
-            # Restore terminal settings
-            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
-
-        # Sox finished naturally (silence detected)
-        print("Transcribing...")
-        return temp_path
+        return _handle_recording_with_input(process, temp_path, check_running=True)
 
     except (subprocess.CalledProcessError, FileNotFoundError, ImportError):
-        return record_audio_manual()
+        # Fallback to manual recording
+        try:
+            import select
+            import termios
+            import tty
 
-def record_audio_manual():
-    """Fallback manual recording"""
-    print("🎤 Recording...")
-    print("Enter: stop")
-    print("Esc: quit")
-    print("C: clear cache")
-    print("")
+            process = subprocess.Popen([
+                'arecord', '-f', 'cd', '-t', 'wav', temp_path
+            ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    # Create temporary file
-    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
-        temp_path = temp_file.name
+            return _handle_recording_with_input(process, temp_path, check_running=False)
 
-    # Start recording in background
-    record_process = subprocess.Popen([
-        'arecord', '-f', 'cd', '-t', 'wav', temp_path
-    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except ImportError:
+            # Final fallback to simple input
+            process = subprocess.Popen([
+                'arecord', '-f', 'cd', '-t', 'wav', temp_path
+            ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+            input()
+            process.terminate()
+            process.wait()
+            print("Transcribing...")
+            return temp_path
+
+def _handle_recording_with_input(process, temp_path, check_running=True):
+    """Handle recording with keyboard input monitoring"""
+    import select
+    import termios
+    import tty
+
+    # Save terminal settings
+    old_settings = termios.tcgetattr(sys.stdin)
+    tty.setraw(sys.stdin.fileno())
 
     try:
-        import termios
-        import tty
-        import select
-
-        # Save terminal settings
-        old_settings = termios.tcgetattr(sys.stdin)
-        tty.setraw(sys.stdin.fileno())
-
-        try:
+        if check_running:
+            # Sox mode - check if process is still running
+            while process.poll() is None:
+                if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
+                    key = sys.stdin.read(1)
+                    result = handle_key_input(key, process, temp_path)
+                    if result == 'stop':
+                        return temp_path
+                time.sleep(0.1)
+        else:
+            # Manual mode - wait for user input
             while True:
                 if sys.stdin in select.select([sys.stdin], [], [], 0.1)[0]:
                     key = sys.stdin.read(1)
-                    if key == '\r' or key == '\n':  # Enter
+                    result = handle_key_input(key, process, temp_path)
+                    if result == 'stop':
                         break
-                    elif key == '\x1b':  # Escape
-                        record_process.terminate()
-                        record_process.wait()
-                        os.unlink(temp_path)
-                        print("\nCancelled")
-                        sys.exit(0)
-                    elif key.lower() == 'c':  # C to clear cache
-                        record_process.terminate()
-                        record_process.wait()
-                        os.unlink(temp_path)
-                        clear_cache()
-                        sys.exit(0)
-        finally:
-            # Restore terminal settings
-            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+    finally:
+        # Restore terminal settings
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
-    except ImportError:
-        # Fallback to simple input if termios not available
-        input()
-
-    # Stop recording
-    record_process.terminate()
-    record_process.wait()
+    # Stop recording if still running
+    if process.poll() is None:
+        process.terminate()
+        process.wait()
 
     print("Transcribing...")
     return temp_path
@@ -140,8 +129,8 @@ def transcribe_audio(audio_file):
 
     start_time = time.time()
 
-    # Use tiny model for speed
-    model = WhisperModel("tiny", device="cpu", compute_type="int8")
+    # Use base model for better accuracy with technical terms
+    model = WhisperModel("base", device="cpu", compute_type="int8")
 
     segments, info = model.transcribe(audio_file, beam_size=5)
 

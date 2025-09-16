@@ -40,6 +40,9 @@ riverctl map normal $mod D spawn "foot --app-id float -- zsh --no-rcs -c $DOTFIL
 # Mod+H to show help/keybindings
 riverctl map normal $mod H spawn "foot --app-id float -- zsh --no-rcs -c $DOTFILES_HOME/river/help.sh"
 
+# Mod+Z for voice input
+riverctl map normal $mod Z spawn "foot --app-id voice-input --window-size-chars 50x8 -- bash -c 'cd $DOTFILES_HOME/whisper && uv run voice_to_clipboard.py'"
+
 # Mod+L to lock the screen
 riverctl map normal $mod L spawn "swaylock -c 000033"
 
@@ -165,6 +168,7 @@ riverctl set-repeat 50 300
 # riverctl float-filter-add app-id float
 # riverctl float-filter-add title "popup title with spaces"
 riverctl rule-add -app-id 'float*' float
+riverctl rule-add -app-id voice-input float
 # Set app-ids and titles of views which should use client side decorations
 # riverctl csd-filter-add app-id "gedit"
 riverctl rule-add -app-id mgba float

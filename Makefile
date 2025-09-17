@@ -37,7 +37,7 @@ test-all: # Run both minimal and core tests
 	make test
 	make test-core
 
-lint: # Run shellcheck on all shell files and ruff on Python files
+lint: # Run shellcheck on shell files and ruff on Python files
 	@echo "Running shellcheck on shell files.."
 	find . -name "*.sh" -o -path "./river/init" | grep -v ".git" | grep -v "scratch" | grep -v ".venv" | xargs shellcheck
 	@echo "Running ruff on Python files.."

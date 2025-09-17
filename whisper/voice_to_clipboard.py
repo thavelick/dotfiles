@@ -12,6 +12,7 @@ import termios
 import tty
 import logging
 import traceback
+import shutil
 from faster_whisper import WhisperModel
 import av
 
@@ -22,9 +23,9 @@ CLEAR_KEY = "c"
 
 def setup_logging():
     """Set up logging for transcription errors."""
-    log_dir = os.path.expanduser("~/.cache")
+    log_dir = os.path.expanduser("~/.cache/voice_input")
     os.makedirs(log_dir, exist_ok=True)
-    log_file = os.path.join(log_dir, "voice_input_errors.log")
+    log_file = os.path.join(log_dir, "errors.log")
 
     logging.basicConfig(
         filename=log_file,
@@ -44,12 +45,6 @@ def run_command(cmd, **kwargs):
 
 def record_and_transcribe_stream():
     """Record audio and transcribe in real-time using streaming with threading"""
-    print("🎤 Recording and transcribing...")
-    print("Enter: stop")
-    print("Esc: quit")
-    print("C: clear cache")
-    print("")
-
     stop_event = threading.Event()
     transcription_queue = queue.Queue()
 
@@ -58,6 +53,11 @@ def record_and_transcribe_stream():
 
     def recording_thread():
         """Thread for recording audio with sox silence detection"""
+        print("🎤 Recording and transcribing...")
+        print("Enter: stop")
+        print("Esc: quit")
+        print("C: clear cache")
+        print("")
         process = subprocess.Popen(
             [
                 "sox",
@@ -198,17 +198,22 @@ def record_and_transcribe_stream():
     if not transcription_queue.empty():
         final_transcription = transcription_queue.get()
         if os.path.exists(temp_path):
-            os.unlink(temp_path)
+            # Keep recording for debugging - save to cache directory
+            debug_path = os.path.expanduser("~/.cache/voice_input/last_recording.wav")
+            shutil.move(temp_path, debug_path)
+            print(f"Recording saved to: {debug_path}")
         return final_transcription
 
     if os.path.exists(temp_path):
-        os.unlink(temp_path)
+        debug_path = os.path.expanduser("~/.cache/voice_input/last_recording.wav")
+        shutil.move(temp_path, debug_path)
+        print(f"Recording saved to: {debug_path}")
     return None
 
 
 def get_cached_pane():
     """Get cached tmux pane choice"""
-    cache_file = os.path.expanduser("~/.cache/voice_tmux_pane")
+    cache_file = os.path.expanduser("~/.cache/voice_input/tmux_pane")
     if os.path.exists(cache_file):
         with open(cache_file, "r", encoding="utf-8") as f:
             return f.read().strip()
@@ -217,16 +222,16 @@ def get_cached_pane():
 
 def cache_pane(pane):
     """Cache tmux pane choice"""
-    cache_dir = os.path.expanduser("~/.cache")
+    cache_dir = os.path.expanduser("~/.cache/voice_input")
     os.makedirs(cache_dir, exist_ok=True)
-    cache_file = os.path.join(cache_dir, "voice_tmux_pane")
+    cache_file = os.path.join(cache_dir, "tmux_pane")
     with open(cache_file, "w", encoding="utf-8") as f:
         f.write(pane)
 
 
 def clear_cache():
     """Clear cached tmux pane"""
-    cache_file = os.path.expanduser("~/.cache/voice_tmux_pane")
+    cache_file = os.path.expanduser("~/.cache/voice_input/tmux_pane")
     if os.path.exists(cache_file):
         os.unlink(cache_file)
         print("Cache cleared!")

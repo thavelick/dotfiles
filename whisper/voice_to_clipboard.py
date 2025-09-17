@@ -14,9 +14,8 @@ import logging
 import traceback
 from faster_whisper import WhisperModel
 
-# Key constants
 ENTER_KEYS = ("\r", "\n")
-ESCAPE_KEY = "\x1b"  # Escape
+ESCAPE_KEY = "\x1b"
 CLEAR_KEY = "c"
 
 
@@ -53,7 +52,6 @@ def record_and_transcribe_stream():
     stop_event = threading.Event()
     transcription_queue = queue.Queue()
 
-    # Create temporary file for audio buffer
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
         temp_path = temp_file.name
 
@@ -112,7 +110,7 @@ def record_and_transcribe_stream():
                         current_size = os.path.getsize(temp_path)
                         if current_size > last_size and current_size > 8192:
                             print(".", end="", flush=True)
-                            # Small delay to avoid reading file while sox is writing
+                            # Avoid reading file while sox is writing
                             time.sleep(0.1)
                             segments, _ = model.transcribe(temp_path, beam_size=5)
 
@@ -128,11 +126,10 @@ def record_and_transcribe_stream():
                     logger.error(
                         f"Transcription chunk error: {e}\n{traceback.format_exc()}"
                     )
-                    print("!", end="", flush=True)  # Show error indicator
+                    print("!", end="", flush=True)
 
-                time.sleep(2.0)  # Check every 2 seconds for longer chunks
+                time.sleep(2.0)
 
-            # Transcribe any remaining audio that didn't trigger a chunk
             if os.path.exists(temp_path):
                 current_size = os.path.getsize(temp_path)
                 if current_size > last_size and current_size > 0:
@@ -146,17 +143,15 @@ def record_and_transcribe_stream():
                     if len(new_transcription) > len(transcription):
                         transcription = new_transcription
 
-            # Use the final real-time transcription
             if transcription:
                 transcription_queue.put(transcription.strip())
         except Exception as e:
             logger.error(f"Fatal transcription error: {e}\n{traceback.format_exc()}")
             print(f"\nTranscription failed: {e}")
-            transcription_queue.put("")  # Put empty result to avoid hanging
+            transcription_queue.put("")
 
     def input_thread():
         """Thread for handling keyboard input"""
-        # Save terminal settings
         old_settings = termios.tcgetattr(sys.stdin)
         tty.setraw(sys.stdin.fileno())
 
@@ -182,10 +177,8 @@ def record_and_transcribe_stream():
                             os.unlink(temp_path)
                         sys.exit(0)
         finally:
-            # Restore terminal settings
             termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
-    # Start all threads
     rec_thread = threading.Thread(target=recording_thread)
     trans_thread = threading.Thread(target=transcription_thread)
     inp_thread = threading.Thread(target=input_thread)
@@ -194,19 +187,16 @@ def record_and_transcribe_stream():
     trans_thread.start()
     inp_thread.start()
 
-    # Wait for threads to complete
     inp_thread.join()
     rec_thread.join()
     trans_thread.join()
 
-    # Get final transcription
     if not transcription_queue.empty():
         final_transcription = transcription_queue.get()
         if os.path.exists(temp_path):
             os.unlink(temp_path)
         return final_transcription
 
-    # Clean up
     if os.path.exists(temp_path):
         os.unlink(temp_path)
     return None
@@ -240,7 +230,6 @@ def clear_cache():
 
 def select_tmux_pane():
     """Let user select tmux pane with fzf"""
-    # Get list of panes with session and window info
     result = run_command(
         [
             "tmux",
@@ -258,7 +247,6 @@ def select_tmux_pane():
     if len(panes) == 1:
         return panes[0].split(" - ")[0]
 
-    # Use fzf to select pane
     fzf_process = run_command(
         ["fzf", "--prompt=Select tmux pane: "],
         input=result.stdout,
@@ -272,15 +260,12 @@ def select_tmux_pane():
 
 def get_target_pane():
     """Get or select target tmux pane"""
-    # Check if tmux sessions exist
     result = run_command(["tmux", "list-sessions"])
     if result.returncode != 0:
         return None
 
-    # Try cached pane first
     target_pane = get_cached_pane()
 
-    # Verify cached pane still exists
     if target_pane:
         pane_result = run_command(
             [
@@ -298,7 +283,6 @@ def get_target_pane():
         else:
             target_pane = None
 
-    # If no valid cached pane, let user select
     if not target_pane:
         target_pane = select_tmux_pane()
 

@@ -37,9 +37,15 @@ test-all: # Run both minimal and core tests
 	make test
 	make test-core
 
-lint: # Run shellcheck on all shell files
+lint: # Run shellcheck on all shell files and ruff on Python files
 	@echo "Running shellcheck on shell files.."
-	find . -name "*.sh" -o -path "./river/init" | grep -v ".git" | grep -v "scratch" | xargs shellcheck
+	find . -name "*.sh" -o -path "./river/init" | grep -v ".git" | grep -v "scratch" | grep -v ".venv" | xargs shellcheck
+	@echo "Running ruff on Python files.."
+	cd whisper && uv run ruff check .
+
+format: # Format Python files with black
+	@echo "Formatting Python files with black.."
+	cd whisper && uv run black .
 
 check-secret: # Check file or directory for secrets using gitleaks (Usage: make check-secret TARGET=path)
 	@if [ -z "$(TARGET)" ]; then \

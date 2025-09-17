@@ -112,6 +112,8 @@ def record_and_transcribe_stream():
                         current_size = os.path.getsize(temp_path)
                         if current_size > last_size and current_size > 8192:
                             print(".", end="", flush=True)
+                            # Small delay to avoid reading file while sox is writing
+                            time.sleep(0.1)
                             segments, _ = model.transcribe(temp_path, beam_size=5)
 
                             new_transcription = ""
@@ -129,6 +131,20 @@ def record_and_transcribe_stream():
                     print("!", end="", flush=True)  # Show error indicator
 
                 time.sleep(2.0)  # Check every 2 seconds for longer chunks
+
+            # Transcribe any remaining audio that didn't trigger a chunk
+            if os.path.exists(temp_path):
+                current_size = os.path.getsize(temp_path)
+                if current_size > last_size and current_size > 0:
+                    print(".", end="", flush=True)
+                    segments, _ = model.transcribe(temp_path, beam_size=5)
+
+                    new_transcription = ""
+                    for segment in segments:
+                        new_transcription += segment.text
+
+                    if len(new_transcription) > len(transcription):
+                        transcription = new_transcription
 
             # Use the final real-time transcription
             if transcription:

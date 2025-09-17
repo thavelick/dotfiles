@@ -1,0 +1,7 @@
+[MASTER]
+# Tell pylint to look for packages in the uv virtual environment
+init-hook='import sys; import subprocess; result = subprocess.run(["uv", "run", "python", "-c", "import sys; print(sys.path)"], capture_output=True, text=True, cwd="/home/tristan/Projects/dotfiles/whisper"); sys.path.extend(eval(result.stdout.strip())) if result.returncode == 0 else None'
+
+[MESSAGES CONTROL]
+# Disable import-error for packages that are available in uv environment
+disable=import-error

@@ -15,6 +15,7 @@ This directory contains the configuration for the River Wayland compositor.
 | `Alt + E` | Emoji picker |
 | `Alt + D` | Document picker |
 | `Alt + H` | Show this help/keybindings |
+| `Alt + Z` | Voice input (record & transcribe to clipboard) |
 
 ### Window Management
 

@@ -7,3 +7,4 @@ QtProject.conf
 .claude
 CLAUDE.local.md
 scratch/
+whisper/.venv/

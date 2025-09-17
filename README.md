@@ -2,6 +2,8 @@
 
 A modular, portable dotfiles configuration supporting multiple operating systems and desktop environments.
 
+![Desktop Environment](desktop_environment.png)
+
 ## Features
 
 - **Cross-platform**: Supports macOS, Arch Linux, and Debian/Ubuntu

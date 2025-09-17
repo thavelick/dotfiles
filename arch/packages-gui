@@ -5,7 +5,6 @@ discord
 dosbox
 emulationstation
 fceux
-firefox
 fluidsynth
 foot
 gimp
@@ -41,3 +40,4 @@ wayfire
 wl-clipboard
 xdg-desktop-portal-gtk
 xdg-desktop-portal-wlr
+zen-browser-bin

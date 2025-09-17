@@ -13,6 +13,7 @@ import tty
 import logging
 import traceback
 from faster_whisper import WhisperModel
+import av
 
 ENTER_KEYS = ("\r", "\n")
 ESCAPE_KEY = "\x1b"
@@ -122,6 +123,9 @@ def record_and_transcribe_stream():
                                 transcription = new_transcription
 
                             last_size = current_size
+                except av.error.ValueError:
+                    # Ignore race condition when reading file while sox writes
+                    continue
                 except Exception as e:
                     logger.error(
                         f"Transcription chunk error: {e}\n{traceback.format_exc()}"

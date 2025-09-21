@@ -108,7 +108,8 @@
 	"custom/controller": {
 		"interval": 10,
 		"exec": "$HOME/Projects/dotfiles/waybar/controller_status.sh",
-		"tooltip": false,
+		"tooltip": true,
+		"tooltip-format": "Click to disconnect",
 		"format": "{}",
 		"return-type": "text",
 		"on-click": "bluetoothctl disconnect 64:B5:C6:3E:91:54"

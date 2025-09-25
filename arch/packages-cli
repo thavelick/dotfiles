@@ -16,6 +16,7 @@ clang
 cmake
 cmatrix
 cups
+darkman
 deno-readability-cli
 docker
 docker-compose

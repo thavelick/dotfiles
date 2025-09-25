@@ -16,9 +16,9 @@ notify_claude_terminals() {
                 {
                     printf '\033[s'      # Save cursor position
                     printf '\033[H'      # Move cursor to top-left
-                    printf "\033[${color_code}m                                                           \033[0m\n"
-                    printf "\033[${color_code}m  $emoji DARKMAN: Switched to ${mode^^} theme - Restart Claude!   \033[0m\n"
-                    printf "\033[${color_code}m                                                           \033[0m\n"
+                    printf '\033[%sm                                                           \033[0m\n' "$color_code"
+                    printf '\033[%sm  %s DARKMAN: Switched to %s theme - Restart Claude!   \033[0m\n' "$color_code" "$emoji" "${mode^^}"
+                    printf '\033[%sm                                                           \033[0m\n' "$color_code"
                     printf '\033[u'      # Restore cursor position
                 } > "/dev/$tty"
             fi

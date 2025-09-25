@@ -37,27 +37,17 @@ set_system_theme() {
 set_foot_theme() {
     local mode=$1
     local signal=$2
+    local theme_config="$HOME/.local/share/foot/foot-theme.ini"
 
-    CONFIG_FILE="$HOME/.config/foot/foot.ini"
-
-    # Set initial color theme based on mode
-    local theme_num
+    # Update initial-color-theme setting (1=dark/colors, 2=light/colors2)
     if [[ "$mode" == "dark" ]]; then
-        theme_num=1
+        echo "initial-color-theme=1" > "$theme_config"
     else
-        theme_num=2
+        echo "initial-color-theme=2" > "$theme_config"
     fi
 
-    if grep -q "^initial-color-theme=" "$CONFIG_FILE"; then
-        sed -i "s/^initial-color-theme=.*/initial-color-theme=$theme_num/" "$CONFIG_FILE"
-    else
-        # Add initial-color-theme setting under [main] section
-        sed -i '/^\[main\]/a initial-color-theme='"$theme_num" "$CONFIG_FILE"
-    fi
-
-    # Signal all running foot instances
+    # Signal all running foot instances to reload config
     pkill -"$signal" -u "$(id -u)" foot
-
     logger "Darkman: Foot switched to $mode theme"
 }
 
@@ -65,12 +55,8 @@ set_foot_theme() {
 set_zsh_theme() {
     local mode=$1
 
-    # Set theme environment variable
-    echo "export THEME_MODE=\"$mode\"" > /tmp/theme_mode_env
-
     # Signal running zsh shells to update theme
     pkill -USR1 -u "$(id -u)" zsh
-
     logger "Darkman: Zsh switched to $mode theme"
 }
 

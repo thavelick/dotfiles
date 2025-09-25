@@ -9,20 +9,24 @@ notify_claude_terminals() {
     local emoji=$3
 
     for pid in $(pgrep -f "claude" 2>/dev/null || true); do
-        if [[ -d "/proc/$pid" ]]; then
-            tty=$(ps -p "$pid" -o tty= 2>/dev/null | tr -d ' ' || echo "unknown")
-            if [[ "$tty" != "unknown" && "$tty" != "?" && -e "/dev/$tty" ]]; then
-                # Show prominent notification bar at top
-                {
-                    printf '\033[s'      # Save cursor position
-                    printf '\033[H'      # Move cursor to top-left
-                    printf '\033[%sm                                                           \033[0m\n' "$color_code"
-                    printf '\033[%sm  %s DARKMAN: Switched to %s theme - Restart Claude!   \033[0m\n' "$color_code" "$emoji" "${mode^^}"
-                    printf '\033[%sm                                                           \033[0m\n' "$color_code"
-                    printf '\033[u'      # Restore cursor position
-                } > "/dev/$tty"
-            fi
-        fi
+        # Skip if process doesn't exist
+        [[ -d "/proc/$pid" ]] || continue
+
+        # Get TTY for the process
+        tty=$(ps -p "$pid" -o tty= 2>/dev/null | tr -d ' ' || echo "unknown")
+
+        # Skip if TTY is invalid or not accessible
+        [[ "$tty" != "unknown" && "$tty" != "?" && -e "/dev/$tty" ]] || continue
+
+        # Show prominent notification bar at top
+        {
+            printf '\033[s'      # Save cursor position
+            printf '\033[H'      # Move cursor to top-left
+            printf '\033[%sm                                                           \033[0m\n' "$color_code"
+            printf '\033[%sm  %s DARKMAN: Switched to %s theme - Restart Claude!   \033[0m\n' "$color_code" "$emoji" "${mode^^}"
+            printf '\033[%sm                                                           \033[0m\n' "$color_code"
+            printf '\033[u'      # Restore cursor position
+        } > "/dev/$tty"
     done
 }
 

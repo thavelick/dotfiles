@@ -42,6 +42,18 @@ lint: # Run shellcheck on shell files and ruff on Python files
 	find . -name "*.sh" -o -path "./river/init" | grep -v ".git" | grep -v "scratch" | grep -v ".venv" | xargs shellcheck
 	@echo "Running ruff on Python files.."
 	cd whisper && uv run ruff check .
+	@echo "Checking package files are alphabetically sorted.."
+	@for file in arch/packages-*; do \
+		if [ -f "$$file" ]; then \
+			if ! sort -c "$$file" 2>/dev/null; then \
+				echo "ERROR: $$file is not alphabetically sorted"; \
+				echo "Run 'sort $$file -o $$file' to fix"; \
+				exit 1; \
+			else \
+				echo "  ✓ $$file is properly sorted"; \
+			fi; \
+		fi; \
+	done
 
 format: # Format Python files with black
 	@echo "Formatting Python files with black.."

@@ -82,3 +82,26 @@ source_if_exists $HOME/work.zsh && source_if_exists $DOTFILES_HOME/work/github.s
 
 # Project-specific configs
 source_if_exists $DOTFILES_HOME/gemini.sh
+
+# Theme switching signal handler for darkman integration
+handle_theme_signal() {
+    # Get current theme mode directly from darkman
+    local theme_mode=$(darkman get 2>/dev/null)
+
+    if [[ -n "$theme_mode" ]]; then
+        # Update zsh-autosuggestions colors based on theme
+        if [[ "$theme_mode" == "dark" ]]; then
+            # Dark theme - use light gray for suggestions
+            export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#586e75"
+        else
+            # Light theme - use dark gray for suggestions
+            export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#93a1a1"
+        fi
+
+        # Force prompt refresh to pick up new theme
+        zle && zle reset-prompt
+    fi
+}
+
+# Set up USR1 signal handler for theme switching
+trap handle_theme_signal USR1

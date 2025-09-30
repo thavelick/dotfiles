@@ -25,10 +25,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 if [ "$(uname)" = 'Darwin' ]; then
-  missing_packages=$(comm -13 <(cat <(brew ls --formula)  <(brew ls --cask) | sort) <(sort mac/packages))
-  if [ -n "$missing_packages" ]; then
-    brew install "$missing_packages"
-  fi
+  mac/install.sh
 elif grep -qF Debian /etc/issue; then
   debian/install.sh
 else # Assume Arch or derivatives

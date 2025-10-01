@@ -19,7 +19,7 @@ preexec() {
 set_prompt_time() {
     # Set prompt_time to show how long the last command took to run: 🐢 1m2s
     # It will only show if the command took longer than 5 seconds.
-    
+
     prompt_time=''
     if [ "$exec_start_time" ]; then
         if command_exists gdate; then
@@ -30,7 +30,7 @@ set_prompt_time() {
             exec_end_time=$(date +%s)
             exec_duration_seconds=$((exec_end_time - exec_start_time))
         fi
-        
+
         if (( exec_duration_seconds >= 5 )); then
             clock_icon="🐢"
             if (( exec_duration_seconds >= 60 )); then
@@ -48,7 +48,7 @@ set_prompt_time() {
 # Pre-command hook
 precmd() {
     set_prompt_time
-    
+
     current_directory=$(pwd)
     if [[ $current_directory != $HOME/Projects/* ]]; then
         # skip doing stuff with git prompts if we're outside of ~/Projects
@@ -56,7 +56,7 @@ precmd() {
         vcs_info_msg_0_=''
         return
     fi
-    
+
     # Only run git commands if git is available
     if command_exists git; then
         unpushed_commits=''
@@ -82,7 +82,7 @@ precmd() {
 # Distribution icon function
 distro_icon() {
     if [[ "$(get_os_type)" == "macos" ]]; then
-        echo ""
+        echo ""
     elif [ ! -f /etc/os-release ]; then
         echo ""
     elif grep -q 'ID=debian' /etc/os-release; then

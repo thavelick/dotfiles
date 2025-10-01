@@ -7,3 +7,5 @@ if [ -n "$missing_packages" ]; then
     brew install "$pkg"
   done
 fi
+
+"$DOTFILES_HOME"/git/setup.sh

@@ -9,3 +9,4 @@ if [ -n "$missing_packages" ]; then
 fi
 
 "$DOTFILES_HOME"/git/setup.sh
+"$DOTFILES_HOME"/tmux/setup.sh

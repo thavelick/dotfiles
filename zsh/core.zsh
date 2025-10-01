@@ -61,6 +61,9 @@ if is_wayland; then
     export MOZ_ENABLE_WAYLAND="1"
 fi
 
+# macOS keychain auto-unlock for SSH sessions
+[[ "$(get_os_type)" == "macos" && -n "$SSH_CONNECTION" ]] && ! security show-keychain-info ~/Library/Keychains/login.keychain-db 2>/dev/null && security unlock-keychain ~/Library/Keychains/login.keychain-db
+
 # Keyboard layout (only matters on systems that use it)
 export XKB_DEFAULT_LAYOUT="us(colemak)"
 export XKB_DEFAULT_OPTIONS=ctrl:nocaps
@@ -83,24 +86,13 @@ source_if_exists $HOME/work.zsh && source_if_exists $DOTFILES_HOME/work/github.s
 # Project-specific configs
 source_if_exists $DOTFILES_HOME/gemini.sh
 
+# zsh-autosuggestions color (works in both light and dark mode)
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#586e75"
+
 # Theme switching signal handler for darkman integration
 handle_theme_signal() {
-    # Get current theme mode directly from darkman
-    local theme_mode=$(darkman get 2>/dev/null)
-
-    if [[ -n "$theme_mode" ]]; then
-        # Update zsh-autosuggestions colors based on theme
-        if [[ "$theme_mode" == "dark" ]]; then
-            # Dark theme - use light gray for suggestions
-            export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#586e75"
-        else
-            # Light theme - use dark gray for suggestions
-            export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#93a1a1"
-        fi
-
-        # Force prompt refresh to pick up new theme
-        zle && zle reset-prompt
-    fi
+    # Force prompt refresh to pick up new theme
+    zle && zle reset-prompt
 }
 
 # Set up USR1 signal handler for theme switching

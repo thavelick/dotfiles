@@ -126,45 +126,39 @@ vim.cmd([[autocmd BufWritePre * lua _G.trim_whitespace()]])
 -- highlight all search matches
 vim.o.hlsearch = true
 
--- Setup language servers manually
-
--- Setup language servers with lspconfig
-local lspconfig = require('lspconfig')
-lspconfig.clangd.setup {}
-lspconfig.pyright.setup {
-  on_attach = function()
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = 0, desc = "Show hover documentation"})
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = 0, desc = "Go to definition"})
-    vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = 0, desc = "Show references"})
-
-    -- which_key.register({
-    --   { "<leader>d", group = "Diagnostics" },
-    -- })
-    vim.keymap.set("n", "<leader>df", vim.diagnostic.goto_next, { buffer = 0, desc = "Go to next diagnostic"})
-    vim.keymap.set("n", "<leader>db", vim.diagnostic.goto_prev, { buffer = 0, desc = "Go to previous diagnostic"})
-    vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, { buffer = 0, desc = "Show diagnostics in loclist"})
-
-    vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { buffer = 0, desc = "Rename symbol"})
-  end,
-}
-lspconfig.esbonio.setup {
-  on_attach = function()
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = 0, desc = "Go to definition"})
-    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = 0, desc = "Go to implementation"})
-    vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = 0, desc = "Show references"})
-
-  end,
-}
-lspconfig.ts_ls.setup {}
-lspconfig.lua_ls.setup {
+-- Setup language servers with new vim.lsp.config API (nvim 0.11+)
+vim.lsp.config.lua_ls = {
   settings = {
     Lua = {
       diagnostics = {
         globals = { 'vim', 'require', 'use'},
       },
     },
-  },
+  }
 }
+
+local function setup_lsp_keymaps(bufnr)
+  vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Show hover documentation"})
+  vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to definition"})
+  vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = bufnr, desc = "Go to implementation"})
+  vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "Show references"})
+  vim.keymap.set("n", "<leader>df", vim.diagnostic.goto_next, { buffer = bufnr, desc = "Go to next diagnostic"})
+  vim.keymap.set("n", "<leader>db", vim.diagnostic.goto_prev, { buffer = bufnr, desc = "Go to previous diagnostic"})
+  vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, { buffer = bufnr, desc = "Show diagnostics in loclist"})
+  vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename symbol"})
+end
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    setup_lsp_keymaps(args.buf)
+  end,
+})
+
+vim.lsp.enable('clangd')
+vim.lsp.enable('pyright')
+vim.lsp.enable('esbonio')
+vim.lsp.enable('ts_ls')
+vim.lsp.enable('lua_ls')
 
 -- Harpoon configuration
 local harpoon = require("harpoon")

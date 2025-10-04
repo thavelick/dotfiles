@@ -12,23 +12,22 @@ disable_hotkey() {
 }
 
 # Remap Caps Lock to Control
-# HID usage codes: 30064771296 = Caps Lock, 30064771129 = Control
+# HID usage codes: 30064771129 = Caps Lock, 30064771300 = Control
 KEYBOARD_ID="5426-269-0"
-if system_profiler SPUSBDataType 2>/dev/null | grep -q "$KEYBOARD_ID" || \
-   defaults -currentHost read -g 2>/dev/null | grep -q "com.apple.keyboard.modifiermapping.$KEYBOARD_ID"; then
-  defaults -currentHost write -g com.apple.keyboard.modifiermapping.$KEYBOARD_ID -array-add '
+# Apply mapping (will succeed if keyboard exists, warn if it doesn't work)
+defaults -currentHost write -g com.apple.keyboard.modifiermapping.$KEYBOARD_ID -array '
 <dict>
   <key>HIDKeyboardModifierMappingDst</key>
-  <integer>30064771129</integer>
+  <integer>30064771300</integer>
   <key>HIDKeyboardModifierMappingSrc</key>
-  <integer>30064771296</integer>
+  <integer>30064771129</integer>
 </dict>
-'
-else
-  echo "Warning: Keyboard $KEYBOARD_ID not found. Caps Lock mapping not applied." >&2
-  echo "Run this to find your keyboard ID:" >&2
-  echo "  defaults -currentHost read -g | grep -i keyboard" >&2
-fi
+' 2>/dev/null || {
+  echo "Warning: Could not apply Caps Lock mapping for keyboard $KEYBOARD_ID" >&2
+  echo "This might not be your keyboard. To find your keyboard ID:" >&2
+  echo "  1. Manually set Caps Lock -> Control in System Settings > Keyboard > Modifier Keys" >&2
+  echo "  2. Run: defaults -currentHost read -g | grep -i keyboard" >&2
+}
 
 # Disable Ctrl+Space keyboard layout switching (conflicts with tmux prefix key)
 # 60 = Select the previous input source

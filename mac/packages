@@ -32,9 +32,11 @@ keepassxc
 kitty
 libqalculate
 libreoffice
+libzim
 lsd
 lua-language-server
 luarocks
+meson
 moreutils
 mpv
 msmtp
@@ -42,11 +44,13 @@ mypy
 nasm
 ncurses
 neovim
+ninja
 nmap
 node
 ollama
 openvpn
 pandoc
+pkgconf
 prettier
 pylint
 pyright

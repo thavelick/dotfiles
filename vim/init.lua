@@ -127,7 +127,15 @@ vim.cmd([[autocmd BufWritePre * lua _G.trim_whitespace()]])
 vim.o.hlsearch = true
 
 -- Setup language servers with new vim.lsp.config API (nvim 0.11+)
-local lspconfigs = require('lspconfig.configs')
+vim.lsp.config.lua_ls = {
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = { 'vim', 'require', 'use'},
+      },
+    },
+  }
+}
 
 local function setup_lsp_keymaps(bufnr)
   vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Show hover documentation"})
@@ -151,16 +159,6 @@ vim.lsp.enable('pyright')
 vim.lsp.enable('esbonio')
 vim.lsp.enable('ts_ls')
 vim.lsp.enable('lua_ls')
-
-if lspconfigs.lua_ls then
-  lspconfigs.lua_ls.default_config.settings = {
-    Lua = {
-      diagnostics = {
-        globals = { 'vim', 'require', 'use'},
-      },
-    },
-  }
-end
 
 -- Harpoon configuration
 local harpoon = require("harpoon")

@@ -27,6 +27,7 @@ fi
 [[ -f "$HOME/Projects/ai-asker/ask.py" ]] && alias ask4='$HOME/Projects/ai-asker/ask.py --model gpt-4'
 [[ -f "$HOME/Projects/dotfiles/git/auto-commit.sh" ]] && alias autocommit='$HOME/Projects/dotfiles/git/auto-commit.sh'
 [[ -f "$DOTFILES_HOME/ghreadme.sh" ]] && alias ghreadme='$DOTFILES_HOME/ghreadme.sh'
+command_exists python3 && [[ -f "$HOME/Projects/nag-runner/nag_runner.py" ]] && alias nag='python3 $HOME/Projects/nag-runner/nag_runner.py'
 
 if [[ -f "$HOME/Projects/stock-tsv/venv/bin/python3" ]] && [[ -f "$HOME/Projects/stock-tsv/stock_tsv.py" ]] && command_exists wl-copy; then
     alias clipstocks='SYMBOLS=VFIAX,VTIVX,VTSAX $HOME/Projects/stock-tsv/venv/bin/python3 $HOME/Projects/stock-tsv/stock_tsv.py | wl-copy'

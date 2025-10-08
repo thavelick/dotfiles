@@ -8,3 +8,4 @@ QtProject.conf
 CLAUDE.local.md
 scratch/
 whisper/.venv/
+logs/

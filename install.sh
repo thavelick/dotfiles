@@ -31,15 +31,6 @@ elif grep -qF Debian /etc/issue; then
 else # Assume Arch or derivatives
   sudo pacman -Syu --noconfirm
   
-  # Choose package list based on flags
-  if [ "$CORE_ONLY" = true ]; then
-    missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort arch/packages-core))
-  elif [ "$NO_GUI" = true ]; then
-    missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort arch/packages-cli))
-  else
-    missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort <(cat arch/packages-gui arch/packages-cli)))
-  fi
-  
   if ! pacman -Qq yay-bin > /dev/null 2>&1 && ! pacman -Qq yay > /dev/null 2>&1; then
     echo "yay block"
     sudo pacman -S --needed --noconfirm git base-devel
@@ -47,6 +38,16 @@ else # Assume Arch or derivatives
     [[ -d $HOME/src/yay-bin ]] || git clone --branch yay-bin --single-branch https://github.com/archlinux/aur.git ~/src/yay-bin
     cd "$HOME/src/yay-bin" || exit
     makepkg -si --noconfirm
+    cd "$DOTFILES_HOME" || exit
+  fi
+
+  # Choose package list based on flags
+  if [ "$CORE_ONLY" = true ]; then
+    missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort arch/packages-core))
+  elif [ "$NO_GUI" = true ]; then
+    missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort arch/packages-cli))
+  else
+    missing_packages=$(comm  -13 <(pacman -Qq | sort) <(sort <(cat arch/packages-gui arch/packages-cli)))
   fi
 
   if [ -n "$missing_packages" ]; then

@@ -1,0 +1,22 @@
+# Exclude large directories not needed for Docker builds
+**/.venv/
+**/venv/
+scratch/
+
+# Exclude git metadata
+.git/
+.github/
+
+# Exclude test artifacts
+*.tar
+
+# Exclude Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Exclude editor files
+.vscode/
+.idea/
+*.swp
+*.swo

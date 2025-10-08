@@ -8,5 +8,5 @@ openssl
 python3
 tidy
 tmux
-yay
+yay-bin
 zsh

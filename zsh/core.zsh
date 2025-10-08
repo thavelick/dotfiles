@@ -1,5 +1,5 @@
 # PATH
-export PATH=$PATH:$HOME/.local/bin:$HOME/.claude/local
+export PATH=$PATH:$HOME/.local/bin:$HOME/.claude/local:$HOME/.lmstudio/bin
 
 # History settings
 export HISTSIZE=100000

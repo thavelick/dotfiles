@@ -17,12 +17,18 @@ WORKDIR /home/testuser
 ENV DOTFILES_HOME=/home/testuser/Projects/dotfiles
 ENV PATH="/home/testuser/.local/bin:$PATH"
 
-# Create the Projects directory and copy dotfiles
-RUN mkdir -p /home/testuser/Projects
-COPY --chown=testuser:testuser . /home/testuser/Projects/dotfiles
+# Create the Projects directory
+RUN mkdir -p /home/testuser/Projects/dotfiles
 
-# Run the core installation
+# Copy only package lists and install script first for better caching
+COPY --chown=testuser:testuser arch/packages-core /home/testuser/Projects/dotfiles/arch/packages-core
+COPY --chown=testuser:testuser install.sh /home/testuser/Projects/dotfiles/install.sh
+
+# Run the core installation (will be cached if package files haven't changed)
 RUN cd $DOTFILES_HOME && ./install.sh --core
+
+# Copy the rest of the dotfiles
+COPY --chown=testuser:testuser . /home/testuser/Projects/dotfiles
 
 # Default shell for interactive use
 CMD ["/bin/zsh", "-l"]

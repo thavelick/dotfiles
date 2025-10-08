@@ -1,6 +1,6 @@
 FROM archlinux:latest
 
-# Install only what's needed to run install.sh
+# Install only what's needed to run install-packages.sh
 RUN pacman -Syu --noconfirm && \
     pacman -S --noconfirm \
         sudo \
@@ -17,18 +17,22 @@ WORKDIR /home/testuser
 ENV DOTFILES_HOME=/home/testuser/Projects/dotfiles
 ENV PATH="/home/testuser/.local/bin:$PATH"
 
-# Create the Projects directory
-RUN mkdir -p /home/testuser/Projects/dotfiles
+# Create directories
+RUN mkdir -p /home/testuser/Projects/dotfiles/arch
 
-# Copy only package lists and install script first for better caching
+# CACHE OPTIMIZATION: Copy only package files first
+# This layer will be cached unless package files change
 COPY --chown=testuser:testuser arch/packages-core /home/testuser/Projects/dotfiles/arch/packages-core
-COPY --chown=testuser:testuser install.sh /home/testuser/Projects/dotfiles/install.sh
+COPY --chown=testuser:testuser arch/install-packages.sh /home/testuser/Projects/dotfiles/arch/install-packages.sh
 
-# Run the core installation (will be cached if package files haven't changed)
-RUN cd $DOTFILES_HOME && ./install.sh --core
+# Install packages (CACHED unless arch/packages-* changes!)
+RUN cd $DOTFILES_HOME/arch && ./install-packages.sh --core
 
 # Copy the rest of the dotfiles
 COPY --chown=testuser:testuser . /home/testuser/Projects/dotfiles
+
+# Run setup scripts only (packages already installed)
+RUN cd $DOTFILES_HOME && ./install.sh --core --skip-packages
 
 # Default shell for interactive use
 CMD ["/bin/zsh", "-l"]

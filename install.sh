@@ -44,7 +44,7 @@ else # Assume Arch or derivatives
     echo "yay block"
     sudo pacman -S --needed --noconfirm git base-devel
     mkdir -p "$HOME/src"
-    [[ -d $HOME/src/yay-bin ]] || git clone https://aur.archlinux.org/yay-bin.git ~/src/yay-bin
+    [[ -d $HOME/src/yay-bin ]] || git clone --branch yay-bin --single-branch https://github.com/archlinux/aur.git ~/src/yay-bin
     cd "$HOME/src/yay-bin" || exit
     makepkg -si --noconfirm
   fi

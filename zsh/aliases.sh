@@ -7,6 +7,7 @@ alias ls='ls --color=auto'
 
 # Conditional aliases based on available commands
 command_exists nvim && alias vim='nvim'
+command_exists pmset && alias off='pmset displaysleepnow'
 
 # Diff alias - use GNU diff color if available
 diff --version 2>/dev/null | grep -q GNU && alias diff='diff --color'

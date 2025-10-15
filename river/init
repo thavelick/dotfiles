@@ -169,6 +169,11 @@ riverctl set-repeat 50 300
 # riverctl float-filter-add title "popup title with spaces"
 riverctl rule-add -app-id 'float*' float
 riverctl rule-add -app-id voice-input float
+riverctl rule-add -app-id float-cli-splits float
+riverctl rule-add -app-id float-cli-splits position 10 10
+riverctl rule-add -app-id "org.TasEmulators.fceux" float
+riverctl rule-add -app-id "org.TasEmulators.fceux" position 530 10
+riverctl rule-add -app-id "org.TasEmulators.fceux" dimensions 1380 1020
 # Set app-ids and titles of views which should use client side decorations
 # riverctl csd-filter-add app-id "gedit"
 riverctl rule-add -app-id mgba float

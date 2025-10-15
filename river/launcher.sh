@@ -14,7 +14,7 @@ echo "$program_to_launch" >> "$HOME/.cache/launcher_history"
 
 # run the program they chose, in a terminal if needed
 desktop_file=$(grep -lE "Exec=.*$program_to_launch" /usr/share/applications/*.desktop)
-not_terminal_apps="firefox|grim-partial"
+not_terminal_apps="firefox|grim-partial|cli_splits_launcher"
 
 [ -z "$desktop_file" ] || grep -qE "Terminal=true" "$desktop_file" && [[ ! "$program_to_launch" =~ $not_terminal_apps ]] && program_to_launch="foot $(which "$program_to_launch")"
 # [ -z "$desktop_file" ] || grep -qE "Terminal=true" "$desktop_file" && program_to_launch="foot $(which "$program_to_launch")"

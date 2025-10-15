@@ -21,6 +21,8 @@ require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
   use {'folke/tokyonight.nvim', tag = 'v2.2.0'}
   use 'jdonaldson/vaxe'
+  use 'folke/snacks.nvim'
+  use {'coder/claudecode.nvim', requires = 'folke/snacks.nvim'}
 end)
 
 -- Key timeout
@@ -176,3 +178,25 @@ vim.keymap.set("n", "<C-e>", function() harpoon:list():select(4) end)
 -- Toggle previous & next buffers stored within Harpoon list
 vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
 vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
+
+-- Claude Code configuration
+require("claudecode").setup({
+  terminal_cmd = "~/.claude/local/claude",
+  terminal = {
+    provider = "external",
+    provider_opts = {
+      external_terminal_cmd = "foot -e %s",
+    },
+  },
+})
+
+-- Claude Code keymaps
+vim.keymap.set("n", "<leader>cc", "<cmd>ClaudeCode<cr>", { desc = "Toggle Claude" })
+vim.keymap.set("n", "<leader>cf", "<cmd>ClaudeCodeFocus<cr>", { desc = "Focus Claude" })
+vim.keymap.set("n", "<leader>cr", "<cmd>ClaudeCode --resume<cr>", { desc = "Resume Claude" })
+vim.keymap.set("n", "<leader>cC", "<cmd>ClaudeCode --continue<cr>", { desc = "Continue Claude" })
+vim.keymap.set("n", "<leader>cm", "<cmd>ClaudeCodeSelectModel<cr>", { desc = "Select Claude model" })
+vim.keymap.set("n", "<leader>cb", "<cmd>ClaudeCodeAdd %<cr>", { desc = "Add current buffer" })
+vim.keymap.set("v", "<leader>cs", "<cmd>ClaudeCodeSend<cr>", { desc = "Send to Claude" })
+vim.keymap.set("n", "<leader>ca", "<cmd>ClaudeCodeDiffAccept<cr>", { desc = "Accept diff" })
+vim.keymap.set("n", "<leader>cd", "<cmd>ClaudeCodeDiffDeny<cr>", { desc = "Deny diff" })

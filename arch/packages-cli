@@ -44,8 +44,8 @@ libqalculate
 libretro-mesen
 linux
 linux-firmware
-lua51-busted
 lua-language-server
+lua51-busted
 luarocks
 man-db
 moreutils

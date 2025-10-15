@@ -45,9 +45,9 @@ lint: # Run shellcheck on shell files and ruff on Python files
 	@echo "Checking package files are alphabetically sorted.."
 	@for file in arch/packages-*; do \
 		if [ -f "$$file" ]; then \
-			if ! sort -c "$$file" 2>/dev/null; then \
+			if ! LC_ALL=C sort -c "$$file" 2>/dev/null; then \
 				echo "ERROR: $$file is not alphabetically sorted"; \
-				echo "Run 'sort $$file -o $$file' to fix"; \
+				echo "Run 'LC_ALL=C sort $$file -o $$file' to fix"; \
 				exit 1; \
 			else \
 				echo "  ✓ $$file is properly sorted"; \

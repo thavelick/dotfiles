@@ -7,7 +7,6 @@ black
 borgbackup
 btop
 bzip2
-claude-code
 cmake
 coreutils
 discord
@@ -39,6 +38,7 @@ luarocks
 meson
 moreutils
 mpv
+m1ddc
 msmtp
 mypy
 nasm

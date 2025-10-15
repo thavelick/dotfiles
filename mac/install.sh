@@ -9,5 +9,7 @@ if [ -n "$missing_packages" ]; then
 fi
 
 "$DOTFILES_HOME"/mac/setup.sh
+"$DOTFILES_HOME"/npm/setup.sh
+"$DOTFILES_HOME"/uv/setup.sh
 "$DOTFILES_HOME"/git/setup.sh
 "$DOTFILES_HOME"/tmux/setup.sh

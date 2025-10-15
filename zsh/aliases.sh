@@ -50,6 +50,9 @@ if command_exists mbsync && command_exists notmuch; then
     alias mailsync="mbsync primary && notmuch new"
 fi
 
+# Enhanced SFTP with readline support
+command_exists rlwrap && command_exists sftp && alias sftp='rlwrap -a -c sftp'
+
 # LLM aliases
 if command_exists llm; then
     alias llmt="llm --model thinking"

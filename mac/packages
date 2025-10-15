@@ -59,6 +59,7 @@ readline
 rectangle
 retroarch
 ripgrep
+rlwrap
 rsync
 rustup
 sdcv

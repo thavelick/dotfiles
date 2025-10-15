@@ -81,6 +81,7 @@ python-uv
 rclone
 retroarch-assets-xmb
 ripgrep
+rlwrap
 rogue
 rogue-debug
 rsync

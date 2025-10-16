@@ -56,3 +56,18 @@ if [ -n "$missing_packages" ]; then
 fi
 
 echo "Package installation complete!"
+
+# Setup npm and uv packages
+export DOTFILES_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+if [ -f "$DOTFILES_HOME/npm/setup.sh" ]; then
+  echo "Setting up npm packages..."
+  bash "$DOTFILES_HOME/npm/setup.sh"
+fi
+
+if [ -f "$DOTFILES_HOME/uv/setup.sh" ]; then
+  echo "Setting up uv tools..."
+  bash "$DOTFILES_HOME/uv/setup.sh"
+fi
+
+echo "All setup complete!"

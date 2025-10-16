@@ -1,1 +1,9 @@
+aider-chat
+datasette
+detect-secrets
+files-to-prompt
 llm
+playwright
+py-spy
+ruff
+vulture

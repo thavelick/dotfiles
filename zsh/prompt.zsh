@@ -96,10 +96,15 @@ distro_icon() {
     fi
 }
 
-# Docker container detection
 docker_indicator() {
     if [ -f /.dockerenv ]; then
         echo "🐋"
+    fi
+}
+
+hostname_indicator() {
+    if is_ssh; then
+        echo "%m:"
     fi
 }
 
@@ -107,4 +112,4 @@ docker_indicator() {
 setopt prompt_subst
 
 # Set the prompt
-PROMPT='${prompt_time}%~ $(distro_icon)$(docker_indicator) ${vcs_info_msg_0_}% ➜ '
+PROMPT='${prompt_time}$(hostname_indicator)%~ $(distro_icon)$(docker_indicator) ${vcs_info_msg_0_}% ➜ '

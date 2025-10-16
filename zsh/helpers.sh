@@ -51,3 +51,8 @@ is_wayland() {
     [[ -n "$WAYLAND_DISPLAY" ]]
 }
 
+# Check if currently in an SSH session
+is_ssh() {
+    [[ -n "$SSH_CONNECTION" || -n "$SSH_CLIENT" || -n "$SSH_TTY" ]]
+}
+

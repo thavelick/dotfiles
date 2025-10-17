@@ -58,7 +58,8 @@ fi
 echo "Package installation complete!"
 
 # Setup npm and uv packages
-export DOTFILES_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+DOTFILES_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)" || exit
+export DOTFILES_HOME
 
 if [ -f "$DOTFILES_HOME/npm/setup.sh" ]; then
   echo "Setting up npm packages..."

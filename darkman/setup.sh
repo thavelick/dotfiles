@@ -6,11 +6,13 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DARK_MODE_DIR="${HOME}/.local/share/dark-mode.d"
 LIGHT_MODE_DIR="${HOME}/.local/share/light-mode.d"
+CONFIG_DIR="${HOME}/.config/darkman"
+CONFIG_FILE="$CONFIG_DIR/config.yaml"
 
 echo "Setting up darkman theme integration..."
 
 # Create darkman directories if they don't exist
-mkdir -p "$DARK_MODE_DIR" "$LIGHT_MODE_DIR"
+mkdir -p "$DARK_MODE_DIR" "$LIGHT_MODE_DIR" "$CONFIG_DIR"
 
 # Function to create symlinks for scripts
 link_scripts() {
@@ -47,6 +49,17 @@ chmod +x "$SCRIPT_DIR/theme-functions.sh"
 
 echo "✓ All scripts linked successfully"
 
+# Setup configuration file
+echo ""
+echo "Setting up darkman configuration..."
+
+# Remove existing symlink or file
+[[ -L "$CONFIG_FILE" || -f "$CONFIG_FILE" ]] && rm "$CONFIG_FILE"
+
+# Create symlink to config
+ln -s "$SCRIPT_DIR/config.yaml" "$CONFIG_FILE"
+echo "✓ Linked config.yaml"
+
 # Check if darkman is installed
 if ! command -v darkman >/dev/null 2>&1; then
     echo "⚠️  Warning: darkman is not installed"
@@ -64,6 +77,10 @@ else
     echo "   You may need to enable it manually: systemctl --user enable --now darkman.service"
 fi
 
+# Restart darkman service to pick up new config
+echo "Restarting darkman service to apply configuration..."
+systemctl --user restart darkman.service 2>/dev/null || true
+
 # Check service status
 echo ""
 echo "Darkman service status:"
@@ -72,11 +89,16 @@ systemctl --user status darkman.service --no-pager -l
 echo ""
 echo "🎉 Darkman setup complete!"
 echo ""
+echo "Configuration:"
+echo "  Location: Arvada, CO (39.8°N, 104.9°W)"
+echo "  Darkman will automatically switch themes at sunrise/sunset."
+echo ""
 echo "Commands:"
 echo "  darkman get           - Check current mode"
 echo "  darkman set dark      - Switch to dark mode"
 echo "  darkman set light     - Switch to light mode"
 echo "  darkman toggle        - Toggle between modes"
 echo ""
-echo "The service will automatically switch themes at sunrise/sunset."
-echo "Claude terminals will show notifications when theme changes - restart Claude to see the new theme."
+echo "Theme switching:"
+echo "  Lock/unlock screen with Mod+L to trigger theme check"
+echo "  Claude terminals will show notifications when theme changes"

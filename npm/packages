@@ -1,2 +1,12 @@
 @anthropic-ai/claude-code
+@eslint/create-config
+@executeautomation/playwright-mcp-server
+@google/gemini-cli
+@playwright/mcp
+eslint
+playwright
+prettier
+pyright
+typescript
+typescript-language-server
 vercel

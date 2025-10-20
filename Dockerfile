@@ -5,8 +5,14 @@ RUN apt-get update && apt-get install -y \
     zsh \
     git \
     curl \
-    neovim \
     && rm -rf /var/lib/apt/lists/*
+
+# Install neovim from AppImage (v0.11.4)
+RUN curl -L https://github.com/neovim/neovim/releases/download/v0.11.4/nvim-linux-x86_64.appimage -o nvim.appimage && \
+    chmod +x nvim.appimage && \
+    ./nvim.appimage --appimage-extract && \
+    mv squashfs-root/usr/bin/nvim /usr/local/bin/nvim && \
+    rm -rf nvim.appimage squashfs-root
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

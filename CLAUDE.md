@@ -44,7 +44,9 @@ This repository contains a modular, portable dotfiles configuration supporting m
 - `make test-core`: Run tests in Arch Linux container
 - `make test-all`: Run both test suites
 - `make build` / `make build-core`: Build Docker test images
-- `make run` / `make run-core`: Run interactive test containers
+- `make run`: Start persistent Debian development container
+- `make shell`: Shell into running container (optional cmd parameter: `make shell cmd="ls -la"`)
+- `make destroy`: Destroy the persistent container
 - After making changes to zsh config, test by sourcing `.zshrc` and running manual tests
 - Check FZF integration with Ctrl+R for history search
 - Test aliases like `ls`, `vim`, `namedcat`

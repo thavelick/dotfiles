@@ -45,9 +45,10 @@ make test-all
 make test      # Debian container
 make test-core # Arch container
 
-# Interactive testing
-make run       # Debian container
-make run-core  # Arch container
+# Interactive development
+make run      # Start persistent Debian container
+make shell    # Shell into running container (or: make shell cmd="ls -la")
+make destroy  # Destroy the container
 ```
 
 ## Development

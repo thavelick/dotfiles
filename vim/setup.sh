@@ -11,3 +11,6 @@ ln -svf "$DOTFILES_HOME/vim/init.lua" "$HOME/.config/nvim/init.lua"
 ln -svf "$DOTFILES_HOME/vim/.vim" "$HOME"
 #  symlink .vimrc
 ln -svf "$DOTFILES_HOME/vim/vimrc" "$HOME/.vimrc"
+
+# Run PackerSync to install plugins (wait for completion before exiting)
+nvim --headless -c 'autocmd User PackerComplete quitall' +PackerSync 2>&1 || true

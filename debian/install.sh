@@ -17,4 +17,6 @@ font/setup.sh
 foot/setup.sh
 git/setup.sh
 nag_runner/setup.sh
+nvim/install.sh
+vim/setup.sh
 waybar/setup.sh

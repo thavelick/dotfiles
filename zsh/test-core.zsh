@@ -181,3 +181,7 @@ fi
 
 echo "All core tests passed! ✓"
 echo "Core installation and configuration verification complete."
+
+# Run comprehensive nvim tests
+echo ""
+bash "$DOTFILES_HOME/nvim/test.sh"

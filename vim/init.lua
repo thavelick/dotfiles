@@ -1,3 +1,15 @@
+-- If packer plugins aren't installed yet, load minimal config and return
+local packer_path = vim.fn.expand("~/.local/share/nvim/site/pack/packer/start/packer.nvim")
+if not vim.loop.fs_stat(packer_path) then
+  -- Minimal config for first run before PackerSync
+  vim.o.spell = true
+  vim.o.spelllang = 'en_us'
+  vim.opt.colorcolumn = '100'
+  vim.wo.number = true
+  vim.wo.relativenumber = true
+  return
+end
+
 -- Enable spell checking
 vim.o.spell = true
 vim.o.spelllang = 'en_us'

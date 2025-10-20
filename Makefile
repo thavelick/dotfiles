@@ -17,20 +17,23 @@ build: # Build the Docker test image (minimal Debian)
 	docker build -t zshrc-test .
 
 run: # Start persistent Debian development container
-	@if docker ps -a --format '{{.Names}}' | grep -q "^$(CONTAINER_NAME)$$"; then \
-		if docker ps --format '{{.Names}}' | grep -q "^$(CONTAINER_NAME)$$"; then \
-			echo "Container $(CONTAINER_NAME) is already running"; \
-		else \
-			echo "Starting existing container $(CONTAINER_NAME).."; \
-			docker start $(CONTAINER_NAME); \
-		fi; \
-	else \
-		echo "Creating and starting container $(CONTAINER_NAME).."; \
-		docker run -d --name $(CONTAINER_NAME) \
-			-v "$(shell pwd)":/home/testuser/Projects/dotfiles \
-			zshrc-test \
-			tail -f /dev/null; \
+	@# Guard: if container is already running, skip
+	@if docker ps --format '{{.Names}}' | grep -q "^$(CONTAINER_NAME)$$"; then \
+		echo "Container $(CONTAINER_NAME) is already running"; \
+		exit 0; \
 	fi
+	@# Guard: if container exists but is stopped, restart it
+	@if docker ps -a --format '{{.Names}}' | grep -q "^$(CONTAINER_NAME)$$"; then \
+		echo "Starting existing container $(CONTAINER_NAME).."; \
+		docker start $(CONTAINER_NAME); \
+		exit 0; \
+	fi
+	@# Create and start new container
+	@echo "Creating and starting container $(CONTAINER_NAME).."; \
+	docker run -d --name $(CONTAINER_NAME) \
+		-v "$(shell pwd)":/home/testuser/Projects/dotfiles \
+		zshrc-test \
+		tail -f /dev/null # Keep container running indefinitely
 
 shell: # Shell into running Debian container (Usage: make shell [cmd="command"])
 	@if [ -z "$(cmd)" ]; then \
@@ -39,7 +42,7 @@ shell: # Shell into running Debian container (Usage: make shell [cmd="command"])
 		docker exec $(CONTAINER_NAME) /bin/sh -c "ln -sf \$$DOTFILES_HOME/zsh/zshrc ~/.zshrc && exec $(cmd)"; \
 	fi
 
-stop: # Stop and remove the Debian development container
+destroy: # Destroy the Debian development container
 	@docker stop $(CONTAINER_NAME) 2>/dev/null && docker rm $(CONTAINER_NAME) 2>/dev/null || echo "Container $(CONTAINER_NAME) is not running"
 
 test: # Run automated tests in container (minimal Debian)

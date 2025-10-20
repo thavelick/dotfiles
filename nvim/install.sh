@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
 
-# Download and install neovim AppImage (v0.11.4)
-NVIM_VERSION="0.11.4"
+# Download and install neovim AppImage (latest stable release)
 NVIM_APPIMAGE="/tmp/nvim-linux-x86_64.appimage"
 
 # Determine if we need sudo (use sudo if not already root)
@@ -11,10 +10,10 @@ if [ "$EUID" -ne 0 ]; then
   SUDO="sudo"
 fi
 
-echo "Installing neovim v${NVIM_VERSION}..."
+echo "Installing neovim (latest stable)..."
 
-# Download AppImage
-curl -L "https://github.com/neovim/neovim/releases/download/v${NVIM_VERSION}/nvim-linux-x86_64.appimage" -o "$NVIM_APPIMAGE"
+# Download AppImage from stable tag (always latest stable release)
+curl -L "https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage" -o "$NVIM_APPIMAGE"
 chmod +x "$NVIM_APPIMAGE"
 
 # Extract and install
@@ -27,5 +26,5 @@ $SUDO mv squashfs-root/usr/share/nvim/runtime /usr/local/share/nvim/
 # Cleanup
 rm -rf "$NVIM_APPIMAGE" squashfs-root
 
-echo "neovim v${NVIM_VERSION} installed successfully"
+echo "neovim installed successfully"
 nvim --version | head -3

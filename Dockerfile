@@ -12,6 +12,8 @@ RUN curl -L https://github.com/neovim/neovim/releases/download/v0.11.4/nvim-linu
     chmod +x nvim.appimage && \
     ./nvim.appimage --appimage-extract && \
     mv squashfs-root/usr/bin/nvim /usr/local/bin/nvim && \
+    mkdir -p /usr/local/share/nvim && \
+    mv squashfs-root/usr/share/nvim/runtime /usr/local/share/nvim/ && \
     rm -rf nvim.appimage squashfs-root
 
 # Copy entrypoint script

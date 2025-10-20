@@ -20,11 +20,13 @@ chmod +x "$NVIM_APPIMAGE"
 cd /tmp
 "$NVIM_APPIMAGE" --appimage-extract > /dev/null
 $SUDO mv squashfs-root/usr/bin/nvim /usr/local/bin/nvim
-$SUDO mkdir -p /usr/local/share/nvim
-$SUDO mv squashfs-root/usr/share/nvim/runtime /usr/local/share/nvim/
+$SUDO mv squashfs-root/usr/share/nvim/runtime /usr/local/share/nvim
+
+# Fix file ownership
+$SUDO chown -R root:root /usr/local/bin/nvim /usr/local/share/nvim
 
 # Cleanup
-rm -rf "$NVIM_APPIMAGE" squashfs-root
+rm -rf "$NVIM_APPIMAGE" squashfs-root 2>/dev/null || $SUDO rm -rf squashfs-root
 
 echo "neovim installed successfully"
 nvim --version | head -3

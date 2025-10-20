@@ -71,3 +71,7 @@ else
 fi
 
 echo "All tests passed! ✓"
+
+# Run nvim tests
+echo ""
+bash "$DOTFILES_HOME/nvim/test.sh"

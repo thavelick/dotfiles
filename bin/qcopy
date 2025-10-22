@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -e
+set -u
+
+if hash pbcopy 2>/dev/null; then
+  exec pbcopy
+elif hash wl-copy 2>/dev/null; then
+  exec wl-copy
+else
+  echo "Error: No clipboard tool found (pbcopy or wl-copy)" >&2
+  exit 1
+fi

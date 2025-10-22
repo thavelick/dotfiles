@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Inspired by https://codeberg.org/EvanHahn/dotfiles/src/branch/main/home/bin/bin/trash
+# Simplified to use mv instead of osascript/gio
+set -e
+set -u
+set -o pipefail
+
+if [[ "$(uname)" == 'Darwin' ]]; then
+  trash_dir="$HOME/.Trash"
+else
+  trash_dir="$HOME/.cache/trash"
+  mkdir -p "$trash_dir"
+fi
+
+for arg in "$@"; do
+  mv "$arg" "$trash_dir/"
+done

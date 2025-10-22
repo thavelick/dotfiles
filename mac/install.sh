@@ -8,6 +8,7 @@ if [ -n "$missing_packages" ]; then
   done
 fi
 
+"$DOTFILES_HOME"/dotfiles-bin/setup.sh
 "$DOTFILES_HOME"/mac/setup.sh
 "$DOTFILES_HOME"/npm/setup.sh
 "$DOTFILES_HOME"/uv/setup.sh

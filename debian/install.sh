@@ -10,6 +10,7 @@ if [ -n "$missing_packages" ]; then
   sudo apt install $missing_packages
 fi
 
+dotfiles-bin/setup.sh
 river/install.sh
 river/setup.sh
 amfora/setup.sh

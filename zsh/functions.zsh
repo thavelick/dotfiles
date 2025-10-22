@@ -274,3 +274,8 @@ boop() {
     fi
     $(exit "$last")
 }
+
+# Wrapper to ensure scratch script takes precedence over AUTO_CD
+scratch() {
+    command scratch "$@"
+}

@@ -14,3 +14,4 @@ fi
 "$DOTFILES_HOME"/uv/setup.sh
 "$DOTFILES_HOME"/git/setup.sh
 "$DOTFILES_HOME"/tmux/setup.sh
+"$DOTFILES_HOME"/sfx/setup.sh

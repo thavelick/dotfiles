@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# From https://codeberg.org/EvanHahn/dotfiles/src/branch/main/home/bin/bin/scratch
+set -e
+set -u
+set -o pipefail
+
+file="$(mktemp)"
+echo "Editing $file"
+exec "$EDITOR" "$file"

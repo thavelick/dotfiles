@@ -1,5 +1,5 @@
 # PATH
-export PATH=$PATH:$HOME/.local/bin:$HOME/.claude/local:$HOME/.lmstudio/bin
+export PATH=$PATH:$HOME/.local/bin:$HOME/.claude/local:$HOME/.lmstudio/bin:$HOME/dotfiles-bin
 
 # History settings
 export HISTSIZE=100000

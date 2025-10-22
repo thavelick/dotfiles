@@ -10,13 +10,15 @@ if [ -n "$missing_packages" ]; then
   sudo apt install $missing_packages
 fi
 
-river/install.sh
-river/setup.sh
-amfora/setup.sh
-font/setup.sh
-foot/setup.sh
-git/setup.sh
-nag_runner/setup.sh
-nvim/install.sh
-vim/setup.sh
-waybar/setup.sh
+"$DOTFILES_HOME"/dotfiles-bin/setup.sh
+"$DOTFILES_HOME"/river/install.sh
+"$DOTFILES_HOME"/river/setup.sh
+"$DOTFILES_HOME"/amfora/setup.sh
+"$DOTFILES_HOME"/font/setup.sh
+"$DOTFILES_HOME"/foot/setup.sh
+"$DOTFILES_HOME"/git/setup.sh
+"$DOTFILES_HOME"/nag_runner/setup.sh
+"$DOTFILES_HOME"/nvim/install.sh
+"$DOTFILES_HOME"/vim/setup.sh
+"$DOTFILES_HOME"/waybar/setup.sh
+"$DOTFILES_HOME"/sfx/setup.sh

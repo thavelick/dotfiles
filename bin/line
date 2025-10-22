@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# From https://codeberg.org/EvanHahn/dotfiles/src/branch/main/home/bin/bin/line
+set -e
+set -u
+
+head -n "$1" | tail -n 1

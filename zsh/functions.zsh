@@ -243,3 +243,39 @@ help() {
             ;;
     esac
 }
+
+# Create directory and cd into it
+# From https://codeberg.org/EvanHahn/dotfiles/src/branch/main/home/zsh/.config/zsh/aliases.zsh
+mkcd() {
+    mkdir -p "$1"
+    cd "$1"
+}
+
+# Create a temporary directory and cd into it
+# From https://codeberg.org/EvanHahn/dotfiles/src/branch/main/home/zsh/.config/zsh/aliases.zsh
+tempe() {
+    cd "$(mktemp -d)"
+    chmod -R 0700 .
+    if [[ $# -eq 1 ]]; then
+        mkdir -p "$1"
+        cd "$1"
+        chmod -R 0700 .
+    fi
+}
+
+# Play sound based on last command's exit code
+# From https://codeberg.org/EvanHahn/dotfiles/src/branch/main/home/zsh/.config/zsh/aliases.zsh
+boop() {
+    local last="$?"
+    if [[ "$last" == '0' ]]; then
+        sfx good
+    else
+        sfx bad
+    fi
+    $(exit "$last")
+}
+
+# Wrapper to ensure scratch script takes precedence over AUTO_CD
+scratch() {
+    command scratch "$@"
+}

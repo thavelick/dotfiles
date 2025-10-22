@@ -50,7 +50,8 @@ else # Assume Arch or derivatives
     "$DOTFILES_HOME"/font/setup.sh
     "$DOTFILES_HOME"/systemd/setup.sh
   fi
-  
+
+  "$DOTFILES_HOME"/dotfiles-bin/setup.sh
   "$DOTFILES_HOME"/git/setup.sh
   "$DOTFILES_HOME"/nag_runner/setup.sh
   "$DOTFILES_HOME"/amfora/setup.sh
@@ -58,5 +59,6 @@ else # Assume Arch or derivatives
   "$DOTFILES_HOME"/tmux/setup.sh
 fi
 
+"$DOTFILES_HOME"/sfx/setup.sh
 "$DOTFILES_HOME"/vim/setup.sh
 "$DOTFILES_HOME"/zsh/setup.sh

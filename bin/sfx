@@ -5,4 +5,32 @@ set -u
 set -o pipefail
 
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
-exec mpv --really-quiet --no-video "$XDG_CONFIG_HOME/dotfiles-sfx/$1.ogg" &
+SFX_DIR="$XDG_CONFIG_HOME/dotfiles-sfx"
+
+# Show usage if no argument provided
+if [ $# -eq 0 ]; then
+  echo "Usage: sfx <sound>"
+  echo ""
+  echo "Available sounds:"
+  if [ -d "$SFX_DIR" ]; then
+    for file in "$SFX_DIR"/*.ogg; do
+      if [ -f "$file" ]; then
+        basename "$file" .ogg
+      fi
+    done | sort
+  else
+    echo "  (none - $SFX_DIR not found)"
+  fi
+  exit 1
+fi
+
+SOUND_FILE="$SFX_DIR/$1.ogg"
+
+# Check if sound file exists
+if [ ! -f "$SOUND_FILE" ]; then
+  echo "Error: Sound '$1' not found at $SOUND_FILE" >&2
+  echo "Run 'sfx' with no arguments to see available sounds." >&2
+  exit 1
+fi
+
+exec mpv --really-quiet --no-video "$SOUND_FILE" &

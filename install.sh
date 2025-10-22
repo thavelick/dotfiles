@@ -59,5 +59,6 @@ else # Assume Arch or derivatives
   "$DOTFILES_HOME"/tmux/setup.sh
 fi
 
+"$DOTFILES_HOME"/sfx/setup.sh
 "$DOTFILES_HOME"/vim/setup.sh
 "$DOTFILES_HOME"/zsh/setup.sh

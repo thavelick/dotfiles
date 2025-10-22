@@ -262,3 +262,15 @@ tempe() {
         chmod -R 0700 .
     fi
 }
+
+# Play sound based on last command's exit code
+# From https://codeberg.org/EvanHahn/dotfiles/src/branch/main/home/zsh/.config/zsh/aliases.zsh
+boop() {
+    local last="$?"
+    if [[ "$last" == '0' ]]; then
+        sfx good
+    else
+        sfx bad
+    fi
+    $(exit "$last")
+}

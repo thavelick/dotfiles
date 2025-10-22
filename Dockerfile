@@ -7,6 +7,14 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# Copy nvim install script and run it
+COPY nvim/install.sh /tmp/nvim-install.sh
+RUN chmod +x /tmp/nvim-install.sh && /tmp/nvim-install.sh && rm /tmp/nvim-install.sh
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Create a test user
 RUN useradd -m -s /bin/zsh testuser
 
@@ -21,5 +29,6 @@ ENV DOTFILES_HOME=/home/testuser/Projects/dotfiles
 # For now, create a placeholder that will be replaced
 RUN echo '# Placeholder - will be replaced by symlink' > .zshrc
 
-# Set zsh as default shell and start with zsh
-CMD ["sh", "-c", "ln -sf $DOTFILES_HOME/zsh/zshrc ~/.zshrc && exec /bin/zsh -l"]
+# Use entrypoint script to always run setup, regardless of CMD override
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["tail", "-f", "/dev/null"]

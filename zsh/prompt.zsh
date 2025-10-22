@@ -98,7 +98,7 @@ distro_icon() {
 
 docker_indicator() {
     if [ -f /.dockerenv ]; then
-        echo "🐋"
+        echo " 🐋"
     fi
 }
 

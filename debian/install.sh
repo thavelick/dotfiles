@@ -18,5 +18,7 @@ fi
 "$DOTFILES_HOME"/foot/setup.sh
 "$DOTFILES_HOME"/git/setup.sh
 "$DOTFILES_HOME"/nag_runner/setup.sh
+"$DOTFILES_HOME"/nvim/install.sh
+"$DOTFILES_HOME"/vim/setup.sh
 "$DOTFILES_HOME"/waybar/setup.sh
 "$DOTFILES_HOME"/sfx/setup.sh

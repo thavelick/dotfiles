@@ -1,7 +1,7 @@
 [
     {
-        "name": "archlinux updates",
-        "command": "sudo pacman -Syu --noconfirm && yay -Syu --noconfirm",
+        "name": "system package updates",
+        "command": "sudo pacman -Syu --noconfirm && yay -Syu --noconfirm && npm update -g && uv tool upgrade --all",
         "interval": "7"
     },
     {

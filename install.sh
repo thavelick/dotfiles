@@ -36,10 +36,10 @@ elif grep -qF Debian /etc/issue; then
 else # Assume Arch or derivatives
   # Install packages unless --skip-packages is set
   if [ "$SKIP_PACKAGES" = false ]; then
-    PACKAGE_FLAGS=""
-    [ "$CORE_ONLY" = true ] && PACKAGE_FLAGS="$PACKAGE_FLAGS --core"
-    [ "$NO_GUI" = true ] && PACKAGE_FLAGS="$PACKAGE_FLAGS --no-gui"
-    "$DOTFILES_HOME/arch/install-packages.sh" "$PACKAGE_FLAGS"
+    PACKAGE_FLAGS=()
+    [ "$CORE_ONLY" = true ] && PACKAGE_FLAGS+=("--core")
+    [ "$NO_GUI" = true ] && PACKAGE_FLAGS+=("--no-gui")
+    "$DOTFILES_HOME/arch/install-packages.sh" "${PACKAGE_FLAGS[@]}"
   fi
 
   # Run setup scripts based on GUI flag

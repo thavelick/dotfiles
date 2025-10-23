@@ -1,0 +1,56 @@
+#!/bin/bash
+set -e
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: url-query <URL> <question>
+
+Ask questions about web content using LLM.
+
+Fetches content from a URL and answers your questions about it.
+Uses Jina to extract page content and LLM for answering.
+
+Requirements:
+  - curl: Fetch web content
+  - llm: AI model for answering questions
+
+Examples:
+  url-query https://example.com "What is this about?"
+  url-query https://news.ycombinator.com "What are the top stories?"
+  q https://wikipedia.org/wiki/Python "What year was it created?"  (q is an alias)
+EOF
+    exit 0
+fi
+
+for cmd in curl llm; do
+    if ! command -v "$cmd" &>/dev/null; then
+        echo "Error: $cmd is required but not installed" >&2
+        exit 1
+    fi
+done
+
+if [[ $# -lt 2 ]]; then
+    echo "Usage: url-query <URL> <question>" >&2
+    exit 1
+fi
+
+url="$1"
+question="$2"
+
+# Fetch the URL content through Jina
+content=$(curl -s "https://r.jina.ai/$url")
+
+# Check if the content was retrieved successfully
+if [[ -z "$content" ]]; then
+    echo "Failed to retrieve content from the URL." >&2
+    exit 1
+fi
+
+system="You are a helpful assistant that can answer questions about the content.
+Reply concisely, in a few sentences.
+
+The content:
+${content}"
+
+# Use llm with the fetched content as a system prompt
+llm prompt "$question" -s "$system"

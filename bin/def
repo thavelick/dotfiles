@@ -1,0 +1,38 @@
+#!/bin/bash
+set -e
+
+show_help() {
+    cat <<EOF
+Usage: def <word>
+
+Look up a word in the dictionary.
+
+Examples:
+  def python         - Look up the word "python"
+  def serendipity    - Look up the word "serendipity"
+
+Requirements:
+  - sdcv: Dictionary lookup tool
+  - elinks: HTML to text converter
+  - less: Pager for viewing results
+EOF
+}
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    show_help
+    exit 0
+fi
+
+for cmd in sdcv elinks less; do
+    if ! command -v "$cmd" &>/dev/null; then
+        echo "Error: $cmd is required but not installed" >&2
+        exit 1
+    fi
+done
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: def <word>" >&2
+    exit 1
+fi
+
+sdcv -n --utf8-output "$@" 2>&1 | sed 's/-->/<p>-->/g' | elinks -dump | less -EXFRfM

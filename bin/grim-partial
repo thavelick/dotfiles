@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: grim-partial
+
+Take a partial screenshot (user selects region).
+
+This tool lets you select a rectangular region of the screen to capture.
+The screenshot is automatically saved (grim's default behavior).
+
+Prerequisites:
+  - grim: Screenshot tool for Wayland
+  - slurp: Region selection tool
+EOF
+    exit 0
+fi
+
+grim -g "$(slurp)"

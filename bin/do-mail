@@ -1,0 +1,31 @@
+#!/bin/bash
+set -e
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: do-mail
+
+Synchronize and manage email.
+
+This script:
+1. Syncs your primary mailbox with mbsync
+2. Indexes new messages with notmuch
+3. Opens the aerc email client
+4. Processes queued emails with msmtp
+5. Syncs mailbox again
+
+Prerequisites:
+  - mbsync: Mail synchronization
+  - notmuch: Mail indexing
+  - aerc: Terminal email client
+  - msmtp: SMTP mail sender with queue support
+EOF
+    exit 0
+fi
+
+printf '\033]2;%s\007' "do-mail"
+mbsync primary
+notmuch new
+aerc
+/usr/share/doc/msmtp/msmtpqueue/msmtp-runqueue.sh
+mbsync primary

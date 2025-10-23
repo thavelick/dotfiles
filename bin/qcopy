@@ -1,11 +1,34 @@
 #!/usr/bin/env bash
-set -e
 set -u
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: qcopy
+
+Copy stdin to clipboard (cross-platform).
+
+This tool copies data from stdin to the system clipboard.
+Automatically uses pbcopy (macOS) or wl-copy (Wayland/Linux).
+
+Examples:
+  echo "Hello" | qcopy                - Copy "Hello" to clipboard
+  cat file.txt | qcopy                - Copy file contents to clipboard
+  ps aux | grep firefox | qcopy       - Copy grep results to clipboard
+
+Requirements:
+  - pbcopy (macOS) or
+  - wl-copy (Wayland/Linux)
+EOF
+    exit 0
+fi
+
+# Use cat pipe to avoid hanging when executed by Claude Bash tool (backgrounding stdin directly causes issues)
+# cat explicitly reads stdin then pipes to wl-copy, allowing the pipeline to run in background cleanly
 
 if hash pbcopy 2>/dev/null; then
   exec pbcopy
 elif hash wl-copy 2>/dev/null; then
-  exec wl-copy
+  cat | wl-copy > /dev/null 2>&1 &
 else
   echo "Error: No clipboard tool found (pbcopy or wl-copy)" >&2
   exit 1

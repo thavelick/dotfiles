@@ -1,0 +1,58 @@
+#!/bin/bash
+set -e
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: video-query <URL> <question>
+
+Ask questions about video content using transcripts and LLM.
+
+Extracts subtitles/transcripts from a video and answers your questions about it.
+Supports YouTube and other video platforms that yt-dlp can handle.
+
+Requirements:
+  - yt-dlp: Download video subtitles/transcripts
+  - curl: Fetch web content
+  - llm: AI model for answering questions
+
+Examples:
+  video-query https://youtube.com/watch?v=... "What is the main topic?"
+  video-query https://youtube.com/watch?v=... "Who is speaking?"
+  qv https://youtube.com/watch?v=... "Summarize key points"  (qv is an alias)
+EOF
+    exit 0
+fi
+
+for cmd in yt-dlp curl llm; do
+    if ! command -v "$cmd" &>/dev/null; then
+        echo "Error: $cmd is required but not installed" >&2
+        exit 1
+    fi
+done
+
+if [[ $# -lt 2 ]]; then
+    echo "Usage: video-query <URL> <question>" >&2
+    exit 1
+fi
+
+url="$1"
+question="$2"
+
+# Fetch the URL content through subtitle extraction
+subtitle_url=$(yt-dlp -q --skip-download --convert-subs srt --write-sub --sub-langs "en" --write-auto-sub --print "requested_subtitles.en.url" "$url")
+content=$(curl -s "$subtitle_url" | sed '/^$/d' | grep -v '^[0-9]*$' | grep -v '\-->' | sed 's/<[^>]*>//g' | tr '\n' ' ')
+
+# Check if the content was retrieved successfully
+if [[ -z "$content" ]]; then
+    echo "Failed to retrieve content from the URL." >&2
+    exit 1
+fi
+
+system="You are a helpful assistant that can answer questions about the video content.
+Reply concisely, in a few sentences.
+
+The video transcript:
+${content}"
+
+# Use llm with the transcript as a system prompt
+llm prompt "$question" -s "$system"

@@ -1,6 +1,27 @@
 #!/bin/bash
 set -e
 
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: url-query <URL> <question>
+
+Ask questions about web content using LLM.
+
+Fetches content from a URL and answers your questions about it.
+Uses Jina to extract page content and LLM for answering.
+
+Requirements:
+  - curl: Fetch web content
+  - llm: AI model for answering questions
+
+Examples:
+  url-query https://example.com "What is this about?"
+  url-query https://news.ycombinator.com "What are the top stories?"
+  q https://wikipedia.org/wiki/Python "What year was it created?"  (q is an alias)
+EOF
+    exit 0
+fi
+
 for cmd in curl llm; do
     if ! command -v "$cmd" &>/dev/null; then
         echo "Error: $cmd is required but not installed" >&2

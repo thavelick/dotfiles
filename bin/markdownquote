@@ -2,6 +2,18 @@
 # From https://codeberg.org/EvanHahn/dotfiles/src/branch/main/home/bin/bin/markdownquote
 import sys
 
+if len(sys.argv) > 1 and sys.argv[1] in ['-h', '--help']:
+    print("""Usage: markdownquote
+
+Convert text to Markdown blockquote format (with > prefix).
+
+Examples:
+  echo "Hello world" | markdownquote      # Output: > Hello world
+  cat file.txt | markdownquote            # Quote every line of a file
+
+This adds '> ' prefix to each line, useful for citing text in Markdown.""")
+    sys.exit(0)
+
 for line in sys.stdin:
     trimmed = line.strip()
     if trimmed == "":

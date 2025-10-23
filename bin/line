@@ -3,4 +3,23 @@
 set -e
 set -u
 
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: line <N>
+
+Print the Nth line from stdin.
+
+Examples:
+  seq 1 10 | line 5         - Print the 5th line (output: 5)
+  cat file.txt | line 42    - Print line 42 of file.txt
+  ls | line 3               - Print the 3rd filename in directory listing
+EOF
+    exit 0
+fi
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: line <N>" >&2
+    exit 1
+fi
+
 head -n "$1" | tail -n 1

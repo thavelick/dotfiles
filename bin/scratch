@@ -4,6 +4,25 @@ set -e
 set -u
 set -o pipefail
 
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: scratch
+
+Create a temporary file and open it in your editor.
+
+This creates a temporary file and opens it with your configured \$EDITOR.
+The file is not automatically deleted, allowing you to save it if needed.
+
+Requires:
+  - \$EDITOR environment variable to be set
+
+Examples:
+  scratch            - Create and edit a temporary file
+  scratch | wc -l    - Edit a file and pipe its output
+EOF
+    exit 0
+fi
+
 file="$(mktemp)"
 echo "Editing $file"
 exec "$EDITOR" "$file"

@@ -4,5 +4,34 @@ set -e
 set -u
 set -o pipefail
 
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: timer <duration>
+
+Simple timer that sleeps for specified duration then plays a sound.
+
+The duration is passed to sleep, so you can use formats like:
+  - 5 (5 seconds)
+  - 1m (1 minute)
+  - 2m30s (2 minutes 30 seconds)
+  - 1h (1 hour)
+
+Examples:
+  timer 30        - 30 second timer
+  timer 5m        - 5 minute timer
+  timer 1h30m     - 1.5 hour timer
+
+Requires:
+  - sleep: Standard Unix command
+  - sfx: Sound effect player (with 'ringaling' sound)
+EOF
+    exit 0
+fi
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: timer <duration>" >&2
+    exit 1
+fi
+
 sleep "$1"
 sfx ringaling

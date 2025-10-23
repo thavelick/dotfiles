@@ -4,6 +4,35 @@ set -e
 set -u
 set -o pipefail
 
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: waitfor <PID>
+
+Wait for a process to finish, preventing system sleep.
+
+Waits for the specified process to terminate while keeping your system awake.
+Useful for long-running tasks where you don't want the computer to sleep.
+
+Smart behavior:
+  - macOS: Uses caffeinate to prevent sleep
+  - Linux with systemd: Uses systemd-inhibit
+  - Fallback: Simple process monitoring
+
+Examples:
+  waitfor 1234            - Wait for process 1234
+  sleep 3600 & waitfor \$!  - Wait for background sleep process
+  (build_command) & waitfor \$!  - Keep system awake during build
+
+Note: You can get a PID with \$! for background jobs or \$(pgrep name) for running processes.
+EOF
+    exit 0
+fi
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: waitfor <PID>" >&2
+    exit 1
+fi
+
 pid="$1"
 
 if hash caffeinate 2>/dev/null; then

@@ -4,13 +4,35 @@ set -e
 set -u
 set -o pipefail
 
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: pastas
+
+Monitor clipboard and print changes when they occur.
+
+This script continuously monitors your clipboard and prints the clipboard content
+whenever it changes. Useful for logging clipboard activity or piping clipboard
+changes to other commands.
+
+Requires:
+  - qpaste: Clipboard paste command
+
+Exit with Ctrl+C.
+
+Examples:
+  pastas                  - Print clipboard whenever it changes
+  pastas | tee log.txt    - Log clipboard changes to a file
+EOF
+    exit 0
+fi
+
 trap 'exit 0' SIGINT
 
 last_value=''
 
 while true
 do
-  value="$(pasta)"
+  value="$(qpaste)"
 
   if [ "$last_value" != "$value" ]; then
     echo "$value"

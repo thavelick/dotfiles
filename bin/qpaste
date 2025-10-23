@@ -2,6 +2,27 @@
 set -e
 set -u
 
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: qpaste
+
+Paste from clipboard to stdout (cross-platform).
+
+This tool outputs the contents of the system clipboard.
+Automatically uses pbpaste (macOS) or wl-paste (Wayland/Linux).
+
+Examples:
+  qpaste                      - Print clipboard contents
+  qpaste > file.txt           - Save clipboard to file
+  qpaste | grep "search"      - Search clipboard contents
+
+Requirements:
+  - pbpaste (macOS) or
+  - wl-paste (Wayland/Linux)
+EOF
+    exit 0
+fi
+
 if hash pbpaste 2>/dev/null; then
   exec pbpaste
 elif hash wl-paste 2>/dev/null; then

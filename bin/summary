@@ -1,6 +1,28 @@
 #!/bin/bash
 set -e
 
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: summary <URL>
+
+Fetch a web page and generate an LLM-based summary.
+
+Fetches the content from a URL, generates an AI summary using LLM,
+converts it to HTML, and opens it in your default browser.
+
+Requirements:
+  - curl: Fetch web content
+  - llm: AI model for summarization
+  - pandoc: Convert markdown to HTML
+  - firefox: Display the summary
+
+Examples:
+  summary https://example.com                    - Summarize example.com
+  summary https://en.wikipedia.org/wiki/Python   - Summarize Wikipedia article
+EOF
+    exit 0
+fi
+
 for cmd in curl llm pandoc firefox; do
     if ! command -v "$cmd" &>/dev/null; then
         echo "Error: $cmd is required but not installed" >&2

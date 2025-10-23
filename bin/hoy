@@ -4,4 +4,17 @@ set -e
 set -u
 set -o pipefail
 
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: hoy
+
+Print today's date in YYYY-MM-DD format.
+
+Examples:
+  hoy                 - Output: 2025-10-22
+  date -d \$(hoy)     - Use today's date with other commands
+EOF
+    exit 0
+fi
+
 echo -n "$(date '+%Y-%m-%d')"

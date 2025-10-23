@@ -1,6 +1,26 @@
 #!/bin/bash
 set -e
 
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    cat <<EOF
+Usage: qr-paste
+
+Convert clipboard content to QR code and display it.
+
+Takes the contents of your clipboard, encodes it as a QR code image,
+and displays the image in an image viewer.
+
+Prerequisites:
+  - qrencode: QR code generation
+  - imv: Image viewer (or your configured image viewer)
+  - qpaste/wl-paste/pbpaste: Clipboard paste tool
+
+Examples:
+  qr-paste            - Generate and display QR code from clipboard
+EOF
+    exit 0
+fi
+
 if ! command -v qrencode &>/dev/null || ! command -v imv &>/dev/null; then
     echo "qr-paste requires qrencode and imv to be installed" >&2
     exit 1

@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+for cmd in curl llm pandoc firefox; do
+    if ! command -v "$cmd" &>/dev/null; then
+        echo "Error: $cmd is required but not installed" >&2
+        exit 1
+    fi
+done
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: summary <URL>" >&2
+    exit 1
+fi
+
+curl -s "https://r.jina.ai/$1" | llm "summarize this text" | pandoc -f markdown -t html > /tmp/summary.html && firefox /tmp/summary.html

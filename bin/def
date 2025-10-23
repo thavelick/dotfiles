@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+for cmd in sdcv elinks less; do
+    if ! command -v "$cmd" &>/dev/null; then
+        echo "Error: $cmd is required but not installed" >&2
+        exit 1
+    fi
+done
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: def <word>" >&2
+    exit 1
+fi
+
+sdcv -n --utf8-output "$@" 2>&1 | sed 's/-->/<p>-->/g' | elinks -dump | less -EXFRfM

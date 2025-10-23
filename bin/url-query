@@ -1,0 +1,35 @@
+#!/bin/bash
+set -e
+
+for cmd in curl llm; do
+    if ! command -v "$cmd" &>/dev/null; then
+        echo "Error: $cmd is required but not installed" >&2
+        exit 1
+    fi
+done
+
+if [[ $# -lt 2 ]]; then
+    echo "Usage: url-query <URL> <question>" >&2
+    exit 1
+fi
+
+url="$1"
+question="$2"
+
+# Fetch the URL content through Jina
+content=$(curl -s "https://r.jina.ai/$url")
+
+# Check if the content was retrieved successfully
+if [[ -z "$content" ]]; then
+    echo "Failed to retrieve content from the URL." >&2
+    exit 1
+fi
+
+system="You are a helpful assistant that can answer questions about the content.
+Reply concisely, in a few sentences.
+
+The content:
+${content}"
+
+# Use llm with the fetched content as a system prompt
+llm prompt "$question" -s "$system"

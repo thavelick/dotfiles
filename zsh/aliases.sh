@@ -50,6 +50,10 @@ if command_exists mbsync && command_exists notmuch; then
     alias mailsync="mbsync primary && notmuch new"
 fi
 
+# Backward compatibility aliases for renamed scripts
+alias q='url-query'
+alias qv='video-query'
+
 # Enhanced SFTP with readline support
 command_exists rlwrap && command_exists sftp && alias sftp='rlwrap -a -c sftp'
 

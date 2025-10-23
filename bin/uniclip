@@ -1,0 +1,49 @@
+#!/bin/bash
+set -e
+
+DOTFILES_HOME=${DOTFILES_HOME:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}
+
+show_help() {
+    cat <<EOF
+Usage: uniclip [QUERY]
+
+Browse and copy Unicode symbols (including LaTeX symbols) to clipboard.
+
+Usage interactive:
+  uniclip              - Open fzf to browse all symbols
+  uniclip 'alpha'      - Filter for symbols matching 'alpha'
+
+The symbol you select will be copied to your clipboard.
+
+Examples:
+  uniclip checkmark    - Find and copy the checkmark symbol ✓
+  uniclip arrow        - Find and copy arrow symbols (↑, →, ↓, ←, etc.)
+  uniclip heart        - Find and copy heart symbols (♥, ❤, etc.)
+
+Requirements:
+  - fzf: Fuzzy finder for browsing symbols
+  - wl-copy (Wayland) or pbcopy (macOS): Clipboard tools
+EOF
+}
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    show_help
+    exit 0
+fi
+
+if ! command -v fzf &>/dev/null; then
+    echo "Error: fzf is required but not installed" >&2
+    exit 1
+fi
+
+# Determine which copy command to use
+if command -v wl-copy &>/dev/null; then
+    clipboard_cmd="wl-copy"
+elif command -v pbcopy &>/dev/null; then
+    clipboard_cmd="pbcopy"
+else
+    echo "Error: No clipboard copy tool found (wl-copy or pbcopy)" >&2
+    exit 1
+fi
+
+cat "$DOTFILES_HOME/zsh/latex_symbols.txt" 2>/dev/null | fzf --query "${1:-}" | tr -s ' ' | cut -d ' ' -f2 | tr -d "\n" | $clipboard_cmd

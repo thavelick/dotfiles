@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+
+if ! command -v qrencode &>/dev/null || ! command -v imv &>/dev/null; then
+    echo "qr-paste requires qrencode and imv to be installed" >&2
+    exit 1
+fi
+
+# Determine which paste command to use
+if command -v wl-paste &>/dev/null; then
+    paste_cmd="wl-paste"
+elif command -v pbpaste &>/dev/null; then
+    paste_cmd="pbpaste"
+else
+    echo "Error: No clipboard paste tool found (wl-paste or pbpaste)" >&2
+    exit 1
+fi
+
+temp_file=$(mktemp --suffix=.png)
+$paste_cmd | qrencode -o "$temp_file" -t PNG -d 300 && imv "$temp_file"
+rm -f "$temp_file"

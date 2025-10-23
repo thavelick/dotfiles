@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-set -e
 set -u
+
+# Use cat pipe to avoid hanging when executed by Claude Bash tool (backgrounding stdin directly causes issues)
+# cat explicitly reads stdin then pipes to wl-copy, allowing the pipeline to run in background cleanly
 
 if hash pbcopy 2>/dev/null; then
   exec pbcopy
 elif hash wl-copy 2>/dev/null; then
-  exec wl-copy
+  cat | wl-copy > /dev/null 2>&1 &
 else
   echo "Error: No clipboard tool found (pbcopy or wl-copy)" >&2
   exit 1

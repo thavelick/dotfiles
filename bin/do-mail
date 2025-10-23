@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+printf '\033]2;%s\007' "do-mail"
+mbsync primary
+notmuch new
+aerc
+/usr/share/doc/msmtp/msmtpqueue/msmtp-runqueue.sh
+mbsync primary

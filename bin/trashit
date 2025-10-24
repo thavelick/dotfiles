@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# Inspired by https://codeberg.org/EvanHahn/dotfiles/src/branch/main/home/bin/bin/trash
+set -e
+set -u
+set -o pipefail
+
+show_help() {
+    cat <<EOF
+Usage: trashit <file|directory> [...]
+
+Move files or directories to trash instead of permanently deleting them.
+
+This is a safer alternative to 'rm' that moves items to a trash directory:
+  - Projects (~/Projects/*): .Trash in project root (auto-added to .gitignore)
+  - macOS (elsewhere): ~/.Trash
+  - Linux (elsewhere): ~/.cache/trash
+
+Multiple files can be trashed in a single command.
+
+Examples:
+  trashit file.txt              - Move single file to trash
+  trashit file1.txt file2.txt   - Move multiple files to trash
+  trashit my_directory          - Move directory to trash
+  trashit *.tmp                 - Move all .tmp files to trash
+EOF
+}
+
+get_project_root() {
+    local current_dir="$1"
+    echo "$HOME/Projects/$(echo "$current_dir" | sed "s|^$HOME/Projects/||" | cut -d/ -f1)"
+}
+
+is_in_projects() {
+    [[ "$(pwd)" == "$HOME/Projects/"* ]]
+}
+
+ensure_gitignore_has_trash() {
+    local project_root="$1"
+    local gitignore="$project_root/.gitignore"
+
+    [[ ! -d "$project_root/.git" ]] && return
+    [[ -f "$gitignore" ]] && grep -q "^\.Trash$" "$gitignore" 2>/dev/null && return
+
+    echo ".Trash" >> "$gitignore"
+}
+
+get_trash_dir() {
+    if is_in_projects; then
+        local project_root
+        project_root=$(get_project_root "$(pwd)")
+        local trash_dir="$project_root/.Trash"
+        mkdir -p "$trash_dir"
+        ensure_gitignore_has_trash "$project_root"
+        echo "$trash_dir"
+    elif [[ "$(uname)" == 'Darwin' ]]; then
+        echo "$HOME/.Trash"
+    else
+        mkdir -p "$HOME/.cache/trash"
+        echo "$HOME/.cache/trash"
+    fi
+}
+
+[[ "${1:-}" == "-h" || "${1:-}" == "--help" ]] && show_help && exit 0
+[[ $# -lt 1 ]] && echo "Usage: trashit <file|directory> [...]" >&2 && exit 1
+
+trash_dir=$(get_trash_dir)
+for arg in "$@"; do
+    mv "$arg" "$trash_dir/"
+done

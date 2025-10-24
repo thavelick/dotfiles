@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -e
+set -u
+
+if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+    cat <<EOF
+Usage: qopen [FILE]
+
+Open a file or URL with the system's default application (cross-platform).
+
+This tool automatically uses the appropriate command for your OS:
+- macOS: open
+- Linux: xdg-open
+
+If no argument is provided, reads from stdin.
+
+Examples:
+  qopen document.pdf              - Open a file
+  qopen https://example.com       - Open a URL
+  echo "file.txt" | qopen         - Open file from stdin
+  qpaste | qopen                  - Open clipboard content as file path
+
+Requirements:
+  - open (macOS) or
+  - xdg-open (Linux)
+EOF
+    exit 0
+fi
+
+# Get the target from argument or stdin
+if [[ $# -gt 0 ]]; then
+    target="$1"
+else
+    target=$(cat)
+fi
+
+# Trim whitespace
+target=$(echo "$target" | xargs)
+
+if [[ -z "$target" ]]; then
+    echo "Error: No file or URL provided" >&2
+    exit 1
+fi
+
+# Try to open using the appropriate tool for the system
+if hash open 2>/dev/null; then
+    # macOS
+    exec open "$target"
+elif hash xdg-open 2>/dev/null; then
+    # Linux
+    exec xdg-open "$target"
+else
+    echo "Error: No open command found (open or xdg-open)" >&2
+    exit 1
+fi

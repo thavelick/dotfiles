@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # Inspired by https://codeberg.org/EvanHahn/dotfiles/src/branch/main/home/bin/bin/trash
-# Simplified to use mv instead of osascript/gio
 set -e
 set -u
 set -o pipefail
 
-if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+show_help() {
     cat <<EOF
 Usage: trashit <file|directory> [...]
 
@@ -24,41 +23,47 @@ Examples:
   trashit my_directory          - Move directory to trash
   trashit *.tmp                 - Move all .tmp files to trash
 EOF
-    exit 0
-fi
+}
 
-if [[ $# -lt 1 ]]; then
-    echo "Usage: trashit <file|directory> [...]" >&2
-    exit 1
-fi
+get_project_root() {
+    local current_dir="$1"
+    echo "$HOME/Projects/$(echo "$current_dir" | sed "s|^$HOME/Projects/||" | cut -d/ -f1)"
+}
 
-# Check if we're in a ~/Projects directory and use project-local trash
-current_dir="$(pwd)"
-if [[ "$current_dir" == "$HOME/Projects/"* ]]; then
-  # Find the project root (first directory under ~/Projects)
-  project_root="$HOME/Projects/$(echo "$current_dir" | sed "s|^$HOME/Projects/||" | cut -d/ -f1)"
-  trash_dir="$project_root/.Trash"
+is_in_projects() {
+    [[ "$(pwd)" == "$HOME/Projects/"* ]]
+}
 
-  # Create .Trash directory if it doesn't exist
-  mkdir -p "$trash_dir"
+ensure_gitignore_has_trash() {
+    local project_root="$1"
+    local gitignore="$project_root/.gitignore"
 
-  # Add .Trash to .gitignore if project has git and .Trash isn't already ignored
-  if [[ -d "$project_root/.git" ]]; then
-    gitignore="$project_root/.gitignore"
-    if [[ ! -f "$gitignore" ]] || ! grep -q "^\.Trash$" "$gitignore" 2>/dev/null; then
-      echo ".Trash" >> "$gitignore"
+    [[ ! -d "$project_root/.git" ]] && return
+    [[ -f "$gitignore" ]] && grep -q "^\.Trash$" "$gitignore" 2>/dev/null && return
+
+    echo ".Trash" >> "$gitignore"
+}
+
+get_trash_dir() {
+    if is_in_projects; then
+        local project_root
+        project_root=$(get_project_root "$(pwd)")
+        local trash_dir="$project_root/.Trash"
+        mkdir -p "$trash_dir"
+        ensure_gitignore_has_trash "$project_root"
+        echo "$trash_dir"
+    elif [[ "$(uname)" == 'Darwin' ]]; then
+        echo "$HOME/.Trash"
+    else
+        mkdir -p "$HOME/.cache/trash"
+        echo "$HOME/.cache/trash"
     fi
-  fi
-else
-  # Use system trash for non-project files
-  if [[ "$(uname)" == 'Darwin' ]]; then
-    trash_dir="$HOME/.Trash"
-  else
-    trash_dir="$HOME/.cache/trash"
-    mkdir -p "$trash_dir"
-  fi
-fi
+}
 
+[[ "${1:-}" == "-h" || "${1:-}" == "--help" ]] && show_help && exit 0
+[[ $# -lt 1 ]] && echo "Usage: trashit <file|directory> [...]" >&2 && exit 1
+
+trash_dir=$(get_trash_dir)
 for arg in "$@"; do
-  mv "$arg" "$trash_dir/"
+    mv "$arg" "$trash_dir/"
 done

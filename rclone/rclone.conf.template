@@ -1,0 +1,21 @@
+[system-backup]
+type = b2
+account = {{RCLONE_B2_ACCOUNT}}
+key = {{RCLONE_B2_KEY}}
+
+[bernard]
+type = sftp
+host = bernard
+user = tristan
+key_file = /home/tristan/.ssh/id_rsa
+shell_type = unix
+md5sum_command = md5sum
+sha1sum_command = sha1sum
+
+[nextcloud]
+type = webdav
+url = {{RCLONE_NEXTCLOUD_URL}}
+vendor = nextcloud
+user = {{RCLONE_NEXTCLOUD_USER}}
+pass = {{RCLONE_NEXTCLOUD_PASS}}
+

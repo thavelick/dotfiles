@@ -26,7 +26,7 @@ do
   riverctl map $mode $mod F6 spawn 'pactl set-sink-volume @DEFAULT_SINK@ +5%'
 done
 # Mod+Shift+Return to start an instance of foot
-riverctl map normal $mod+Shift Return spawn foot
+riverctl map normal $mod+Shift Return spawn "$DOTFILES_HOME/river/spawn_foot.sh"
 
 # Mod+P to start the launcher
 riverctl map normal $mod P spawn "foot --app-id float -- zsh --no-rcs -c $DOTFILES_HOME/river/launcher.sh"

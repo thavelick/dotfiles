@@ -97,3 +97,12 @@ handle_theme_signal() {
 
 # Set up USR1 signal handler for theme switching
 trap handle_theme_signal USR1
+
+# Save current working directory for river/foot spawning
+update_current_pwd() {
+    mkdir -p ~/.cache/zsh
+    pwd > ~/.cache/zsh/current_pwd
+}
+
+# Update pwd after each command completes
+precmd_functions+=(update_current_pwd)

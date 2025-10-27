@@ -104,6 +104,5 @@ update_current_pwd() {
     pwd > ~/.cache/zsh/current_pwd
 }
 
-# Update pwd when directory changes or command completes
-chpwd_functions+=(update_current_pwd)
+# Update pwd after each command completes
 precmd_functions+=(update_current_pwd)

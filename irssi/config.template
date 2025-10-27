@@ -6,6 +6,7 @@ servers = (
   },
   {
     address = "irc.libera.chat";
+    chatnet = "Libera";
     port = "0";
     password = "{{IRSSI_LIBERA_CHAT_PASSWORD}}";
     use_tls = "no";
@@ -28,6 +29,9 @@ chatnets = {
     max_kicks = "1";
     max_msgs = "1";
     max_whois = "1";
+  };
+  Libera = {
+    type = "IRC";
   };
   DarkScience = {
     type = "IRC";

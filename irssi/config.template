@@ -20,6 +20,14 @@ servers = (
     use_tls = "yes";
     tls_verify = "yes";
     autoconnect = "yes";
+  },
+  {
+    address = "irc.oftc.net";
+    chatnet = "OFTC";
+    port = "6697";
+    password = "{{IRSSI_OFTC_PASSWORD}}";
+    use_tls = "yes";
+    tls_verify = "yes";
   }
 );
 
@@ -29,6 +37,7 @@ chatnets = {
     max_kicks = "1";
     max_msgs = "1";
     max_whois = "1";
+    autosendcmd = "/msg X@channels.undernet.org LOGIN {{IRSSI_UNDERNET_USERNAME}} {{IRSSI_UNDERNET_PASSWORD}}";
   };
   Libera = {
     type = "IRC";
@@ -36,6 +45,10 @@ chatnets = {
   DarkScience = {
     type = "IRC";
     autosendcmd = "/msg NickServ IDENTIFY {{IRSSI_DARKSCIENCE_PASSWORD}}";
+  };
+  OFTC = {
+    type = "IRC";
+    autosendcmd = "/msg NickServ IDENTIFY {{IRSSI_OFTC_PASSWORD}}";
   };
   IRC4Fun = { type = "IRC"; };
 };

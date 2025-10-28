@@ -11,6 +11,7 @@ bat
 borg
 brother-hl2170w
 btop
+bubblewrap
 busybox
 clang
 cmake
@@ -90,6 +91,7 @@ rustup
 sacc
 sdcv
 shellcheck
+socat
 soundfont-fatboy
 speedtest-cli
 strace

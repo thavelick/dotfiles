@@ -40,3 +40,25 @@
         autoSquash = true
         autoStash = true
         updateRefs = true
+
+[pager]
+        diff = "command -v delta >/dev/null 2>&1 && delta || less -R"
+        show = "command -v delta >/dev/null 2>&1 && delta || less -R"
+        log = "command -v delta >/dev/null 2>&1 && delta || less -R"
+
+[interactive]
+        diffFilter = delta --color-only 2>/dev/null || cat
+
+[delta]
+        navigate = true
+        line-numbers = true
+        keep-plus-minus-markers = true
+        light = false
+
+[delta "light"]
+        syntax-theme = Solarized (light)
+        light = true
+
+[delta "dark"]
+        syntax-theme = Solarized (dark)
+        dark = true

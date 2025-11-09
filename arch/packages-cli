@@ -31,7 +31,6 @@ fastfetch
 git-delta
 github-cli
 gitleaks
-google-gemini-cli
 grub
 haxe
 icu66-bin
@@ -69,7 +68,6 @@ pipewire-alsa
 pipewire-jack
 pipewire-media-session
 pkgfile
-playwright
 pmidi
 prettier
 pyright

@@ -1,0 +1,157 @@
+#!/usr/bin/env python3
+"""Merge KeePassXC sync conflict files, oldest to newest."""
+
+import argparse
+import getpass
+from datetime import datetime
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+
+def find_conflict_files(db_path: Path) -> list[Path]:
+    """Find all sync-conflict files for the given database."""
+    pattern = re.compile(
+        rf"^{re.escape(db_path.stem)}\.sync-conflict-(\d{{8}})-(\d{{6}})-\w+\.kdbx$"
+    )
+    conflicts = []
+    for f in db_path.parent.iterdir():
+        match = pattern.match(f.name)
+        if match:
+            timestamp = match.group(1) + match.group(2)
+            conflicts.append((timestamp, f))
+    conflicts.sort(key=lambda x: x[0])
+    return [f for _, f in conflicts]
+
+
+def run_merge(
+    db_path: Path, conflict_path: Path, password: str, dry_run: bool, log_file
+) -> tuple[bool, str]:
+    """Run keepassxc-cli merge. Returns (success, output)."""
+    cmd = ["keepassxc-cli", "merge", "-s", str(db_path), str(conflict_path)]
+    if dry_run:
+        cmd.insert(2, "--dry-run")
+
+    log_file.write(f"$ {' '.join(cmd)}\n")
+
+    proc = subprocess.run(
+        cmd,
+        input=password + "\n",
+        capture_output=True,
+        text=True,
+    )
+    output = proc.stdout + proc.stderr
+    log_file.write(output)
+    log_file.write("\n")
+    log_file.flush()
+    return proc.returncode == 0, output
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Merge KeePassXC sync conflict files")
+    parser.add_argument("database", type=Path, help="Path to the main .kdbx database")
+    parser.add_argument(
+        "--resolved-dir",
+        type=Path,
+        default=None,
+        help="Directory to move resolved conflict files to (default: <db_dir>/resolved-kdbx-conflicts)",
+    )
+    parser.add_argument(
+        "--log-file",
+        type=Path,
+        default=None,
+        help="Log file for CLI output (default: <db_dir>/kdbx-merge.log)",
+    )
+    args = parser.parse_args()
+
+    db_path = args.database.expanduser().resolve()
+    db_dir = db_path.parent
+
+    resolved_dir = (
+        args.resolved_dir.expanduser().resolve()
+        if args.resolved_dir
+        else db_dir / "resolved-kdbx-conflicts"
+    )
+    log_path = (
+        args.log_file.expanduser().resolve()
+        if args.log_file
+        else db_dir / "kdbx-merge.log"
+    )
+
+    if not db_path.exists():
+        print(f"Database not found: {db_path}", file=sys.stderr)
+        sys.exit(1)
+
+    conflicts = find_conflict_files(db_path)
+    if not conflicts:
+        print("No conflict files found.")
+        sys.exit(0)
+
+    print(f"Found {len(conflicts)} conflict file(s):")
+    for f in conflicts:
+        print(f"  {f.name}")
+    print()
+
+    password = getpass.getpass("Enter KeePassXC password: ")
+
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    backup_path = db_path.with_suffix(f".kdbx.backup-{timestamp}")
+    shutil.copy2(db_path, backup_path)
+    print(f"Created backup: {backup_path}\n")
+
+    with open(log_path, "a", encoding="utf-8") as log_file:
+        log_file.write(f"\n{'=' * 60}\n")
+        log_file.write(f"Session started: {datetime.now().isoformat()}\n")
+        log_file.write(f"Database: {db_path}\n")
+        log_file.write(f"Backup: {backup_path}\n")
+        log_file.write(f"{'=' * 60}\n\n")
+
+        for conflict in conflicts:
+            print(f"\n{'=' * 60}")
+            print(f"Processing: {conflict.name}")
+            print("=" * 60)
+
+            log_file.write(f"Processing: {conflict.name}\n")
+            log_file.write("-" * 40 + "\n")
+
+            print("\nDry run:")
+            success, output = run_merge(
+                db_path, conflict, password, dry_run=True, log_file=log_file
+            )
+            print(output)
+
+            if not success:
+                print("Dry run failed. Skipping this file.")
+                log_file.write("Dry run failed. Skipping.\n\n")
+                continue
+
+            response = input("\nMerge this file? [y/N]: ").strip().lower()
+            if response != "y":
+                print("Skipping.")
+                log_file.write("User skipped.\n\n")
+                continue
+
+            success, output = run_merge(
+                db_path, conflict, password, dry_run=False, log_file=log_file
+            )
+            print(output)
+
+            if success:
+                resolved_dir.mkdir(parents=True, exist_ok=True)
+                dest = resolved_dir / conflict.name
+                shutil.move(conflict, dest)
+                print(f"Moved to: {dest}")
+                log_file.write(f"Merged successfully. Moved to: {dest}\n\n")
+            else:
+                print("Merge failed. Leaving conflict file in place.")
+                log_file.write("Merge failed.\n\n")
+
+        log_file.write(f"Session ended: {datetime.now().isoformat()}\n")
+
+    print(f"\nDone. Log written to: {log_path}")
+
+
+if __name__ == "__main__":
+    main()

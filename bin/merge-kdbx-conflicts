@@ -55,18 +55,31 @@ def main():
     parser.add_argument(
         "--resolved-dir",
         type=Path,
-        default=Path.home() / "Sync" / "resolved-kdbx-conflicts",
-        help="Directory to move resolved conflict files to",
+        default=None,
+        help="Directory to move resolved conflict files to (default: <db_dir>/resolved-kdbx-conflicts)",
     )
     parser.add_argument(
         "--log-file",
         type=Path,
-        default=Path.home() / "Sync" / "kdbx-merge.log",
-        help="Log file for CLI output",
+        default=None,
+        help="Log file for CLI output (default: <db_dir>/kdbx-merge.log)",
     )
     args = parser.parse_args()
 
     db_path = args.database.expanduser().resolve()
+    db_dir = db_path.parent
+
+    resolved_dir = (
+        args.resolved_dir.expanduser().resolve()
+        if args.resolved_dir
+        else db_dir / "resolved-kdbx-conflicts"
+    )
+    log_path = (
+        args.log_file.expanduser().resolve()
+        if args.log_file
+        else db_dir / "kdbx-merge.log"
+    )
+
     if not db_path.exists():
         print(f"Database not found: {db_path}", file=sys.stderr)
         sys.exit(1)
@@ -83,15 +96,12 @@ def main():
 
     password = getpass.getpass("Enter KeePassXC password: ")
 
-    resolved_dir = args.resolved_dir.expanduser().resolve()
-    log_path = args.log_file.expanduser().resolve()
-
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     backup_path = db_path.with_suffix(f".kdbx.backup-{timestamp}")
     shutil.copy2(db_path, backup_path)
     print(f"Created backup: {backup_path}\n")
 
-    with open(log_path, "a") as log_file:
+    with open(log_path, "a", encoding="utf-8") as log_file:
         log_file.write(f"\n{'=' * 60}\n")
         log_file.write(f"Session started: {datetime.now().isoformat()}\n")
         log_file.write(f"Database: {db_path}\n")
@@ -107,7 +117,9 @@ def main():
             log_file.write("-" * 40 + "\n")
 
             print("\nDry run:")
-            success, output = run_merge(db_path, conflict, password, dry_run=True, log_file=log_file)
+            success, output = run_merge(
+                db_path, conflict, password, dry_run=True, log_file=log_file
+            )
             print(output)
 
             if not success:
@@ -121,7 +133,9 @@ def main():
                 log_file.write("User skipped.\n\n")
                 continue
 
-            success, output = run_merge(db_path, conflict, password, dry_run=False, log_file=log_file)
+            success, output = run_merge(
+                db_path, conflict, password, dry_run=False, log_file=log_file
+            )
             print(output)
 
             if success:

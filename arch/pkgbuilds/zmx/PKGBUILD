@@ -1,0 +1,29 @@
+# Maintainer: Tristan Havelick <tristan@havelick.com>
+
+pkgname=zmx
+pkgver=0.0.1
+pkgrel=1
+pkgdesc="Session persistence for terminal processes"
+arch=('x86_64')
+url="https://github.com/neurosnap/zmx"
+license=('MIT')
+makedepends=('zig>=0.15.2' 'git')
+depends=()
+source=("git+https://github.com/neurosnap/zmx.git#tag=v$pkgver")
+sha256sums=('0e3a2dcd904b04487ccc65bb37c94d6663a0cc8eaf0d9d08954800c1f475a5df')
+
+build() {
+  cd "$pkgname"
+
+  # Zig will download dependencies (ghostty-vt and its transitive deps) during build
+  # This is acceptable as they are locked by hash in build.zig.zon
+  DESTDIR="build" zig build \
+    --prefix /usr \
+    -Doptimize=ReleaseSafe
+}
+
+package() {
+  cd "$pkgname"
+
+  cp -a build/* "$pkgdir"
+}

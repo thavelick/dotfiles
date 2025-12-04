@@ -13,6 +13,7 @@ This repository contains a modular, portable dotfiles configuration supporting m
 - **git/**: Git configuration and setup
 - **whisper/**: Voice input transcription system
 - **systemd/**: System service configurations
+- **claude/**: Claude Code configuration (CLAUDE.md and custom slash commands)
 - **arch/**: Arch Linux package lists and configurations
 - **debian/**: Debian/Ubuntu package management
 - **mac/**: macOS-specific configurations

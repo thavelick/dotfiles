@@ -21,6 +21,7 @@ A modular, portable dotfiles configuration supporting multiple operating systems
 - **Development**: Git setup and workflow tools
 - **Voice**: Whisper-based transcription system with Alt+Z activation
 - **System**: systemd service configurations and package management
+- **Claude Code**: Configuration and custom slash commands
 
 ## Installation
 
@@ -88,6 +89,7 @@ Key bindings and features:
 ├── tmux/          # Multiplexer
 ├── vim/           # Editor
 ├── whisper/       # Voice input
+├── claude/        # Claude Code config
 ├── arch/          # Arch packages
 ├── debian/        # Debian packages
 └── mac/           # macOS packages

@@ -17,6 +17,12 @@ This repository contains a modular, portable dotfiles configuration supporting m
 - **debian/**: Debian/Ubuntu package management
 - **mac/**: macOS-specific configurations
 
+### Aliases vs Functions vs Scripts
+
+1. **Alias** - if arguments go at end and it's simple
+2. **Function** - only if technically required (modifies parent shell state, uses zsh builtins, captures `$?`)
+3. **Script** (`bin/`) - default choice for everything else (portability and discoverability)
+
 ## Development
 - Use the `scratch/` directory for one-off debugging scripts and temporary files
 - `scratch/` is gitignored, so it's safe for experimentation

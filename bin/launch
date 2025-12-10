@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -e
+set -u
+
+if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+    cat <<EOF
+Usage: launch [OPTIONS] <command> [args...]
+
+Launch a program in its own window without blocking the terminal.
+Output is silenced by default and the process is fully detached.
+
+Options:
+  -v, --verbose     Show stdout and stderr
+  -e, --stderr      Show only stderr (hide stdout)
+  -h, --help        Show this help
+
+Examples:
+  launch firefox                  - Open Firefox (silent)
+  launch -v mpv video.mp4         - Play video (show output)
+  launch -e code ~/project        - Open VS Code (show errors only)
+EOF
+    exit 0
+fi
+
+if [[ $# -eq 0 ]]; then
+    echo "Error: No command specified" >&2
+    echo "Try: launch --help" >&2
+    exit 1
+fi
+
+redirect="&>/dev/null"
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -v|--verbose)
+            redirect=""
+            shift
+            ;;
+        -e|--stderr)
+            redirect=">/dev/null"
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+if [[ $# -eq 0 ]]; then
+    echo "Error: No command specified after options" >&2
+    echo "Try: launch --help" >&2
+    exit 1
+fi
+
+eval "\"\$@\" $redirect &"
+disown

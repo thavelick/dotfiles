@@ -6,4 +6,5 @@ llm
 playwright
 py-spy
 ruff
+tzupdate
 vulture

@@ -106,3 +106,13 @@ update_current_pwd() {
 
 # Update pwd after each command completes
 precmd_functions+=(update_current_pwd)
+
+# Update timezone based on location (async, only notify on change)
+if command_exists tzupdate; then
+    {
+        before=$(readlink /etc/localtime)
+        sudo tzupdate >/dev/null 2>&1
+        after=$(readlink /etc/localtime)
+        [[ "$before" != "$after" ]] && echo "Timezone updated to ${after##*/zoneinfo/}"
+    } &!
+fi

@@ -69,6 +69,34 @@ else
     exit 1
 fi
 
+# Test 6a: Error code display in prompt
+echo -n "Testing error code display... "
+# Simulate a command with exit code 42
+set +e
+(exit 42)
+precmd
+set -e
+if [[ "$prompt_error" =~ "42" ]]; then
+    echo "✓"
+else
+    echo "✗"
+    echo "Expected prompt_error to contain '42'"
+    echo "Got: $prompt_error"
+    exit 1
+fi
+
+# Test that error clears on success
+true
+precmd
+if [[ -z "$prompt_error" ]]; then
+    echo -n "✓ (clears on success)"
+else
+    echo "✗"
+    echo "Expected prompt_error to be empty after successful command"
+    echo "Got: $prompt_error"
+    exit 1
+fi
+
 # Test 7: FZF integration
 echo -n "Testing FZF installation... "
 if command -v fzf >/dev/null 2>&1; then

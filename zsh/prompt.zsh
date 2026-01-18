@@ -47,7 +47,14 @@ set_prompt_time() {
 
 # Pre-command hook
 precmd() {
+    local last_exit=$?
     set_prompt_time
+
+    if [[ $last_exit -ne 0 ]]; then
+        prompt_error="%F{red}✗ ${last_exit}%f "
+    else
+        prompt_error=''
+    fi
 
     current_directory=$(pwd)
     if [[ $current_directory != $HOME/Projects/* ]]; then
@@ -112,4 +119,4 @@ hostname_indicator() {
 setopt prompt_subst
 
 # Set the prompt
-PROMPT='${prompt_time}$(hostname_indicator)%~ $(distro_icon)$(docker_indicator) ${vcs_info_msg_0_}% ➜ '
+PROMPT='${prompt_error}${prompt_time}$(hostname_indicator)%~ $(distro_icon)$(docker_indicator) ${vcs_info_msg_0_}% ➜ '

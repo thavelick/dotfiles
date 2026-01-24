@@ -9,10 +9,11 @@ fi
 # The percentage change; positive to increase, negative to decrease
 PERCENT_CHANGE=$1
 
-BACKLIGHT_DEVICE="/sys/class/backlight/intel_backlight"
+# Auto-detect backlight device (intel_backlight for Intel, amdgpu_bl* for AMD, etc.)
+BACKLIGHT_DEVICE=$(find /sys/class/backlight -maxdepth 1 -type l | head -n 1)
 
-if [ ! -d "$BACKLIGHT_DEVICE" ]; then
-    echo "Backlight device not found at $BACKLIGHT_DEVICE"
+if [ -z "$BACKLIGHT_DEVICE" ]; then
+    echo "No backlight device found in /sys/class/backlight"
     exit 1
 fi
 

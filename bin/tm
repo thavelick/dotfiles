@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -e
+set -u
+set -o pipefail
+
+if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+    cat <<EOF
+Usage: tm
+
+Connect to or create a tmux session named "default".
+
+If a session named "default" already exists, attaches to it.
+If no such session exists, creates it with a vertical split pane.
+
+Examples:
+  tm    - Connect to default session (or create if needed)
+EOF
+    exit 0
+fi
+
+SESSION_NAME="default"
+
+if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+    exec tmux attach-session -t "$SESSION_NAME"
+else
+    tmux new-session -s "$SESSION_NAME" -d
+    tmux split-window -h -t "$SESSION_NAME"
+    exec tmux attach-session -t "$SESSION_NAME"
+fi

@@ -1,0 +1,13 @@
+# Chawan browser configuration
+
+[buffer]
+# Enable JavaScript
+# Options: false (disabled), true (enabled), "app" (enabled with additional APIs for better compatibility)
+scripting = true
+
+# Enable images
+images = true
+
+[display]
+# Set image display mode (auto, sixel, or kitty)
+image-mode = "sixel"

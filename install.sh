@@ -55,6 +55,7 @@ else # Assume Arch or derivatives
   "$DOTFILES_HOME"/git/setup.sh
   "$DOTFILES_HOME"/nag_runner/setup.sh
   "$DOTFILES_HOME"/amfora/setup.sh
+  "$DOTFILES_HOME"/chawan/setup.sh
   "$DOTFILES_HOME"/tidy/setup.sh
   "$DOTFILES_HOME"/tmux/setup.sh
 fi

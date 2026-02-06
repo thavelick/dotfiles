@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -e
+set -u
+set -o pipefail
+
+if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+    cat <<EOF
+Usage: nextcloud-sync [--resync]
+
+Sync Nextcloud to ~/nextcloud using rclone bisync, excluding the transmission folder.
+
+Options:
+  --resync    Force resync (required for first run or after errors)
+
+Examples:
+  nextcloud-sync           - Normal bidirectional sync
+  nextcloud-sync --resync  - Force resync from scratch
+EOF
+    exit 0
+fi
+
+RESYNC_FLAG=""
+if [[ "${1:-}" == "--resync" ]]; then
+    RESYNC_FLAG="--resync"
+fi
+
+mkdir -p ~/nextcloud
+
+rclone bisync nextcloud: ~/nextcloud --exclude "transmission/**" $RESYNC_FLAG

@@ -1,0 +1,3 @@
+# Chawan auto-executed mailcap entries
+# Images
+image/*; imv-mailcap %u

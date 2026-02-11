@@ -8,6 +8,28 @@ scripting = true
 # Enable images
 images = true
 
+# Enable cookies and save them to disk (REQUIRED for login functionality)
+cookie = "save"
+
+# Enable referer header (some sites require this for security)
+referer-from = true
+
+# Auto-accept redirects without confirmation
+meta-refresh = "always"
+
 [display]
 # Set image display mode (auto, sixel, or kitty)
 image-mode = "sixel"
+
+# Custom search engine using just-bangs-lite
+[[omnirule]]
+match = '^jb:'
+substitute-url = '(x) => "https://tristanhavelick.com/just-bangs-lite/?q=" + encodeURIComponent(x.replace(/^jb:/, ""))'
+
+# Rebind C-k to use just-bangs-lite as default search
+[page]
+'C-k' = '() => pager.load("jb:")'
+
+# Open current URL in default browser (press Esc then o)
+# Use single quotes to protect shell special chars, escape any single quotes in URL
+'M-o' = "() => pager.extern(\"xdg-open '\" + String(pager.buffer.url).replace(/'/g, \"'\\\\''\" ) + \"'\")"

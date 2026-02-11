@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Pipe URL directly to imv
+exec curl -s "$1" | imv -

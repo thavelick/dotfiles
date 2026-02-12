@@ -4,7 +4,6 @@
 import argparse
 import html.parser
 import sys
-import urllib.error
 import urllib.request
 
 
@@ -50,14 +49,11 @@ def main():
 
     try:
         title = fetch_title(args.url)
-    except (urllib.error.URLError, urllib.error.HTTPError) as e:
+    except (ValueError, OSError) as e:
         print(f"mdlink: {e}", file=sys.stderr)
         sys.exit(1)
 
-    if not title:
-        title = args.url
-
-    title = title.replace("[", "\\[").replace("]", "\\]")
+    title = (title or args.url).replace("[", "\\[").replace("]", "\\]")
     print(f"[{title}]({args.url})")
 
 

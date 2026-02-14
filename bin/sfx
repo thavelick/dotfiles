@@ -8,7 +8,7 @@ XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
 SFX_DIR="$XDG_CONFIG_HOME/dotfiles-sfx"
 
 # Show usage if no argument provided
-if [ $# -eq 0 ]; then
+if [ $# -eq 0 ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
   echo "Usage: sfx <sound>"
   echo ""
   echo "Available sounds:"
@@ -26,11 +26,10 @@ fi
 
 SOUND_FILE="$SFX_DIR/$1.ogg"
 
-# Check if sound file exists
+# Fall back to bell if sound file doesn't exist
 if [ ! -f "$SOUND_FILE" ]; then
-  echo "Error: Sound '$1' not found at $SOUND_FILE" >&2
-  echo "Run 'sfx' with no arguments to see available sounds." >&2
-  exit 1
+  echo "Warning: Sound '$1' not found, playing bell instead" >&2
+  SOUND_FILE="$SFX_DIR/bell.ogg"
 fi
 
 exec mpv --really-quiet --no-video "$SOUND_FILE" &

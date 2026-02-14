@@ -1,10 +1,8 @@
-- use `trashit` instead of `rm` when removing files or directories
-- to copy and paste from the user's clipboard use `qpaste` and `qcopy`. They work roughly like pbcopy and pbpaste on mac but are cross-platform
-- use `bd` for task tracking
-## GitHub Ticket Workflow
-- When user says "let's do a ticket", find a GitHub ticket using gh CLI
-- Prefer older tickets first
-- Only consider tickets created by thavelick
-- When starting a ticket always cut a new branch. It should have a name like a_description_123 where 123 is the ticket number.
-- When adding comments to tickets or PRs always attribute the comments to Claude. Otherwise they look like they're coming from the user
+- Use qcopy and qpaste for copy/pasting to the user's clipboard. Works like pbcopy/pbpaste
+- Use trashit instead of rm and rmdir for deleting files and directories. Moves items to trash for safety
+- When asked to "merge", run `gh pr merge --merge --delete-branch` to merge with a merge commit and delete the remote and local branch
+- User's GitHub username is @thavelick. When using personal pronouns (e.g., "on my behalf", "as me"), this is the identity to use.
 
+## Workflow Rules
+- When asked for information or explanation, do NOT implement changes unless explicitly asked. Answering a question is not permission to create scripts, modify config, or write code.
+- For sequential multi-step workflows (e.g., commit then simplify, or plan then implement), complete each step fully before starting the next. Never run steps in parallel unless the user explicitly requests it.

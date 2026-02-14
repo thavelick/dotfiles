@@ -8,7 +8,7 @@ XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
 SFX_DIR="$XDG_CONFIG_HOME/dotfiles-sfx"
 
 # Show usage if no argument provided
-if [ $# -eq 0 ]; then
+if [ $# -eq 0 ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
   echo "Usage: sfx <sound>"
   echo ""
   echo "Available sounds:"

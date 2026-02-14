@@ -67,7 +67,9 @@ if is_wayland; then
 fi
 
 # macOS keychain auto-unlock for SSH sessions
-[[ "$(get_os_type)" == "macos" && -n "$SSH_CONNECTION" ]] && ! security show-keychain-info ~/Library/Keychains/login.keychain-db 2>/dev/null && security unlock-keychain ~/Library/Keychains/login.keychain-db
+if [[ "$(get_os_type)" == "macos" && -n "$SSH_CONNECTION" ]] && ! security show-keychain-info ~/Library/Keychains/login.keychain-db 2>/dev/null; then
+    read -q "?Keychain is locked. Unlock it? [y/N] " && echo && security unlock-keychain ~/Library/Keychains/login.keychain-db || echo
+fi
 
 # Keyboard layout (only matters on systems that use it)
 export XKB_DEFAULT_LAYOUT="us(colemak)"

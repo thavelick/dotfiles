@@ -5,6 +5,8 @@
 /home/tristan/.cache/*
 /home/tristan/.cargo/*
 /home/tristan/Downloads/*
+/home/tristan/Games/eXoDemoScene/*
+/home/tristan/Movies/*
 /home/tristan/go/*
 /home/tristan/.gradle/*
 /home/tristan/.ollama/models/*
@@ -29,3 +31,5 @@
 /var/cache
 /var/lib/docker/overlay2/*
 /run/media
+/run/user/*/doc
+/run/docker/netns

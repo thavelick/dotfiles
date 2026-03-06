@@ -6,7 +6,7 @@
     },
     {
         "name": "prune package caches",
-        "command": "sudo pacman -Sc --noconfirm && yay -Sc --aur --noconfirm",
+        "command": "sudo rm -rf /var/cache/pacman/pkg/download-* && sudo pacman -Sc --noconfirm && yay -Sc --aur --noconfirm",
         "interval": "31"
     },
     {

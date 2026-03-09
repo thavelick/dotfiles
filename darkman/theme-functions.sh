@@ -43,11 +43,11 @@ set_foot_theme() {
     local signal=$2
     local theme_config="$HOME/.local/share/foot/foot-theme.ini"
 
-    # Update initial-color-theme setting (1=dark/colors, 2=light/colors2)
+    # Update initial-color-theme setting
     if [[ "$mode" == "dark" ]]; then
-        echo "initial-color-theme=1" > "$theme_config"
+        echo "initial-color-theme=dark" > "$theme_config"
     else
-        echo "initial-color-theme=2" > "$theme_config"
+        echo "initial-color-theme=light" > "$theme_config"
     fi
 
     # Signal all running foot instances to reload config

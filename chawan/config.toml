@@ -19,7 +19,7 @@ meta-refresh = "always"
 
 [display]
 # Set image display mode (auto, sixel, or kitty)
-image-mode = "sixel"
+image-mode = "auto"
 
 # Custom search engine using just-bangs-lite
 [[omnirule]]

@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DEFAULT_WIDTH=100
+
+if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+    cat <<EOF
+Usage: centered [-w WIDTH] COMMAND [ARGS...]
+
+Run a command in a centered tmux pane with a fixed width.
+
+Options:
+  -w WIDTH   Set the pane width (default: $DEFAULT_WIDTH)
+
+Examples:
+  centered vim README.md
+  centered -w 120 less somefile.txt
+  centered man bash
+EOF
+    exit 0
+fi
+
+width=$DEFAULT_WIDTH
+if [[ "${1:-}" == "-w" ]]; then
+    width="${2:?Missing width argument}"
+    shift 2
+fi
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: centered [-w WIDTH] COMMAND [ARGS...]" >&2
+    exit 1
+fi
+
+total_cols=$(tput cols)
+if [[ $total_cols -lt 200 ]]; then
+    echo "Terminal too narrow (${total_cols} cols) for centering, running directly." >&2
+    exec "$@"
+fi
+
+side=$(( (total_cols - width) / 2 ))
+session="centered-$$"
+
+cleanup() {
+    tmux kill-session -t "$session" 2>/dev/null || true
+}
+trap cleanup EXIT
+
+# Start the session running the command, then kill the session on exit
+tmux new-session -d -s "$session" -x "$total_cols" -y "$(tput lines)" \
+    bash -c "$(printf '%q ' "$@"); tmux kill-session -t $session 2>/dev/null"
+
+# Add right padding pane
+tmux split-window -h -t "$session":1.1 -l "$side" "sleep infinity"
+# Add left padding pane
+tmux split-window -h -t "$session":1.1 -l "$side" -b "sleep infinity"
+
+# Disable input on padding panes
+tmux select-pane -t "$session":1.1 -d
+tmux select-pane -t "$session":1.3 -d
+
+# Bounce focus back to center pane if a padding pane is clicked
+tmux set-hook -t "$session" pane-focus-in "if -F '#{!=:#{pane_index},2}' 'select-pane -t 2'"
+
+
+# Focus the center pane
+tmux select-pane -t "$session":1.2
+
+# Hide borders and status bar for a clean look
+tmux set -t "$session" pane-border-style "fg=#2e3440"
+tmux set -t "$session" pane-active-border-style "fg=#2e3440"
+tmux set -t "$session" status off
+
+tmux attach-session -t "$session"

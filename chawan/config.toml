@@ -17,6 +17,10 @@ referer-from = true
 # Auto-accept redirects without confirmation
 meta-refresh = "always"
 
+[external]
+copy-cmd = "wl-copy"
+paste-cmd = "wl-paste"
+
 [display]
 # Set image display mode (auto, sixel, or kitty)
 image-mode = "auto"

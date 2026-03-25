@@ -1,7 +1,7 @@
 [
     {
         "name": "system package updates",
-        "command": "yay -Syu --noconfirm && npm update -g && uv tool upgrade --all",
+        "command": "yay -Syu --noconfirm && npm update -g --min-release-age 7 && uv tool upgrade --all --exclude-newer '1 week'",
         "interval": "7"
     },
     {

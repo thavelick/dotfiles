@@ -27,6 +27,7 @@ setopt HIST_REDUCE_BLANKS    # Remove superfluous blanks from each command line 
 export DOTFILES_HOME=$HOME/Projects/dotfiles
 export GPG_TTY=$TTY
 export PYTHONPATH=.
+export UV_EXCLUDE_NEWER="1 week"
 
 # Platform-specific environment setup
 if command_exists nvim; then

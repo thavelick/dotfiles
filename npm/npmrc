@@ -1,0 +1,2 @@
+prefix=${HOME}/.npm-global
+min-release-age=7

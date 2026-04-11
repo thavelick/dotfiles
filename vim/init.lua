@@ -86,6 +86,7 @@ local function touch_file()
   vim.fn.system('touch ' .. file)
 end
 vim.keymap.set('n', '<leader>tf', touch_file, {desc = 'Touch a file'})
+vim.keymap.set('n', '<leader>tc', '<cmd>tabclose<cr>', {desc = 'Close tab'})
 
 -- reload my vim config from any buffer
 vim.keymap.set('n', '<f4>', ":source $MYVIMRC<cr>", {desc = 'Reload vim config'})
@@ -136,6 +137,16 @@ end
 
 -- Autocommand to trim whitespace before saving
 vim.cmd([[autocmd BufWritePre * lua _G.trim_whitespace()]])
+
+-- Silently handle files that change on disk: reload if unmodified, keep our
+-- edits if modified. Suppresses the W12 prompt entirely.
+vim.o.autoread = true
+vim.api.nvim_create_autocmd('FileChangedShell', {
+  pattern = '*',
+  callback = function()
+    vim.v.fcs_choice = vim.bo.modified and '' or 'reload'
+  end,
+})
 
 -- highlight all search matches
 vim.o.hlsearch = true
@@ -212,3 +223,8 @@ vim.keymap.set("n", "<leader>cb", "<cmd>ClaudeCodeAdd %<cr>", { desc = "Add curr
 vim.keymap.set("v", "<leader>cs", "<cmd>ClaudeCodeSend<cr>", { desc = "Send to Claude" })
 vim.keymap.set("n", "<leader>ca", "<cmd>ClaudeCodeDiffAccept<cr>", { desc = "Accept diff" })
 vim.keymap.set("n", "<leader>cd", "<cmd>ClaudeCodeDiffDeny<cr>", { desc = "Deny diff" })
+
+-- Code review keymaps (implementation in vim/lua/review.lua)
+local review = require('review')
+vim.keymap.set('n', '<leader>rr', review.vs_head, {desc = 'Review working tree vs HEAD'})
+vim.keymap.set('n', '<leader>rR', review.vs_merge_base, {desc = 'Review vs merge-base with main'})

@@ -66,6 +66,58 @@ local function find_win_by_term(tab, want_terminal)
   return nil
 end
 
+-- Parse the "new file" line number from a delta side-by-side output line.
+-- Delta's ANSI-stripped format is: │ old_num │ old_content │ new_num │ new_content
+-- The new line number lives in field 4 (after splitting on │).
+local function parse_new_line_num(line)
+  if not line or line == '' then return nil end
+  local parts = vim.split(line, '│', {plain = true})
+  if #parts < 4 then return nil end
+  local num = parts[4]:match('%d+')
+  return num and tonumber(num) or nil
+end
+
+-- Called from <CR> in a review terminal buffer. Walks up from the cursor line
+-- looking for a parseable new-file line number, then jumps the file pane in
+-- the same tab to that line.
+local function jump_to_file_line()
+  local term_buf = vim.api.nvim_get_current_buf()
+  if vim.bo[term_buf].buftype ~= 'terminal' then return end
+  local row = vim.api.nvim_win_get_cursor(0)[1]
+
+  local line_num
+  for r = row, 1, -1 do
+    local line = vim.api.nvim_buf_get_lines(term_buf, r - 1, r, false)[1]
+    local n = parse_new_line_num(line)
+    if n then line_num = n; break end
+  end
+  if not line_num then
+    vim.notify('No diff line number at cursor', vim.log.levels.INFO)
+    return
+  end
+
+  local tab = vim.api.nvim_get_current_tabpage()
+  local file_win = find_win_by_term(tab, false)
+  if not file_win then
+    vim.notify('No file pane in this tab', vim.log.levels.INFO)
+    return
+  end
+  vim.api.nvim_set_current_win(file_win)
+  local file_buf = vim.api.nvim_win_get_buf(file_win)
+  local max_line = vim.api.nvim_buf_line_count(file_buf)
+  vim.api.nvim_win_set_cursor(file_win, {math.min(line_num, max_line), 0})
+  vim.cmd('normal! zz')
+end
+
+-- Run a diff command in a new terminal buffer and wire up review keymaps.
+-- Must be called in the window that should host the terminal.
+local function open_diff_terminal(cmd)
+  vim.cmd('terminal ' .. cmd)
+  vim.bo.buflisted = false
+  vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], {buffer = true, desc = 'Exit terminal mode'})
+  vim.keymap.set('n', '<CR>', jump_to_file_line, {buffer = true, desc = 'Jump to diff line in file'})
+end
+
 -- Replace (or create) the terminal window's buffer with a fresh diff run.
 local function render_diff_into_tab(tab, root, base_ref, rel, is_untracked)
   vim.api.nvim_set_current_tabpage(tab)
@@ -74,13 +126,11 @@ local function render_diff_into_tab(tab, root, base_ref, rel, is_untracked)
   if term_win then
     vim.api.nvim_set_current_win(term_win)
     local old_buf = vim.api.nvim_win_get_buf(term_win)
-    vim.cmd('terminal ' .. cmd)
-    vim.bo.buflisted = false
+    open_diff_terminal(cmd)
     pcall(vim.api.nvim_buf_delete, old_buf, {force = true})
   else
     vim.cmd('topleft split')
-    vim.cmd('terminal ' .. cmd)
-    vim.bo.buflisted = false
+    open_diff_terminal(cmd)
   end
   -- Leave focus on the diff (terminal) pane.
   local focus_term = find_win_by_term(tab, true)
@@ -161,8 +211,7 @@ local function review_against(base_ref)
         vim.cmd('edit ' .. vim.fn.fnameescape(abs))
         vim.cmd('topleft split')
       end
-      vim.cmd('terminal ' .. build_diff_cmd(root, base_ref, rel, untracked_set[rel] or false))
-      vim.bo.buflisted = false
+      open_diff_terminal(build_diff_cmd(root, base_ref, rel, untracked_set[rel] or false))
     end
   end
 

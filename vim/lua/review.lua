@@ -40,6 +40,14 @@ local function build_diff_cmd(root, base_ref, rel, is_untracked)
   )
 end
 
+local function build_stats_cmd(root, base_ref)
+  return string.format(
+    'git -C %s --no-pager diff --stat --color=always %s',
+    vim.fn.shellescape(root),
+    vim.fn.shellescape(base_ref)
+  )
+end
+
 local function git_root()
   local root = vim.fn.systemlist('git rev-parse --show-toplevel')[1]
   if vim.v.shell_error ~= 0 or not root or root == '' then
@@ -64,6 +72,38 @@ local function find_win_by_term(tab, want_terminal)
     end
   end
   return nil
+end
+
+-- Read a tabpage variable, returning nil if unset (instead of raising).
+local function tab_var(tab, name)
+  local ok, val = pcall(vim.api.nvim_tabpage_get_var, tab, name)
+  if ok then return val end
+  return nil
+end
+
+-- Review tab metadata: stats flag or file path, plus stored base ref (if any).
+-- Returns nil if this isn't a review tab.
+local function review_info(tab)
+  if tab_var(tab, 'review_stats') then
+    return {base_ref = tab_var(tab, 'review_base'), stats = true}
+  end
+  local rel = tab_var(tab, 'review_file')
+  if rel then
+    return {base_ref = tab_var(tab, 'review_base'), rel = rel}
+  end
+  return nil
+end
+
+local function is_review_tab(tab)
+  return review_info(tab) ~= nil
+end
+
+-- Pick the right command (stats or file diff) for an existing review tab.
+local function cmd_for_review_tab(info, root, base_ref, untracked_set)
+  if info.stats then
+    return build_stats_cmd(root, base_ref)
+  end
+  return build_diff_cmd(root, base_ref, info.rel, untracked_set[info.rel] or false)
 end
 
 -- Parse the "new file" line number from a delta side-by-side output line.
@@ -118,10 +158,10 @@ local function open_diff_terminal(cmd)
   vim.keymap.set('n', '<CR>', jump_to_file_line, {buffer = true, desc = 'Jump to diff line in file'})
 end
 
--- Replace (or create) the terminal window's buffer with a fresh diff run.
-local function render_diff_into_tab(tab, root, base_ref, rel, is_untracked)
+-- Replace (or create) a tab's terminal pane with a fresh run of `cmd`.
+-- Used by both file-review refresh (diff cmd) and stats-tab refresh (stat cmd).
+local function render_cmd_into_tab(tab, cmd)
   vim.api.nvim_set_current_tabpage(tab)
-  local cmd = build_diff_cmd(root, base_ref, rel, is_untracked)
   local term_win = find_win_by_term(tab, true)
   if term_win then
     vim.api.nvim_set_current_win(term_win)
@@ -139,7 +179,7 @@ local function render_diff_into_tab(tab, root, base_ref, rel, is_untracked)
   end
 end
 
--- Re-render every existing review tab's diff at the current terminal width.
+-- Re-render every existing review tab at the current terminal width.
 -- Doesn't add or remove tabs. Returns true if any tab was touched.
 local function refresh_all_review_tabs()
   local root = git_root()
@@ -148,10 +188,9 @@ local function refresh_all_review_tabs()
   local prev_tab = vim.api.nvim_get_current_tabpage()
   local touched = false
   for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
-    local ok_f, rel = pcall(vim.api.nvim_tabpage_get_var, tab, 'review_file')
-    local ok_b, base_ref = pcall(vim.api.nvim_tabpage_get_var, tab, 'review_base')
-    if ok_f and rel and ok_b and base_ref then
-      render_diff_into_tab(tab, root, base_ref, rel, untracked_set[rel] or false)
+    local info = review_info(tab)
+    if info and info.base_ref then
+      render_cmd_into_tab(tab, cmd_for_review_tab(info, root, info.base_ref, untracked_set))
       touched = true
     end
   end
@@ -176,17 +215,29 @@ local function review_against(base_ref)
   local untracked_set = fetch_untracked(root)
   for f in pairs(untracked_set) do table.insert(files, f) end
 
+  -- Remember where the user invoked rr from so new tabs land to its right.
+  local start_tab = vim.api.nvim_get_current_tabpage()
+
   local new_set = {}
   for _, rel in ipairs(files) do new_set[rel] = true end
 
-  -- Walk existing review tabs: refresh ones still changed, close stale ones.
+  -- Walk existing review tabs: refresh stats/file tabs still relevant, close
+  -- file tabs whose files no longer appear in the diff.
   local existing = {}
+  local existing_stats = false
   for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
-    local ok, rel = pcall(vim.api.nvim_tabpage_get_var, tab, 'review_file')
-    if ok and rel then
-      if new_set[rel] then
-        existing[rel] = true
-        render_diff_into_tab(tab, root, base_ref, rel, untracked_set[rel] or false)
+    local info = review_info(tab)
+    if info then
+      local keep
+      if info.stats then
+        existing_stats = true
+        keep = #files > 0
+      else
+        keep = new_set[info.rel] or false
+        if keep then existing[info.rel] = true end
+      end
+      if keep then
+        render_cmd_into_tab(tab, cmd_for_review_tab(info, root, base_ref, untracked_set))
         vim.t.review_base = base_ref
       else
         vim.api.nvim_set_current_tabpage(tab)
@@ -198,6 +249,28 @@ local function review_against(base_ref)
   if #files == 0 then
     vim.notify('No changed files vs ' .. base_ref)
     return
+  end
+
+  -- New tabs are created "after current" by :tabnew, so navigate to the
+  -- starting tab first. That anchors the stats tab immediately to its right.
+  if vim.api.nvim_tabpage_is_valid(start_tab) then
+    vim.api.nvim_set_current_tabpage(start_tab)
+  end
+
+  -- Create the stats tab first so it ends up as the leftmost review tab.
+  if not existing_stats then
+    vim.cmd('tabnew')
+    vim.t.review_stats = true
+    vim.t.review_base = base_ref
+    open_diff_terminal(build_stats_cmd(root, base_ref))
+  end
+
+  -- Move to the rightmost existing review tab so new file tabs chain after it
+  -- (keeping the review cluster contiguous and in order).
+  for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
+    if is_review_tab(tab) then
+      vim.api.nvim_set_current_tabpage(tab)
+    end
   end
 
   for _, rel in ipairs(files) do
@@ -217,10 +290,9 @@ local function review_against(base_ref)
 
   last_wide = is_wide()
 
-  -- Jump to the first review tab (skip any pre-existing non-review tabs).
+  -- Jump to the first review tab (stats if present, otherwise first file).
   for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
-    local ok, rel = pcall(vim.api.nvim_tabpage_get_var, tab, 'review_file')
-    if ok and rel then
+    if is_review_tab(tab) then
       vim.api.nvim_set_current_tabpage(tab)
       break
     end
@@ -292,8 +364,10 @@ function M.tabline()
 
   local paths = {}
   for i, tab in ipairs(tabs) do
-    local ok, rel = pcall(vim.api.nvim_tabpage_get_var, tab, 'review_file')
-    if ok and rel and rel ~= '' then
+    local rel = tab_var(tab, 'review_file')
+    if tab_var(tab, 'review_stats') then
+      paths[i] = '[stats]'
+    elseif rel and rel ~= '' then
       paths[i] = rel
     else
       local win = vim.api.nvim_tabpage_get_win(tab)

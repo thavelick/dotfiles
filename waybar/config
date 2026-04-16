@@ -15,6 +15,7 @@
 	],
 	"modules-right": [
 		"custom/nag-runner",
+		"custom/kernel-reboot",
 		"custom/controller",
 		"custom/network",
 		"pulseaudio",
@@ -104,6 +105,12 @@
 		"exec": "$HOME/Projects/nag-runner/nag_runner.py --check && echo '' || echo '⚠️'",
 		"tooltip": true,
 		"tooltip-format": "Nags Overdue!"
+	},
+	"custom/kernel-reboot": {
+		"interval": 60,
+		"exec": "[ -d \"/usr/lib/modules/$(uname -r)\" ] && echo '' || echo '🔃'",
+		"tooltip": true,
+		"tooltip-format": "Kernel updated — reboot pending"
 	},
 	"custom/controller": {
 		"interval": 10,

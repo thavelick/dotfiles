@@ -18,5 +18,10 @@
         "name": "backups",
         "command": "~/Projects/dotfiles/backups.sh",
         "interval": "11"
+    },
+    {
+        "name": "import browser history",
+        "command": "~/Projects/browser-history/browser_history.py import",
+        "interval": "13"
     }
 ]

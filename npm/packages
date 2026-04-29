@@ -2,6 +2,7 @@
 @eslint/create-config
 @executeautomation/playwright-mcp-server
 @google/gemini-cli
+@mariozechner/pi-coding-agent
 @playwright/mcp
 eslint
 playwright

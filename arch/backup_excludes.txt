@@ -10,7 +10,7 @@
 /home/tristan/go/*
 /home/tristan/.gradle/*
 /home/tristan/.ollama/models/*
-/home/tristan/.local/share/kiwix/*.zim
+/home/tristan/kiwix/*.zim
 /home/tristan/.local/share/Zeal/*
 /home/tristan/Projects/**/.git/objects/*
 /home/tristan/Projects/koreader/base/*

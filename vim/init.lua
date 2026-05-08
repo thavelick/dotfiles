@@ -151,6 +151,9 @@ vim.api.nvim_create_autocmd('FileChangedShell', {
 -- highlight all search matches
 vim.o.hlsearch = true
 
+-- wrap long lines at word boundaries instead of mid-word
+vim.o.linebreak = true
+
 -- Setup language servers with new vim.lsp.config API (nvim 0.11+)
 vim.lsp.config.lua_ls = {
   settings = {

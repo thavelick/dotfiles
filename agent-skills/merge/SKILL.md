@@ -1,6 +1,11 @@
-Merge the current PR with branch deletion, but only after CI passes.
+---
+name: merge
+description: Merge the current PR with branch deletion, but only after CI passes. Use when the user clearly means "merge the open PR" (e.g. plain "merge", "merge it", "ship it"). Do NOT use for git branch merges ("merge main into X") or code merges.
+---
 
-Follow these steps:
+First, confirm intent. Only proceed with this skill if it's obvious the user means "merge the current open PR." If they mean a git branch merge (e.g. "merge main into our branch") or a code merge (combining functions, files, etc.), stop and handle what they actually asked for instead.
+
+If a PR merge is intended, follow these steps:
 
 1. Get the current PR number using `gh pr view --json number -q .number`
 

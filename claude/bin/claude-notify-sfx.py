@@ -48,6 +48,7 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
-    except Exception:
-        # Never let a hook failure block Claude.
+    except Exception as e:
+        # Never let a hook failure block Claude, but surface what broke.
+        print(f"claude-notify-sfx: {type(e).__name__}: {e}", file=sys.stderr)
         sys.exit(0)

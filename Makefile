@@ -73,6 +73,8 @@ lint: # Run shellcheck on shell files and ruff on Python files
 	cd whisper && uv run ruff check . && cd ..
 	@echo "Checking package files are alphabetically sorted.."
 	./tools/check-package-sort.sh
+	@echo "Checking Claude theme is pinned.."
+	./tools/check-claude-theme.sh
 
 format: # Format Python files with black
 	@echo "Formatting Python files with black.."

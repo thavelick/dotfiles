@@ -3,7 +3,6 @@
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
-    "defaultMode": "auto",
     "allow": [
       "Bash(git *)",
       "Bash(gh *)",
@@ -40,7 +39,8 @@
       "Write(.claude/settings.json)",
       "Bash(gh pr merge*)",
       "Bash(gh repo delete*)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "hooks": {
     "PreToolUse": [
@@ -107,8 +107,9 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
+  "promptSuggestionEnabled": false,
   "skipDangerousModePermissionPrompt": true,
-  "skipAutoPermissionPrompt": true,
+  "theme": "dark",
   "teammateMode": "tmux",
-  "promptSuggestionEnabled": false
+  "skipAutoPermissionPrompt": true
 }

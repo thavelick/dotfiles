@@ -1,9 +1,73 @@
 {
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "medium",
+  "enabledPlugins": {
+    "clangd-lsp@claude-plugins-official": false,
+    "code-review@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
+  },
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "command": "$HOME/.claude/bin/claude-notify-sfx.py play ringaling 90",
+            "type": "command"
+          }
+        ],
+        "matcher": "permission_prompt"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "jq -r '.tool_input.command' | grep -qE '(^|[ ;&|])(rm|rmdir)( |$)' && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"Use trashit instead of rm/rmdir — moves items to trash for safety\"}}' || true",
+            "type": "command"
+          },
+          {
+            "command": "jq -r '.tool_input.command' | grep -qE '(^|[ ;&|()`$])gh( |$)' && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"GitHub identity: @thavelick. @me works in gh CLI filters (--assignee @me, --author @me, search syntax) but NOT in @-mentions, commit co-author trailers, URLs, or most GraphQL login args — use @thavelick literally there.\"}}' || true",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "$HOME/.claude/bin/claude-notify-sfx.py play dading 60",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "command": "$HOME/.claude/bin/claude-notify-sfx.py start",
+            "type": "command"
+          },
+          {
+            "command": "jq -r '.prompt // \"\"' | grep -qiE '(qcopy|qpaste|clipboard|copy (me|that|this)|paste (me|that|this))' && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"Use qcopy and qpaste for the user clipboard (cross-platform pbcopy/pbpaste). Only applies to clipboard ops — ignore if the request is about copying files or pasting code into a file.\"}}' || true",
+            "type": "command"
+          }
+        ]
+      }
+    ]
+  },
   "permissions": {
-    "defaultMode": "auto",
     "allow": [
       "Bash(git *)",
       "Bash(gh *)",
@@ -30,86 +94,22 @@
       "Bash(sed *)",
       "Bash(for *)"
     ],
-    "deny": [
-      "Bash(sudo *)",
-      "Bash(rm *)",
-      "Bash(rm -*)"
-    ],
     "ask": [
       "Edit(.claude/settings.json)",
       "Write(.claude/settings.json)",
       "Bash(gh pr merge*)",
       "Bash(gh repo delete*)"
+    ],
+    "defaultMode": "auto",
+    "deny": [
+      "Bash(sudo *)",
+      "Bash(rm *)",
+      "Bash(rm -*)"
     ]
   },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "jq -r '.tool_input.command' | grep -qE '(^|[ ;&|])(rm|rmdir)( |$)' && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"Use trashit instead of rm/rmdir — moves items to trash for safety\"}}' || true"
-          },
-          {
-            "type": "command",
-            "command": "jq -r '.tool_input.command' | grep -qE '(^|[ ;&|()`$])gh( |$)' && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"GitHub identity: @thavelick. @me works in gh CLI filters (--assignee @me, --author @me, search syntax) but NOT in @-mentions, commit co-author trailers, URLs, or most GraphQL login args — use @thavelick literally there.\"}}' || true"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/bin/claude-notify-sfx.py start"
-          },
-          {
-            "type": "command",
-            "command": "jq -r '.prompt // \"\"' | grep -qiE '(qcopy|qpaste|clipboard|copy (me|that|this)|paste (me|that|this))' && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"Use qcopy and qpaste for the user clipboard (cross-platform pbcopy/pbpaste). Only applies to clipboard ops — ignore if the request is about copying files or pasting code into a file.\"}}' || true"
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "matcher": "permission_prompt",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/bin/claude-notify-sfx.py play ringaling 90"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/bin/claude-notify-sfx.py play dading 60"
-          }
-        ]
-      }
-    ]
-  },
-  "enabledPlugins": {
-    "code-simplifier@claude-plugins-official": true,
-    "commit-commands@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true,
-    "pr-review-toolkit@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true,
-    "lua-lsp@claude-plugins-official": true,
-    "clangd-lsp@claude-plugins-official": false
-  },
-  "alwaysThinkingEnabled": true,
-  "effortLevel": "medium",
-  "skipDangerousModePermissionPrompt": true,
+  "promptSuggestionEnabled": false,
   "skipAutoPermissionPrompt": true,
+  "skipDangerousModePermissionPrompt": true,
   "teammateMode": "tmux",
-  "theme": "light",
-  "promptSuggestionEnabled": false
+  "theme": "dark"
 }

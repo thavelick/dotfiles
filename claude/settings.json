@@ -110,6 +110,5 @@
   "skipDangerousModePermissionPrompt": true,
   "skipAutoPermissionPrompt": true,
   "teammateMode": "tmux",
-  "theme": "light",
   "promptSuggestionEnabled": false
 }

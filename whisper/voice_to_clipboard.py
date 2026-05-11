@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Voice input script that records audio and transcribes it using Whisper."""
+
 import subprocess
 import tempfile
 import os

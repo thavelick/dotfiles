@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# Only trivial substitutions (args at end, no logic) belong here.
+# Anything more involved goes in bin/ — see bin/README.md.
+#
 # Ensure DOTFILES_HOME is set
 [[ -z "$DOTFILES_HOME" ]] && echo "Warning: DOTFILES_HOME not set" >&2
 

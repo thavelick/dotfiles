@@ -76,9 +76,15 @@ lint: # Run shellcheck on shell files and ruff on Python files
 	@echo "Checking Claude theme is pinned.."
 	./tools/check-claude-theme.sh
 
-format: # Format Python files with black
+format: # Format Python files with black and JSON files with jq
 	@echo "Formatting Python files with black.."
 	cd whisper && uv run black .
+	@echo "Formatting Claude settings.."
+	jq -S --indent 2 . claude/settings.json > claude/settings.json.tmp && mv claude/settings.json.tmp claude/settings.json
+
+install-hooks: # Wire tools/git-hooks/ into this repo via core.hooksPath
+	@echo "Setting core.hooksPath to tools/git-hooks.."
+	git config core.hooksPath tools/git-hooks
 
 check-secret: # Check file or directory for secrets using gitleaks (Usage: make check-secret TARGET=path)
 	@if [ -z "$(TARGET)" ]; then \

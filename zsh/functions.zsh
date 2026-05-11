@@ -1,3 +1,7 @@
+# Only logic that technically must run in the current shell belongs here:
+# cd, parent-shell var/state mutation, `$?` capture, zsh builtins/widgets.
+# Everything else goes in bin/ — see bin/README.md.
+#
 # LLM code function
 if command_exists llm; then
     llmc() {

@@ -75,6 +75,8 @@ lint: # Run shellcheck on shell files and ruff on Python files
 	./tools/check-package-sort.sh
 	@echo "Checking Claude theme is pinned.."
 	./tools/check-claude-theme.sh
+	@echo "Checking Claude settings are formatted.."
+	./tools/check-claude-settings-format.sh
 
 format: # Format Python files with black and JSON files with jq
 	@echo "Formatting Python files with black.."

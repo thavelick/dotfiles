@@ -43,12 +43,31 @@
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.command' | grep -qE '(^|[ ;&|])(rm|rmdir)( |$)' && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"Use trashit instead of rm/rmdir — moves items to trash for safety\"}}' || true"
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.command' | grep -qE '(^|[ ;&|()`$])gh( |$)' && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"GitHub identity: @thavelick. @me works in gh CLI filters (--assignee @me, --author @me, search syntax) but NOT in @-mentions, commit co-author trailers, URLs, or most GraphQL login args — use @thavelick literally there.\"}}' || true"
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [
       {
         "hooks": [
           {
             "type": "command",
             "command": "$HOME/.claude/bin/claude-notify-sfx.py start"
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.prompt // \"\"' | grep -qiE '(qcopy|qpaste|clipboard|copy (me|that|this)|paste (me|that|this))' && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"Use qcopy and qpaste for the user clipboard (cross-platform pbcopy/pbpaste). Only applies to clipboard ops — ignore if the request is about copying files or pasting code into a file.\"}}' || true"
           }
         ]
       }

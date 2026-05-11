@@ -30,7 +30,7 @@ Run the full developer workflow end-to-end: pick a ticket, branch, plan, impleme
 
 7. **Initial commit**: Invoke the `commit-commands:commit` skill.
 
-8. **Simplify**: Invoke the `simplify-agent` skill on the changed code. This step is for pre-PR cleanup — refactoring to cleaner code, removing duplication, improving reuse. It is NOT for addressing PR review feedback (that's step 11). The `simplify-agent` skill launches code-simplifier agents that review for reuse, quality, and efficiency issues, then fix what they find.
+8. **Simplify**: Only after step 7's commit has completed, invoke the `simplify-agent` skill on the changed code. Do not run commit and simplify in parallel or batch them in one tool turn — the commit must be on disk before simplify reads the tree, and simplify's edits must land as a separate follow-up commit. This step is for pre-PR cleanup — refactoring to cleaner code, removing duplication, improving reuse. It is NOT for addressing PR review feedback (that's step 11). The `simplify-agent` skill launches code-simplifier agents that review for reuse, quality, and efficiency issues, then fix what they find.
 
 9. **Push & PR**: Invoke the `commit-commands:commit-push-pr` skill.
 

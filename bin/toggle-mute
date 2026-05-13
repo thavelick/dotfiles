@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+    cat <<EOF
+Usage: toggle-mute
+
+Toggle the default audio output's mute state (cross-platform).
+
+Prints "muted" or "unmuted" to stdout reflecting the new state.
+
+Backends (in preference order):
+  - pamixer (Linux)
+  - pactl   (Linux, PulseAudio/PipeWire)
+  - osascript (macOS)
+EOF
+    exit 0
+fi
+
+if hash pamixer 2>/dev/null; then
+    pamixer --toggle-mute
+    state=$(pamixer --get-mute)  # "true" or "false"
+elif hash pactl 2>/dev/null; then
+    pactl set-sink-mute @DEFAULT_SINK@ toggle
+    case "$(pactl get-sink-mute @DEFAULT_SINK@)" in
+        *yes) state=true ;;
+        *)    state=false ;;
+    esac
+elif hash osascript 2>/dev/null; then
+    state=$(osascript \
+        -e 'set v to not (output muted of (get volume settings))' \
+        -e 'set volume output muted v' \
+        -e 'return v')
+else
+    echo "Error: No supported audio tool found (pamixer, pactl, or osascript)" >&2
+    exit 1
+fi
+
+if [[ "$state" == "true" ]]; then
+    echo "muted"
+else
+    echo "unmuted"
+fi

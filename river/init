@@ -4,7 +4,7 @@ set -e
 mod="Mod1"
 for mode in normal locked
 do
-  # arch/surfacepro
+  # arch/thinkpad-x1-carbon-5th-gen
   riverctl map $mode None XF86AudioRaiseVolume  spawn 'pamixer -i 5'
   riverctl map $mode None XF86AudioLowerVolume  spawn 'pamixer -d 5'
   riverctl map $mode None XF86AudioMute         spawn 'pamixer --toggle-mute'

@@ -62,7 +62,7 @@ This directory contains the configuration for the River Wayland compositor.
 
 ### System Controls
 
-#### Media Keys (Surface Pro/Laptop)
+#### Media Keys (ThinkPad X1 Carbon 5th Gen)
 - **Volume Up/Down/Mute** - Hardware media keys
 - **Brightness Up/Down** - Hardware function keys
 - **Play/Pause/Next/Previous** - Hardware media keys

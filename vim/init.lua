@@ -122,9 +122,9 @@ vim.o.clipboard = 'unnamedplus'
 -- ALE linters and fixers configuration
 vim.g.ale_linters = {
   html = {'tidy'},
-  python = {'pylint'}
+  python = {'ruff'}
 }
-vim.g.ale_fixers = { python = {'black'} }
+vim.g.ale_fixers = { python = {'ruff', 'ruff_format'} }
 vim.g.ale_fix_on_save = 1
 
 -- Function to trim trailing whitespace

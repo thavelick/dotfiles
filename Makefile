@@ -80,7 +80,7 @@ lint: # Run shellcheck on shell files and ruff on Python files
 
 format: # Format Python files with ruff and JSON files with jq
 	@echo "Formatting Python files with ruff.."
-	cd whisper && uv run ruff format .
+	(cd whisper && uv run ruff format .)
 	@echo "Formatting Claude settings.."
 	jq -S --indent 2 . claude/settings.json > claude/settings.json.tmp && mv claude/settings.json.tmp claude/settings.json
 

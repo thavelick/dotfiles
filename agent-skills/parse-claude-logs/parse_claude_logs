@@ -1,0 +1,304 @@
+#!/usr/bin/env python3
+"""Filter Claude Code session JSONL logs into readable plain-text streams."""
+import argparse
+import json
+import os
+import re
+import sys
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+PROJECTS_ROOT = Path.home() / ".claude" / "projects"
+
+CATEGORIES = ["user", "assistant", "thinking", "tool-calls", "tool-results", "agents", "system"]
+DEFAULT_CATEGORIES = {"user", "assistant", "tool-calls"}
+AGENT_TOOLS = {"Agent", "Task"}
+RESULT_TRUNCATE_LINES = 20
+
+
+def encode_cwd(path):
+    p = str(Path(path).resolve())
+    return p.replace("/", "-")
+
+
+def resolve_project_dir(arg):
+    if arg:
+        candidate = Path(arg).expanduser()
+        if candidate.is_dir() and candidate.parent == PROJECTS_ROOT:
+            return candidate
+        encoded = PROJECTS_ROOT / encode_cwd(candidate)
+        if encoded.is_dir():
+            return encoded
+        sys.exit(f"error: no project log dir for {candidate} (looked for {encoded})")
+    encoded = PROJECTS_ROOT / encode_cwd(os.getcwd())
+    if not encoded.is_dir():
+        sys.exit(f"error: no claude logs for current dir (expected {encoded})")
+    return encoded
+
+
+def resolve_session(project_dir, arg):
+    sessions = sorted(project_dir.glob("*.jsonl"), key=lambda p: p.stat().st_mtime, reverse=True)
+    if not sessions:
+        sys.exit(f"error: no sessions in {project_dir}")
+    if not arg:
+        return sessions[0]
+    p = Path(arg).expanduser()
+    if p.is_file():
+        return p
+    matches = [s for s in sessions if s.stem.startswith(arg)]
+    if len(matches) == 1:
+        return matches[0]
+    if not matches:
+        sys.exit(f"error: no session matching '{arg}' in {project_dir}")
+    sys.exit(f"error: multiple sessions match '{arg}': {', '.join(m.stem for m in matches)}")
+
+
+def parse_since(spec):
+    m = re.fullmatch(r"(\d+)([smhd])", spec)
+    if m:
+        n, unit = int(m.group(1)), m.group(2)
+        delta = {"s": "seconds", "m": "minutes", "h": "hours", "d": "days"}[unit]
+        return datetime.now(timezone.utc) - timedelta(**{delta: n})
+    try:
+        dt = datetime.fromisoformat(spec)
+        if dt.tzinfo is None:
+            dt = dt.astimezone()
+        return dt.astimezone(timezone.utc)
+    except ValueError:
+        sys.exit(f"error: bad --since value '{spec}' (use 10m/2h/1d or ISO timestamp)")
+
+
+def parse_ts(entry):
+    ts = entry.get("timestamp")
+    if not ts:
+        return None
+    try:
+        return datetime.fromisoformat(ts.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def fmt_time(dt):
+    if dt is None:
+        return "--:--:--"
+    return dt.astimezone().strftime("%H:%M:%S")
+
+
+def categorize(entry):
+    """Yield (category, payload) tuples for an entry — one entry may split into multiple."""
+    t = entry.get("type")
+    if t == "user":
+        content = entry.get("message", {}).get("content")
+        if isinstance(content, str):
+            yield ("user", content)
+        elif isinstance(content, list):
+            for block in content:
+                if isinstance(block, dict) and block.get("type") == "tool_result":
+                    yield ("tool-results", block)
+    elif t == "assistant":
+        content = entry.get("message", {}).get("content", [])
+        if not isinstance(content, list):
+            return
+        for block in content:
+            if not isinstance(block, dict):
+                continue
+            btype = block.get("type")
+            if btype == "text":
+                txt = block.get("text", "").strip()
+                if txt:
+                    yield ("assistant", txt)
+            elif btype == "thinking":
+                txt = block.get("thinking", "").strip()
+                if txt:
+                    yield ("thinking", txt)
+            elif btype == "tool_use":
+                if block.get("name") in AGENT_TOOLS:
+                    yield ("agents", block)
+                else:
+                    yield ("tool-calls", block)
+    elif t in ("system", "attachment", "file-history-snapshot", "permission-mode", "ai-title", "last-prompt"):
+        yield ("system", entry)
+
+
+def format_tool_call(block):
+    name = block.get("name", "?")
+    inp = block.get("input", {}) or {}
+    if name == "Read":
+        path = inp.get("file_path", "?")
+        offset, limit = inp.get("offset"), inp.get("limit")
+        if offset or limit:
+            start = offset or 1
+            end = (offset or 1) + limit - 1 if limit else "?"
+            return f"Read: {path} (lines {start}-{end})"
+        return f"Read: {path}"
+    if name == "Bash":
+        desc = inp.get("description", "")
+        cmd = inp.get("command", "")
+        head = f"Bash: {desc}" if desc else "Bash:"
+        return f"{head}\n$ {cmd}"
+    if name in ("Edit", "Write"):
+        path = inp.get("file_path", "?")
+        if name == "Write":
+            content = inp.get("content", "")
+            preview = "\n".join(content.splitlines()[:3])
+            return f"Write: {path}\n{preview}"
+        old = "\n".join((inp.get("old_string", "") or "").splitlines()[:3])
+        new = "\n".join((inp.get("new_string", "") or "").splitlines()[:3])
+        return f"Edit: {path}\n- {old}\n+ {new}"
+    if name == "Grep":
+        return f"Grep: {inp.get('pattern', '?')} in {inp.get('path', '.')}"
+    if name == "Glob":
+        return f"Glob: {inp.get('pattern', '?')}"
+    if name in AGENT_TOOLS:
+        sub = inp.get("subagent_type", "general-purpose")
+        desc = inp.get("description", "")
+        prompt = inp.get("prompt", "")
+        return f"Agent[{sub}]: {desc}\n{prompt}"
+    summary = ", ".join(f"{k}={str(v)[:60]}" for k, v in inp.items())
+    return f"{name}: {summary}"
+
+
+def format_tool_result(block, full):
+    tool_id = block.get("tool_use_id", "")
+    content = block.get("content", "")
+    if isinstance(content, list):
+        parts = []
+        for c in content:
+            if isinstance(c, dict) and c.get("type") == "text":
+                parts.append(c.get("text", ""))
+            elif isinstance(c, str):
+                parts.append(c)
+        content = "\n".join(parts)
+    if not isinstance(content, str):
+        content = str(content)
+    header_suffix = f" (id={tool_id[-8:]})" if tool_id else ""
+    if not full:
+        lines = content.splitlines()
+        if len(lines) > RESULT_TRUNCATE_LINES:
+            content = "\n".join(lines[:RESULT_TRUNCATE_LINES])
+            content += f"\n[... {len(lines) - RESULT_TRUNCATE_LINES} more lines]"
+    return header_suffix, content
+
+
+def format_system(entry):
+    t = entry.get("type")
+    if t == "permission-mode":
+        return f"permission-mode → {entry.get('permissionMode')}"
+    if t == "ai-title":
+        return f"ai-title: {entry.get('title', '')}"
+    if t == "attachment":
+        return f"attachment: {entry.get('filename') or entry.get('type')}"
+    if t == "file-history-snapshot":
+        return f"file-history-snapshot ({len(entry.get('snapshot', {}).get('trackedFileBackups', {}))} files)"
+    if t == "last-prompt":
+        return f"last-prompt: {str(entry.get('prompt', ''))[:120]}"
+    if t == "system":
+        return f"system: {str(entry.get('content', entry))[:200]}"
+    return f"{t}"
+
+
+def emit(category, body, ts, suffix=""):
+    label = category.upper()
+    print(f"=== {label} {fmt_time(ts)}{suffix} ===")
+    print()
+    print(body)
+    print()
+
+
+def render_entry(category, payload, ts, full):
+    if category in ("user", "assistant", "thinking"):
+        emit(category, payload, ts)
+    elif category == "tool-calls":
+        emit("tool", format_tool_call(payload), ts)
+    elif category == "agents":
+        emit("agent", format_tool_call(payload), ts)
+    elif category == "tool-results":
+        suffix, body = format_tool_result(payload, full)
+        emit("tool-result", body, ts, suffix)
+    elif category == "system":
+        emit("system", format_system(payload), ts)
+
+
+def iter_entries(session_path):
+    with open(session_path, errors="replace") as f:
+        for i, line in enumerate(f, 1):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                yield json.loads(line)
+            except json.JSONDecodeError as e:
+                print(f"warning: {session_path.name}:{i}: {e}", file=sys.stderr)
+
+
+def list_sessions(project_dir):
+    rows = []
+    for p in sorted(project_dir.glob("*.jsonl"), key=lambda p: p.stat().st_mtime, reverse=True):
+        title, first_user, count = "", "", 0
+        for entry in iter_entries(p):
+            count += 1
+            if entry.get("type") == "ai-title" and not title:
+                title = entry.get("title", "")
+            if entry.get("type") == "user" and not first_user:
+                c = entry.get("message", {}).get("content")
+                if isinstance(c, str):
+                    first_user = c.replace("\n", " ")[:60]
+        mtime = datetime.fromtimestamp(p.stat().st_mtime).strftime("%Y-%m-%d %H:%M")
+        label = title or first_user or "(empty)"
+        rows.append((p.stem, mtime, count, label))
+    if not rows:
+        print(f"no sessions in {project_dir}", file=sys.stderr)
+        sys.exit(2)
+    for uuid, mtime, count, label in rows:
+        print(f"{uuid}  {mtime}  {count:>4}  {label}")
+
+
+def main():
+    ap = argparse.ArgumentParser(
+        description="Filter Claude Code session JSONL logs into readable streams.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Default content: --user --assistant --tool-calls (override by passing any filter flag).",
+    )
+    g = ap.add_argument_group("content filters")
+    for cat in CATEGORIES:
+        g.add_argument(f"--{cat}", action="store_true", dest=cat.replace("-", "_"))
+    ap.add_argument("--session", help="UUID prefix or path")
+    ap.add_argument("--project", help="project dir (default: $PWD encoded)")
+    ap.add_argument("--list", action="store_true", help="list sessions and exit")
+    ap.add_argument("--since", help="10m/2h/1d or ISO timestamp")
+    ap.add_argument("--last", type=int, help="show only the last N matching entries")
+    ap.add_argument("--full", action="store_true", help="disable tool-result truncation")
+    args = ap.parse_args()
+
+    project_dir = resolve_project_dir(args.project)
+    if args.list:
+        list_sessions(project_dir)
+        return
+
+    requested = {c for c in CATEGORIES if getattr(args, c.replace("-", "_"))}
+    active = requested or DEFAULT_CATEGORIES
+
+    session = resolve_session(project_dir, args.session)
+    since = parse_since(args.since) if args.since else None
+
+    print(f"# session: {session.stem}  {session}")
+    print()
+
+    matches = []
+    for entry in iter_entries(session):
+        ts = parse_ts(entry)
+        if since and ts and ts < since:
+            continue
+        for category, payload in categorize(entry):
+            if category in active:
+                matches.append((category, payload, ts))
+
+    if args.last is not None:
+        matches = matches[-args.last:]
+
+    for category, payload, ts in matches:
+        render_entry(category, payload, ts, args.full)
+
+
+if __name__ == "__main__":
+    main()

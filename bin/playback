@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+    cat <<EOF
+Usage: playback --play | --pause
+
+Idempotently play or pause whatever media is currently active
+(YouTube in a browser, Jellyfin, Spotify, mpv, etc.).
+
+  --play   Ensure playback is running (no-op if already playing)
+  --pause  Ensure playback is paused  (no-op if already paused)
+
+If nothing is currently playing, exits 0 silently.
+
+Backends (in preference order):
+  - playerctl       (Linux, MPRIS)
+  - nowplaying-cli  (macOS, MediaRemote private framework)
+EOF
+    exit 0
+fi
+
+case "${1:-}" in
+    --play)  action=play ;;
+    --pause) action=pause ;;
+    "")
+        echo "Usage: playback --play | --pause" >&2
+        exit 1
+        ;;
+    *)
+        echo "playback: unknown argument: $1" >&2
+        echo "Usage: playback --play | --pause" >&2
+        exit 1
+        ;;
+esac
+
+if hash playerctl 2>/dev/null; then
+    playerctl --no-messages "$action" 2>/dev/null || true
+elif hash nowplaying-cli 2>/dev/null; then
+    nowplaying-cli "$action" >/dev/null 2>&1 || true
+else
+    echo "playback: no supported backend found (need playerctl or nowplaying-cli)" >&2
+    exit 1
+fi

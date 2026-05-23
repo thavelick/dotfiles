@@ -21,6 +21,10 @@
       {
         "hooks": [
           {
+            "command": "playback --pause",
+            "type": "command"
+          },
+          {
             "command": "$HOME/.claude/bin/claude-notify-sfx.py play ringaling 90",
             "type": "command"
           }
@@ -46,6 +50,10 @@
     "Stop": [
       {
         "hooks": [
+          {
+            "command": "playback --pause",
+            "type": "command"
+          },
           {
             "command": "$HOME/.claude/bin/claude-notify-sfx.py play dading 60",
             "type": "command"

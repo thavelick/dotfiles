@@ -30,7 +30,6 @@ fi
 # Project-specific aliases
 [[ -f "$HOME/Projects/ai-asker/ask.py" ]] && alias ask='$HOME/Projects/ai-asker/ask.py'
 [[ -f "$HOME/Projects/ai-asker/ask.py" ]] && alias ask4='$HOME/Projects/ai-asker/ask.py --model gpt-4'
-[[ -f "$HOME/Projects/dotfiles/git/auto-commit.sh" ]] && alias autocommit='$HOME/Projects/dotfiles/git/auto-commit.sh'
 [[ -f "$DOTFILES_HOME/ghreadme.sh" ]] && alias ghreadme='$DOTFILES_HOME/ghreadme.sh'
 command_exists python3 && [[ -f "$HOME/Projects/nag-runner/nag_runner.py" ]] && alias nag='python3 $HOME/Projects/nag-runner/nag_runner.py'
 

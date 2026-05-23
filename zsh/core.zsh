@@ -89,7 +89,7 @@ setopt interactive_comments
 source_if_exists $HOME/secrets.zsh
 
 # Work environment
-source_if_exists $HOME/work.zsh && source_if_exists $DOTFILES_HOME/work/github.sh
+source_if_exists $HOME/work.zsh
 
 # Project-specific configs
 source_if_exists $DOTFILES_HOME/gemini.sh

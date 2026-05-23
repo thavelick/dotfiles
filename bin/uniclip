@@ -46,4 +46,5 @@ else
     exit 1
 fi
 
-cat "$DOTFILES_HOME/zsh/latex_symbols.txt" 2>/dev/null | fzf --query "${1:-}" | tr -s ' ' | cut -d ' ' -f2 | tr -d "\n" | $clipboard_cmd
+[ -r "$DOTFILES_HOME/zsh/latex_symbols.txt" ] || exit 0
+fzf --query "${1:-}" < "$DOTFILES_HOME/zsh/latex_symbols.txt" | tr -s ' ' | cut -d ' ' -f2 | tr -d "\n" | $clipboard_cmd

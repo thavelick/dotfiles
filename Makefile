@@ -68,7 +68,11 @@ test-all: # Run both minimal and core tests
 
 lint: # Run shellcheck on shell files and ruff on Python files
 	@echo "Running shellcheck on shell files.."
-	find . -name "*.sh" -o -path "./river/init" | grep -v ".git" | grep -v "scratch" | grep -v ".venv" | grep -v ".Trash" | xargs shellcheck
+	@if ! ./tools/list-shell-files.sh | xargs shellcheck; then
+		echo
+		echo "shellcheck found issues — run 'make lint-fix' to auto-apply fixes (review the diff before committing)"
+		exit 1
+	fi
 	@echo "Running ruff on Python files.."
 	cd whisper && uv run ruff check . && cd ..
 	@echo "Checking package files are alphabetically sorted.."
@@ -77,6 +81,19 @@ lint: # Run shellcheck on shell files and ruff on Python files
 	./tools/check-claude-theme.sh
 	@echo "Checking Claude settings are formatted.."
 	./tools/check-claude-settings-format.sh
+
+lint-fix: # Auto-apply shellcheck fixes via 'shellcheck -f diff | patch'
+	@echo "Applying shellcheck auto-fixes.."
+	@./tools/list-shell-files.sh | while IFS= read -r f; do
+		diff=$$(shellcheck -f diff "$$f" 2>/dev/null || true)
+		if [ -n "$$diff" ]; then
+			echo "Patching $$f"
+			printf '%s\n' "$$diff" | patch -p0 "$$f"
+		fi
+	done
+	@echo
+	@echo "Re-running shellcheck.."
+	@./tools/list-shell-files.sh | xargs shellcheck
 
 format: # Format Python files with ruff and JSON files with jq
 	@echo "Formatting Python files with ruff.."

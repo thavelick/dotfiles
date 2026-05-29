@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+usage() {
     cat <<EOF
-Usage: playback --play | --pause
+Usage: playback --play | --pause | --pause-distractions
 
 Idempotently play or pause whatever media is currently active
 (YouTube in a browser, Jellyfin, Spotify, mpv, etc.).
 
-  --play   Ensure playback is running (no-op if already playing)
-  --pause  Ensure playback is paused  (no-op if already paused)
+  --play                Ensure playback is running (no-op if already playing)
+  --pause               Ensure playback is paused  (no-op if already paused)
+  --pause-distractions  Like --pause, but leave Jellyfin Desktop alone
 
 If nothing is currently playing, exits 0 silently.
 
@@ -17,26 +18,39 @@ Backends (in preference order):
   - playerctl       (Linux, MPRIS)
   - nowplaying-cli  (macOS, MediaRemote private framework)
 EOF
+}
+
+if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+    usage
     exit 0
 fi
 
+skip_jellyfin=false
 case "${1:-}" in
     --play)  action=play ;;
     --pause) action=pause ;;
+    --pause-distractions) action=pause; skip_jellyfin=true ;;
     "")
-        echo "Usage: playback --play | --pause" >&2
+        usage >&2
         exit 1
         ;;
     *)
         echo "playback: unknown argument: $1" >&2
-        echo "Usage: playback --play | --pause" >&2
+        usage >&2
         exit 1
         ;;
 esac
 
 if hash playerctl 2>/dev/null; then
+    # TODO: honor skip_jellyfin on Linux once we pick a desktop client there
     playerctl --no-messages "$action" 2>/dev/null || true
 elif hash nowplaying-cli 2>/dev/null; then
+    if [[ "$skip_jellyfin" == true ]]; then
+        current=$(nowplaying-cli get clientBundleIdentifier 2>/dev/null || true)
+        if [[ "$current" == "org.jellyfin.jellyfin-desktop" ]]; then
+            exit 0
+        fi
+    fi
     nowplaying-cli "$action" >/dev/null 2>&1 || true
 else
     echo "playback: no supported backend found (need playerctl or nowplaying-cli)" >&2

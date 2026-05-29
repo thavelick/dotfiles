@@ -21,7 +21,7 @@
       {
         "hooks": [
           {
-            "command": "playback --pause",
+            "command": "playback --pause-distractions",
             "type": "command"
           },
           {
@@ -51,7 +51,7 @@
       {
         "hooks": [
           {
-            "command": "playback --pause",
+            "command": "playback --pause-distractions",
             "type": "command"
           },
           {

@@ -46,7 +46,7 @@ if hash playerctl 2>/dev/null; then
     playerctl --no-messages "$action" 2>/dev/null || true
 elif hash nowplaying-cli 2>/dev/null; then
     if [[ "$skip_jellyfin" == true ]]; then
-        current=$(nowplaying-cli get bundleIdentifier 2>/dev/null || true)
+        current=$(nowplaying-cli get clientBundleIdentifier 2>/dev/null || true)
         if [[ "$current" == "org.jellyfin.jellyfin-desktop" ]]; then
             exit 0
         fi

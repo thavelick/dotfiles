@@ -45,13 +45,19 @@ if hash playerctl 2>/dev/null; then
     # TODO: honor skip_jellyfin on Linux once we pick a desktop client there
     playerctl --no-messages "$action" 2>/dev/null || true
 elif hash nowplaying-cli 2>/dev/null; then
+    # MediaRemote can wedge — cap each call so we never block Claude's Stop hook.
+    if hash timeout 2>/dev/null; then
+        np() { timeout 2 nowplaying-cli "$@"; }
+    else
+        np() { nowplaying-cli "$@"; }
+    fi
     if [[ "$skip_jellyfin" == true ]]; then
-        current=$(nowplaying-cli get clientBundleIdentifier 2>/dev/null || true)
+        current=$(np get clientBundleIdentifier 2>/dev/null || true)
         if [[ "$current" == "org.jellyfin.jellyfin-desktop" ]]; then
             exit 0
         fi
     fi
-    nowplaying-cli "$action" >/dev/null 2>&1 || true
+    np "$action" >/dev/null 2>&1 || true
 else
     echo "playback: no supported backend found (need playerctl or nowplaying-cli)" >&2
     exit 1

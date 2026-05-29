@@ -47,17 +47,17 @@ if hash playerctl 2>/dev/null; then
 elif hash nowplaying-cli 2>/dev/null; then
     # MediaRemote can wedge — cap each call so we never block Claude's Stop hook.
     if hash timeout 2>/dev/null; then
-        np() { timeout 2 nowplaying-cli "$@"; }
+        nowplaying() { timeout 2 nowplaying-cli "$@"; }
     else
-        np() { nowplaying-cli "$@"; }
+        nowplaying() { nowplaying-cli "$@"; }
     fi
     if [[ "$skip_jellyfin" == true ]]; then
-        current=$(np get clientBundleIdentifier 2>/dev/null || true)
+        current=$(nowplaying get clientBundleIdentifier 2>/dev/null || true)
         if [[ "$current" == "org.jellyfin.jellyfin-desktop" ]]; then
             exit 0
         fi
     fi
-    np "$action" >/dev/null 2>&1 || true
+    nowplaying "$action" >/dev/null 2>&1 || true
 else
     echo "playback: no supported backend found (need playerctl or nowplaying-cli)" >&2
     exit 1

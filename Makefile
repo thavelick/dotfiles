@@ -68,11 +68,11 @@ test-all: # Run both minimal and core tests
 
 lint: # Run shellcheck on shell files and ruff on Python files
 	@echo "Running shellcheck on shell files.."
-	@if ! ./tools/list-shell-files.sh | xargs shellcheck; then
-		echo
-		echo "shellcheck found issues — run 'make lint-fix' to auto-apply fixes (review the diff before committing)"
-		exit 1
-	fi
+	@./tools/list-shell-files.sh | xargs shellcheck || { \
+		echo; \
+		echo "shellcheck found issues — run 'make lint-fix' to auto-apply fixes (review the diff before committing)"; \
+		exit 1; \
+	}
 	@echo "Running ruff on Python files.."
 	cd whisper && uv run ruff check . && cd ..
 	@echo "Checking package files are alphabetically sorted.."
@@ -84,12 +84,12 @@ lint: # Run shellcheck on shell files and ruff on Python files
 
 lint-fix: # Auto-apply shellcheck fixes via 'shellcheck -f diff | patch'
 	@echo "Applying shellcheck auto-fixes.."
-	@./tools/list-shell-files.sh | while IFS= read -r f; do
-		diff=$$(shellcheck -f diff "$$f" 2>/dev/null || true)
-		if [ -n "$$diff" ]; then
-			echo "Patching $$f"
-			printf '%s\n' "$$diff" | patch -p0 "$$f"
-		fi
+	@./tools/list-shell-files.sh | while IFS= read -r f; do \
+		diff=$$(shellcheck -f diff "$$f" 2>/dev/null || true); \
+		if [ -n "$$diff" ]; then \
+			echo "Patching $$f"; \
+			printf '%s\n' "$$diff" | patch -p0 "$$f"; \
+		fi; \
 	done
 	@echo
 	@echo "Re-running shellcheck.."

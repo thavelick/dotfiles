@@ -6,6 +6,7 @@
 /home/tristan/.cargo/*
 /home/tristan/Downloads/*
 /home/tristan/Games/eXoDemoScene/*
+/home/tristan/Games/eXoDOS/*
 /home/tristan/Movies/*
 /home/tristan/go/*
 /home/tristan/.gradle/*

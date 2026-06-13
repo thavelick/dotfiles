@@ -10,6 +10,7 @@
 /home/tristan/Movies/*
 /home/tristan/go/*
 /home/tristan/.gradle/*
+/home/tristan/.local/share/flatpak/*
 /home/tristan/.ollama/models/*
 /home/tristan/kiwix/*.zim
 /home/tristan/.local/share/Zeal/*

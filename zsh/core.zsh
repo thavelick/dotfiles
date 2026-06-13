@@ -72,9 +72,9 @@ if [[ "$(get_os_type)" == "macos" && -n "$SSH_CONNECTION" ]] && ! security show-
     read -q "?Keychain is locked. Unlock it? [y/N] " && echo && security unlock-keychain ~/Library/Keychains/login.keychain-db || echo
 fi
 
-# Keyboard layout (only matters on systems that use it)
-export XKB_DEFAULT_LAYOUT="us(colemak)"
-export XKB_DEFAULT_OPTIONS=ctrl:nocaps
+# Keyboard layout (Colemak + Caps→Ctrl) is now owned by keyd at the evdev level
+# so it reaches raw-input apps (SDL 1.2 DOSBox / eXoDOS) too. Display server is
+# left plain US; do not set XKB_DEFAULT_LAYOUT/OPTIONS here or the layers stack.
 
 # Help system
 export HELPDIR=/usr/share/zsh/"${ZSH_VERSION}"/help

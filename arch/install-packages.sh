@@ -46,9 +46,13 @@ if [ -n "$missing_packages" ]; then
   sudo pacman -S --needed --noconfirm $missing_packages
 fi
 
-# Build and install custom PKGBUILDs (slack, zen, brother driver, zmx, ...)
-echo "Installing custom PKGBUILDs..."
-bash "$SCRIPT_DIR/pkgbuilds/install.sh"
+# Build and install custom PKGBUILDs (slack, zen, brother driver, zmx, ...).
+# Skip for core/cli-only installs — these are desktop apps + a printer driver —
+# and skip if the dir isn't present (e.g. the cached Docker package layer).
+if [ "$CORE_ONLY" = false ] && [ "$NO_GUI" = false ] && [ -d "$SCRIPT_DIR/pkgbuilds" ]; then
+  echo "Installing custom PKGBUILDs..."
+  bash "$SCRIPT_DIR/pkgbuilds/install.sh"
+fi
 
 echo "Package installation complete!"
 

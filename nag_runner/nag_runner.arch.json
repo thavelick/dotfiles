@@ -1,12 +1,12 @@
 [
     {
         "name": "system package updates",
-        "command": "yay -Syu --noconfirm && npm update -g --min-release-age 7 && uv tool upgrade --all --exclude-newer '1 week'",
+        "command": "sudo pacman -Syu --noconfirm && ~/Projects/dotfiles/arch/pkgbuilds/install.sh && npm update -g --min-release-age 7 && uv tool upgrade --all --exclude-newer '1 week'",
         "interval": "7"
     },
     {
         "name": "prune package caches",
-        "command": "sudo rm -rf /var/cache/pacman/pkg/download-* && sudo pacman -Sc --noconfirm && yay -Sc --aur --noconfirm",
+        "command": "sudo rm -rf /var/cache/pacman/pkg/download-* && sudo pacman -Sc --noconfirm",
         "interval": "31"
     },
     {

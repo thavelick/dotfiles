@@ -96,5 +96,5 @@ Key bindings and features:
 ## Requirements
 
 - **macOS**: Homebrew
-- **Arch Linux**: pacman, yay (auto-installed)
+- **Arch Linux**: pacman (custom packages built from `arch/pkgbuilds/`)
 - **Debian/Ubuntu**: apt

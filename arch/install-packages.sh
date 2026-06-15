@@ -28,16 +28,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # System update
 sudo pacman -Syu --noconfirm
 
-# Install yay-bin if not already installed
-if ! pacman -Qq yay-bin > /dev/null 2>&1 && ! pacman -Qq yay > /dev/null 2>&1; then
-  echo "Installing yay-bin..."
-  sudo pacman -S --needed --noconfirm git base-devel
-  mkdir -p "$HOME/src"
-  [[ -d $HOME/src/yay-bin ]] || git clone --branch yay-bin --single-branch https://github.com/archlinux/aur.git ~/src/yay-bin
-  cd "$HOME/src/yay-bin" || exit
-  makepkg -si --noconfirm
-  cd - > /dev/null || exit
-fi
+# Make sure we can build the custom PKGBUILDs
+sudo pacman -S --needed --noconfirm git base-devel
 
 # Choose package list based on flags
 if [ "$CORE_ONLY" = true ]; then
@@ -50,10 +42,13 @@ fi
 
 # Install missing packages
 if [ -n "$missing_packages" ]; then
-  for pkg in $missing_packages; do
-    yay -S --noconfirm "$pkg"
-  done
+  # shellcheck disable=SC2086  # word-splitting is intended: install all at once
+  sudo pacman -S --needed --noconfirm $missing_packages
 fi
+
+# Build and install custom PKGBUILDs (slack, zen, brother driver, zmx, ...)
+echo "Installing custom PKGBUILDs..."
+bash "$SCRIPT_DIR/pkgbuilds/install.sh"
 
 echo "Package installation complete!"
 

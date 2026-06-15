@@ -8,6 +8,7 @@ eslint
 playwright
 prettier
 pyright
+supabase
 typescript
 typescript-language-server
 vercel

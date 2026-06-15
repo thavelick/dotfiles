@@ -71,7 +71,9 @@ is_gui_package() {
 # Main processing
 echo "Categorizing packages based on dependencies..."
 
-# Get all explicitly installed packages
+# Get explicitly installed *native* (repo) packages. Foreign packages (AUR or
+# our own PKGBUILDs under pkgbuilds/) are excluded: they aren't installable with
+# `pacman -S`, so they don't belong in these manifests.
 while IFS= read -r line; do
     package=$(echo "$line" | cut -d' ' -f1)
     
@@ -89,7 +91,7 @@ while IFS= read -r line; do
         cli_packages+=("$package")
     fi
     
-done < <(pacman -Qe)
+done < <(pacman -Qen)
 
 # Sort arrays
 mapfile -t gui_packages < <(printf '%s\n' "${gui_packages[@]}" | sort)

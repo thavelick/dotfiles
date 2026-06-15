@@ -7,6 +7,9 @@ scratch/
 .git/
 .github/
 
+# Exclude local trash (trashit) — gitignored, must be context-excluded too
+.Trash/
+
 # Exclude test artifacts
 *.tar
 

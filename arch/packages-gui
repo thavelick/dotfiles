@@ -1,22 +1,17 @@
 abiword
-atari800
 crawl-tiles
 discord
-dosbox
-emulationstation
 fceux
 fluidsynth
 foot
 gimp
 gnumeric
-google-chrome
 grim
 gst-plugin-pipewire
 guvcview
 imv
 inkscape
 keepassxc
-koreader-bin
 libpulse
 libreoffice-still
 lutris
@@ -39,4 +34,3 @@ waybar
 wl-clipboard
 xdg-desktop-portal-gtk
 xdg-desktop-portal-wlr
-zen-browser-bin

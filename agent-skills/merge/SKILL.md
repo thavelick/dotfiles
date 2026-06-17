@@ -17,4 +17,6 @@ If a PR merge is intended, follow these steps:
 
 4. If CI passed: Execute `gh pr merge --merge --delete-branch` to merge with a merge commit and delete both local and remote branches
 
+   When run from a local checkout of the PR branch, `--delete-branch` also switches the working copy back to the default branch, pulls the latest `main`, and deletes the local branch automatically. This is expected — do NOT tell the user to manually run `git checkout main && git pull` or `git branch -d <branch>` afterward; `gh` has already done it.
+
 5. Report the final status to the user

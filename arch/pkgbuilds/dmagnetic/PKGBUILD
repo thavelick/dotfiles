@@ -1,0 +1,41 @@
+# Maintainer: Tristan Havelick <tristan@havelick.com>
+
+pkgname=dmagnetic
+pkgver=0.37
+pkgrel=1
+pkgdesc="Terminal Magnetic Scrolls interpreter with ANSI/sixel/UTF graphics"
+arch=('x86_64' 'aarch64')
+url="https://www.dettus.net/dMagnetic/"
+license=('BSD-2-Clause')
+depends=('glibc')
+# Upstream's install target already strips the binary (install -s), so there are
+# no debug symbols to split — skip the (empty) debug package and its gdb warning.
+options=('!debug')
+# make/gcc come from base-devel, which makepkg assumes is installed.
+source=("https://www.dettus.net/dMagnetic/dMagnetic_$pkgver.tar.bz2")
+sha256sums=('ad812bb515bc972e23930d643d5abeaed971d550768b1b3f371bd0f72c3c2e89')
+
+build() {
+  cd "$srcdir/dMagnetic_$pkgver"
+  # Pure C, no external deps. The Makefile uses CFLAGS?=, so makepkg's
+  # exported build flags are honored; it only appends -Wall.
+  make
+}
+
+check() {
+  cd "$srcdir/dMagnetic_$pkgver"
+  # Upstream's post-compilation render tests against bundled testcode/minitest.mag.
+  # Default SHA256_CMD is BSD's "sha256"; on Linux it's "sha256sum".
+  make SHA256_CMD="sha256sum" check
+}
+
+package() {
+  cd "$srcdir/dMagnetic_$pkgver"
+  # Upstream conflates DESTDIR/PREFIX (MYPREFIX=$(DESTDIR)), so DESTDIR is the
+  # install root rather than a staging prefix. Point it at $pkgdir/usr to land
+  # bin/, share/man/, and share/games/ under /usr.
+  make DESTDIR="$pkgdir/usr" install
+
+  # Also drop the license where Arch expects it.
+  install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE.txt"
+}

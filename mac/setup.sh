@@ -47,3 +47,15 @@ ln -svf "$DOTFILES_HOME/mac/DefaultKeyBinding.dict" ~/Library/KeyBindings/Defaul
 
 # Restart preferences daemon to apply changes
 /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+
+# Install the Nextcloud sync-needed check as a launchd agent (macOS equivalent
+# of the systemd timer used on Linux). Runs bin/nextcloud-sync-check every 30
+# minutes to maintain the ~/.cache/nextcloud-sync-needed sentinel the prompt reads.
+mkdir -p ~/Library/LaunchAgents ~/.cache
+NEXTCLOUD_AGENT=~/Library/LaunchAgents/com.havelick.nextcloud-sync-check.plist
+sed \
+  -e "s|__SCRIPT__|$DOTFILES_HOME/bin/nextcloud-sync-check|" \
+  -e "s|__LOG__|$HOME/.cache/nextcloud-sync-check.log|" \
+  "$DOTFILES_HOME/mac/com.havelick.nextcloud-sync-check.plist.template" > "$NEXTCLOUD_AGENT"
+launchctl unload "$NEXTCLOUD_AGENT" 2>/dev/null || true
+launchctl load -w "$NEXTCLOUD_AGENT"

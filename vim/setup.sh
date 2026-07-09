@@ -7,6 +7,8 @@ echo "$packer_path"
 mkdir -p "$HOME/.config/nvim"
 ln -svf "$DOTFILES_HOME/vim/init.lua" "$HOME/.config/nvim/init.lua"
 ln -svf "$DOTFILES_HOME/vim/lua" "$HOME/.config/nvim/lua"
+ln -svf "$DOTFILES_HOME/vim/syntax" "$HOME/.config/nvim/syntax"
+ln -svf "$DOTFILES_HOME/vim/ftdetect" "$HOME/.config/nvim/ftdetect"
 
 # symlink .vim
 ln -svf "$DOTFILES_HOME/vim/.vim" "$HOME"

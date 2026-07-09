@@ -1,0 +1,50 @@
+# Maintainer: Tristan Havelick <tristan@havelick.com>
+
+pkgname=ifm
+pkgver=5.5
+pkgrel=1
+pkgdesc="Interactive Fiction Mapper: a language and CLI tool for mapping and solving IF games"
+arch=('x86_64' 'aarch64')
+url="https://ifm.readthedocs.io/"
+license=('GPL-2.0-only')
+depends=('glibc')
+# configure hard-requires a Python interpreter (AM_PATH_PYTHON). flex/bison are
+# NOT needed: this release tarball ships the pre-generated lexer/parser
+# (src/ifm-scan.c, src/ifm-parse.c) and the configure script, so we only run
+# ./configure && make. base-devel provides make/gcc.
+makedepends=('python')
+# The IF Archive release tarball is self-contained (bundles configure and the
+# flex/bison output); the upstream source lives at https://git.sr.ht/~zondo/ifm
+source=("https://ifarchive.org/if-archive/mapping-tools/$pkgname-$pkgver.tar.gz")
+sha256sums=('e6140fd48c98a8b0c64b97fdada78f6ff3d3b25241d036fdced738257cb1ad39')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  # 5.5 predates upstream's GCC-15 fix and uses K&R-style unprototyped function
+  # pointers. GCC 15 defaults to C23, where () means (void), turning those into
+  # hard errors. -std=gnu17 restores the older semantics; append it so makepkg's
+  # hardening/optimization CFLAGS are preserved.
+  CFLAGS="$CFLAGS -std=gnu17" ./configure --prefix=/usr
+  # Build only the core program (src/ also builds the bundled libfig/libvars).
+  # The doc/ subdir builds HTML via sphinx and its install ignores DESTDIR, and
+  # progs/ builds optional perl/tk helper scripts -- skip both for a clean CLI
+  # package. The user guide is hosted at https://ifm.readthedocs.io/.
+  make -C src
+}
+
+check() {
+  cd "$srcdir/$pkgname-$pkgver"
+  # Upstream's automake test suite: 41 tests comparing ifm output to .exp files.
+  make -C tests check
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  # Install the binary (src), the runtime library data in /usr/share/ifm (lib),
+  # and the pre-built man page (man). All three honor DESTDIR.
+  make -C src install DESTDIR="$pkgdir"
+  make -C lib install DESTDIR="$pkgdir"
+  make -C man install DESTDIR="$pkgdir"
+
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}

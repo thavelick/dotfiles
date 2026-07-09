@@ -27,3 +27,7 @@ fi
 mkdir -p ~/nextcloud
 
 rclone bisync nextcloud: ~/nextcloud --exclude "transmission/**" $RESYNC_FLAG
+
+# Sync succeeded (set -e would have aborted otherwise), so clear the
+# prompt's "sync needed" sentinel that nextcloud-sync-check maintains.
+rm -f "${XDG_CACHE_HOME:-$HOME/.cache}/nextcloud-sync-needed"

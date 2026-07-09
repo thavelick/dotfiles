@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -u
+set -o pipefail
+
+if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+    cat <<EOF
+Usage: nextcloud-sync-check
+
+Check whether ~/nextcloud is out of sync with the nextcloud: remote and record
+the result in a sentinel file for the shell prompt to read.
+
+  - differences found    -> create the sentinel (sync needed)
+  - no differences       -> remove the sentinel (in sync)
+  - remote unreachable    -> leave the sentinel untouched (avoid false flags)
+
+Sentinel file: \${XDG_CACHE_HOME:-~/.cache}/nextcloud-sync-needed
+EOF
+    exit 0
+fi
+
+CACHE_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/nextcloud-sync-needed"
+
+output=$(rclone check nextcloud: ~/nextcloud --exclude "transmission/**" 2>&1)
+
+# Pull the count out of rclone's "N differences found" summary line. This is
+# absent when the remote is unreachable, which lets us leave the sentinel alone
+# instead of falsely flagging a sync.
+count=$(printf '%s\n' "$output" | grep -oE '[0-9]+ differences found' | head -1 | grep -oE '^[0-9]+')
+
+if [[ -z "$count" ]]; then
+    # Could not determine sync state (network/remote error); leave sentinel as-is.
+    exit 0
+elif [[ "$count" -gt 0 ]]; then
+    mkdir -p "$(dirname "$CACHE_FILE")"
+    touch "$CACHE_FILE"
+else
+    rm -f "$CACHE_FILE"
+fi

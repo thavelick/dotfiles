@@ -1,0 +1,6 @@
+[Unit]
+Description=Check whether Nextcloud needs a sync
+
+[Service]
+Type=oneshot
+ExecStart=%h/Projects/dotfiles/bin/nextcloud-sync-check

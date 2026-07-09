@@ -109,6 +109,15 @@ docker_indicator() {
     fi
 }
 
+# Nextcloud sync indicator: shows ☁️ when nextcloud-sync-check has found the
+# local ~/nextcloud out of sync with the remote (sentinel maintained by the
+# nextcloud-sync-check timer, cleared when nextcloud-sync runs).
+nextcloud_indicator() {
+    if [ -f "${XDG_CACHE_HOME:-$HOME/.cache}/nextcloud-sync-needed" ]; then
+        echo " ☁️"
+    fi
+}
+
 hostname_indicator() {
     if is_ssh; then
         echo "%m:"
@@ -119,4 +128,4 @@ hostname_indicator() {
 setopt prompt_subst
 
 # Set the prompt
-PROMPT='${prompt_error}${prompt_time}$(hostname_indicator)%~ $(distro_icon)$(docker_indicator) ${vcs_info_msg_0_}% ➜ '
+PROMPT='${prompt_error}${prompt_time}$(hostname_indicator)%~ $(distro_icon)$(docker_indicator)$(nextcloud_indicator) ${vcs_info_msg_0_}% ➜ '

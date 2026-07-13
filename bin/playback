@@ -14,9 +14,9 @@ Idempotently play or pause whatever media is currently active
 
 If nothing is currently playing, exits 0 silently.
 
-Backends (in preference order):
-  - playerctl       (Linux, MPRIS)
-  - nowplaying-cli  (macOS, MediaRemote private framework)
+Backends:
+  - playerctl  (Linux, MPRIS)
+  - macOS: no-op (nowplaying-cli's MediaRemote helper hangs Claude hooks)
 EOF
 }
 
@@ -26,6 +26,7 @@ if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
 fi
 
 skip_jellyfin=false
+# shellcheck disable=SC2034 # skip_jellyfin kept for the Linux TODO below; macOS is a no-op
 case "${1:-}" in
     --play)  action=play ;;
     --pause) action=pause ;;
@@ -41,20 +42,13 @@ case "${1:-}" in
         ;;
 esac
 
-if hash playerctl 2>/dev/null; then
+if [[ "$(uname)" == "Darwin" ]]; then
+    # No-op on macOS: nowplaying-cli's perl MediaRemote helper can outlive
+    # `timeout` and hold the hook's stdout pipe open, hanging Claude's hooks.
+    exit 0
+elif hash playerctl 2>/dev/null; then
     # TODO: honor skip_jellyfin on Linux once we pick a desktop client there
     playerctl --no-messages "$action" 2>/dev/null || true
-elif hash nowplaying-cli 2>/dev/null; then
-    # MediaRemote can wedge — cap each call so we never block Claude's Stop hook.
-    timeout_prefix=""
-    hash timeout 2>/dev/null && timeout_prefix="timeout 2"
-    if [[ "$skip_jellyfin" == true ]]; then
-        current=$($timeout_prefix nowplaying-cli get clientBundleIdentifier 2>/dev/null || true)
-        if [[ "$current" == "org.jellyfin.jellyfin-desktop" ]]; then
-            exit 0
-        fi
-    fi
-    $timeout_prefix nowplaying-cli "$action" >/dev/null 2>&1 || true
 else
     echo "playback: no supported backend found (need playerctl or nowplaying-cli)" >&2
     exit 1

@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -e
+set -u
+set -o pipefail
+
+if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+    cat <<EOF
+Usage: gdrive-sync [--resync]
+
+Sync Google Drive using rclone:
+  - Bidirectional sync of My Drive (gdrive:) to ~/gdrive.
+    Native Google Docs/Sheets/Slides are skipped here; bisync can't
+    round-trip them safely.
+  - One-way, read-only mirror of shared-with-me files (gdrive-shared:)
+    to ~/gdrive-shared. Native Docs are exported as .docx/.xlsx/etc.
+    Local edits and deletions there are never pushed back and will be
+    overwritten on the next sync.
+
+Options:
+  --resync    Force resync of the bidirectional pair (required for
+              first run or after errors)
+
+Examples:
+  gdrive-sync           - Normal sync
+  gdrive-sync --resync  - Force resync from scratch
+EOF
+    exit 0
+fi
+
+RESYNC_FLAG=""
+if [[ "${1:-}" == "--resync" ]]; then
+    RESYNC_FLAG="--resync"
+fi
+
+mkdir -p ~/gdrive ~/gdrive-shared
+
+rclone bisync gdrive: ~/gdrive --drive-skip-gdocs $RESYNC_FLAG
+
+rclone sync gdrive-shared: ~/gdrive-shared

@@ -19,3 +19,14 @@ vendor = nextcloud
 user = {{RCLONE_NEXTCLOUD_USER}}
 pass = {{RCLONE_NEXTCLOUD_PASS}}
 
+[gdrive]
+type = drive
+scope = drive
+token = {{RCLONE_GDRIVE_TOKEN}}
+
+[gdrive-shared]
+type = drive
+scope = drive
+shared_with_me = true
+token = {{RCLONE_GDRIVE_TOKEN}}
+

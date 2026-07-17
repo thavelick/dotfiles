@@ -3,6 +3,10 @@
 	font-family: "monospace";
 }
 
+#battery, #pulseaudio {
+	font-family: "MesloLGS Nerd Font", "monospace";
+}
+
 window#waybar {
 	background: #1a1a1a;
 	color: #fdf6e3;

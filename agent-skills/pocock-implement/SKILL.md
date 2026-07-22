@@ -1,7 +1,6 @@
 ---
 name: pocock-implement
-description: "Implement a piece of work based on a spec or set of tickets."
-disable-model-invocation: true
+description: Implement a piece of work based on a spec or set of tickets — TDD at agreed seams, typecheck and test as you go, review, then commit. Use when the user wants to build out an agreed spec or work through a set of tickets.
 ---
 
 Implement the work described by the user in the spec or tickets.

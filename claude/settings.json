@@ -107,6 +107,8 @@
     ],
     "ask": [
       "Edit(.claude/settings.json)",
+      "Edit(~/.claude/settings.json)",
+      "Edit(~/Projects/dotfiles/claude/settings.json)",
       "Bash(gh pr merge*)",
       "Bash(gh repo delete*)"
     ],

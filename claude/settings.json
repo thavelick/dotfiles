@@ -126,5 +126,6 @@
     "type": "command"
   },
   "teammateMode": "tmux",
-  "theme": "auto"
+  "theme": "auto",
+  "tui": "fullscreen"
 }

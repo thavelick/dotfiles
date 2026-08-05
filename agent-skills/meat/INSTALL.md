@@ -15,9 +15,12 @@ commits. Our commits sit directly on top of theirs.
 ## Requirements
 
 - **Go** — 1.26+. `brew install go` / `pacman -S go`.
-- **git-delta** — optional, for reading the result in color. Already configured
-  in `git/gitconfig`.
+- **bun** — for `bunx`, which `meat-view` uses to render the page. No global
+  install of `diff2html-cli` is needed; `bunx` fetches the pinned version on
+  first use and caches it.
 - **gh** — only for abridging PRs by number.
+
+`meat-view` and `qopen` both ship in this repo's `bin/`, already on `$PATH`.
 
 Upstream has no third-party dependencies, so there is nothing to `go mod
 download`.
@@ -86,7 +89,7 @@ own (so a bisect never lands on a broken state):
   changed lines of ordinary source) would be split by upstream `Abridge`;
   `meatx prep` only warns. Rarely reachable once generated files are excluded.
 - **The output is not an applicable patch.** Hunk counts go stale wherever rows
-  were dropped, so delta's line numbers drift within a cut hunk. Never
-  `git apply` it.
+  were dropped, so line numbers drift within a cut hunk — which is why
+  `meat-view` hides them. Never `git apply` it.
 - **Files are never reordered**, only dropped — so a move between files still
   shows its two sides far apart, wherever git put them.

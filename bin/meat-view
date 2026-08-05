@@ -1,0 +1,251 @@
+#!/usr/bin/env python3
+"""Render a meat reading diff to a standalone HTML page and open it."""
+
+import argparse
+import html
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+
+HELP = """Usage: meat-view <reading.diff> [OPTIONS]
+
+Render a meat "reading diff" as a side-by-side HTML page and open it in the
+browser. The page carries a header band explaining what the abridgement left
+out, so the artifact accounts for its own omissions.
+
+Options:
+  --orig <file>       The original (unabridged) diff, i.e. meat's $STATE.
+                      Used to derive which files were dropped whole.
+  --excluded <file>   File holding `meatx prep` stderr, i.e. the generated
+                      files it excluded before numbering.
+  --note <text>       Prose about what was dropped and why.
+  --target <name>     Names the output file: pr-175, worktree, staged, a sha.
+                      Defaults to "reading".
+  --title <text>      Page title / header line. Defaults to the target.
+  -h, --help          Show this help.
+
+Output goes to <repo>/scratch/meat-diffs/<target>.html, or $TMPDIR if that
+path is not git-ignored. Repeat runs are numbered (pr-175-2.html); prior
+renders are never overwritten.
+
+Requirements:
+  - bunx (renders via diff2html-cli)
+  - qopen
+  - git
+"""
+
+DIFF2HTML = "diff2html-cli@5.2.15"
+TEMPLATE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "meat-view-template.html")
+
+
+def die(msg):
+    print(f"Error: {msg}", file=sys.stderr)
+    sys.exit(1)
+
+
+def read(path):
+    try:
+        with open(path, encoding="utf-8", errors="replace") as f:
+            return f.read()
+    except OSError as e:
+        die(f"cannot read {path}: {e}")
+
+
+def parse_header_lines(text):
+    """Pull the leading `#` comment lines off a reading diff.
+
+    Returns (summary, retention). The `kept N/M ...` line is the last one.
+    """
+    lines = []
+    for line in text.splitlines():
+        if line.startswith("#"):
+            lines.append(line.lstrip("#").strip())
+        elif line.strip() == "" and lines:
+            continue
+        else:
+            break
+    retention = ""
+    if lines and lines[-1].startswith("kept "):
+        retention = lines.pop()
+    return " ".join(lines).strip(), retention
+
+
+def diff_files(text):
+    """File paths named by `diff --git a/X b/Y` lines, in order."""
+    seen = []
+    for m in re.finditer(r"^diff --git a/(\S+) b/(\S+)", text, re.M):
+        path = m.group(2)
+        if path not in seen:
+            seen.append(path)
+    return seen
+
+
+def rich(text):
+    """HTML-escape, then render `backticked` spans as <code>."""
+    return re.sub(r"`([^`]+)`", r"<code>\1</code>", html.escape(text))
+
+
+def details(summary, body_html, open_=False):
+    attr = " open" if open_ else ""
+    return (
+        f'<details class="meat-details"{attr}><summary>{html.escape(summary)}'
+        f"</summary>{body_html}</details>"
+    )
+
+
+def bullet_list(items):
+    return "<ul>" + "".join(f"<li>{html.escape(i)}</li>" for i in items) + "</ul>"
+
+
+def build_band(summary, retention, dropped, excluded, note):
+    parts = []
+    if summary:
+        parts.append(f'<p class="meat-summary">{rich(summary)}</p>')
+
+    chips = []
+    if retention:
+        chips.append(f'<span class="meat-chip">{html.escape(retention)}</span>')
+    if dropped:
+        n = len(dropped)
+        chips.append(
+            f'<span class="meat-chip">{n} file{"s" if n != 1 else ""} dropped whole</span>'
+        )
+    chips.append(
+        '<span class="meat-chip meat-chip-warn">line numbers hidden &mdash; folds '
+        "make them drift; not an applicable patch</span>"
+    )
+    parts.append('<div class="meat-facts">' + "".join(chips) + "</div>")
+
+    if note:
+        parts.append(f'<p class="meat-note">{rich(note)}</p>')
+
+    if dropped:
+        parts.append(
+            details(
+                f"Dropped whole ({len(dropped)})",
+                bullet_list(dropped),
+                open_=len(dropped) <= 5,
+            )
+        )
+    if excluded:
+        parts.append(
+            details(
+                "Excluded as generated before abridging",
+                f"<pre>{html.escape(excluded.strip())}</pre>",
+            )
+        )
+    return "\n".join(parts)
+
+
+def output_dir():
+    """<repo>/scratch/meat-diffs if git-ignored, else $TMPDIR."""
+    try:
+        top = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        top = ""
+    if top:
+        target = os.path.join(top, "scratch", "meat-diffs")
+        os.makedirs(target, exist_ok=True)
+        ignored = subprocess.run(
+            ["git", "check-ignore", "-q", target], cwd=top
+        ).returncode == 0
+        if ignored:
+            return target
+        print(
+            f"Notice: {target} is not git-ignored; writing to $TMPDIR instead.",
+            file=sys.stderr,
+        )
+    return tempfile.gettempdir()
+
+
+def next_free(directory, stem):
+    candidate = os.path.join(directory, f"{stem}.html")
+    n = 1
+    while os.path.exists(candidate):
+        n += 1
+        candidate = os.path.join(directory, f"{stem}-{n}.html")
+    return candidate
+
+
+def main():
+    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
+        print(HELP)
+        sys.exit(0)
+
+    p = argparse.ArgumentParser(add_help=False)
+    p.add_argument("reading")
+    p.add_argument("--orig")
+    p.add_argument("--excluded")
+    p.add_argument("--note")
+    p.add_argument("--target")
+    p.add_argument("--title")
+    args = p.parse_args()
+
+    for cmd in ("bunx", "qopen", "git"):
+        if not shutil.which(cmd):
+            die(f"{cmd} is required but not installed")
+
+    reading = read(args.reading)
+    summary, retention = parse_header_lines(reading)
+
+    dropped = []
+    if args.orig:
+        kept = set(diff_files(reading))
+        dropped = [f for f in diff_files(read(args.orig)) if f not in kept]
+
+    # prep writes nothing to stderr when it excluded nothing, and a file
+    # holding only whitespace must not become an empty disclosure block.
+    excluded = read(args.excluded).strip() if args.excluded else ""
+
+    target = args.target or "reading"
+    stem = re.sub(r"[^A-Za-z0-9._-]", "-", target.replace("/", "-")).strip("-") or "reading"
+    title = args.title or target
+
+    band = build_band(summary, retention, dropped, excluded, args.note)
+
+    tmpl = read(TEMPLATE)
+    if "<!--meat-header-->" not in tmpl:
+        die(f"{TEMPLATE} is missing the <!--meat-header--> placeholder")
+
+    out = next_free(output_dir(), stem)
+
+    with tempfile.NamedTemporaryFile(
+        "w", suffix=".html", delete=False, encoding="utf-8"
+    ) as tf:
+        tf.write(tmpl.replace("<!--meat-header-->", band))
+        tmpl_path = tf.name
+
+    try:
+        subprocess.run(
+            [
+                "bunx", DIFF2HTML,
+                "-s", "side",
+                "-i", "file",
+                "--cs", "auto",
+                "--su", "open",
+                "--hwt", tmpl_path,
+                "-t", title,
+                "-F", out,
+                "--", args.reading,
+            ],
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        die(f"diff2html failed (exit {e.returncode})")
+    finally:
+        os.unlink(tmpl_path)
+
+    print(out)
+    subprocess.run(["qopen", out])
+
+
+if __name__ == "__main__":
+    main()

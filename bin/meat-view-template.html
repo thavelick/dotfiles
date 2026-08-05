@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><!--diff2html-title--></title>
+
+    <!--
+      Diff to HTML wrapper, customized for meat-view (bin/meat-view).
+      Based on diff2html-cli's stock template.html by rtfpessoa.
+      The diff2html-title / diff2html-css / diff2html-js-ui / diff2html-header /
+      diff2html-diff comment placeholders and the //diff2html-* script lines are
+      substituted by diff2html-cli; do not remove them. The meat-header comment
+      placeholder is substituted by meat-view itself.
+    -->
+
+    <!--diff2html-css-->
+
+    <!--diff2html-js-ui-->
+
+    <style>
+      :root {
+        --meat-bg: #ffffff;
+        --meat-fg: #1f2328;
+        --meat-muted: #59636e;
+        --meat-border: #d1d9e0;
+        --meat-subtle: #f6f8fa;
+        --meat-accent: #8250df;
+        --meat-warn: #9a6700;
+        --meat-warn-bg: #fff8c5;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --meat-bg: #0d1117;
+          --meat-fg: #e6edf3;
+          --meat-muted: #9198a1;
+          --meat-border: #3d444d;
+          --meat-subtle: #151b23;
+          --meat-accent: #d2a8ff;
+          --meat-warn: #d29922;
+          --meat-warn-bg: #272115;
+        }
+      }
+
+      body {
+        margin: 0;
+        background: var(--meat-bg);
+        color: var(--meat-fg);
+      }
+
+      /* The stock template centers everything; the diff must not be centered. */
+      #diff {
+        text-align: left;
+      }
+
+      /* ---- header band ------------------------------------------------- */
+
+      .meat-band {
+        text-align: left;
+        padding: 18px 20px 14px;
+        border-bottom: 1px solid var(--meat-border);
+        background: var(--meat-subtle);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .meat-band-inner {
+        max-width: 105ch;
+      }
+      .meat-eyebrow {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+      }
+      .meat-tag {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--meat-accent);
+        border: 1px solid currentColor;
+        border-radius: 999px;
+        padding: 2px 8px;
+        white-space: nowrap;
+      }
+      .meat-band h1 {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 0;
+        color: var(--meat-muted);
+      }
+      .meat-summary {
+        margin: 0 0 10px;
+        font-size: 17px;
+        line-height: 1.45;
+      }
+      .meat-summary code,
+      .meat-note code {
+        font-size: 0.88em;
+        background: var(--meat-bg);
+        border: 1px solid var(--meat-border);
+        border-radius: 4px;
+        padding: 0 4px;
+      }
+      .meat-facts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 4px;
+      }
+      .meat-chip {
+        font-size: 12px;
+        color: var(--meat-muted);
+        background: var(--meat-bg);
+        border: 1px solid var(--meat-border);
+        border-radius: 999px;
+        padding: 2px 10px;
+      }
+      .meat-chip-warn {
+        color: var(--meat-warn);
+        background: var(--meat-warn-bg);
+        border-color: var(--meat-warn);
+      }
+      .meat-note {
+        margin: 10px 0 0;
+        padding-left: 10px;
+        border-left: 3px solid var(--meat-border);
+        color: var(--meat-fg);
+      }
+      .meat-details {
+        margin-top: 8px;
+      }
+      .meat-details > summary {
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--meat-muted);
+        list-style-position: outside;
+      }
+      .meat-details > summary:hover {
+        color: var(--meat-fg);
+      }
+      .meat-details ul {
+        margin: 6px 0 0;
+        padding-left: 26px;
+        font-size: 13px;
+        color: var(--meat-muted);
+      }
+      .meat-details li {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+      }
+      .meat-details pre {
+        margin: 6px 0 0 16px;
+        font-size: 12px;
+        white-space: pre-wrap;
+        color: var(--meat-muted);
+      }
+
+      /* ---- sticky file list -------------------------------------------- */
+
+      .d2h-file-list-wrapper {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: #fff;
+        max-height: 40vh;
+        overflow: auto;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        text-align: left;
+        margin-bottom: 0;
+        padding: 10px 20px;
+      }
+      @media (prefers-color-scheme: dark) {
+        .d2h-file-list-wrapper {
+          background: #0d1117;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+        }
+      }
+      .d2h-wrapper {
+        padding: 16px 20px 60px;
+      }
+
+      /* ---- hidden line numbers ------------------------------------------
+         meat's folds make in-hunk line numbers wrong, so they are not shown.
+         The gutter itself stays: it is what separates the two sides. */
+      /* !important because diff2html's dark rules are
+         `.d2h-auto-color-scheme .d2h-code-side-linenumber`, which outranks a
+         bare class selector — without it the numbers reappear in dark mode. */
+      .d2h-code-side-linenumber,
+      .d2h-code-linenumber {
+        color: transparent !important;
+      }
+    </style>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const targetElement = document.getElementById('diff');
+        const diff2htmlUi = new Diff2HtmlUI(targetElement);
+        //diff2html-fileListToggle
+        //diff2html-fileContentToggle
+        //diff2html-synchronisedScroll
+        //diff2html-highlightCode
+      });
+    </script>
+  </head>
+  <body style="text-align: center; font-family: 'Source Sans Pro', sans-serif">
+    <header class="meat-band">
+      <div class="meat-band-inner">
+        <div class="meat-eyebrow">
+          <span class="meat-tag">reading diff</span>
+          <h1><!--diff2html-header--></h1>
+        </div>
+        <!--meat-header-->
+      </div>
+    </header>
+
+    <div id="diff">
+      <!--diff2html-diff-->
+    </div>
+  </body>
+</html>

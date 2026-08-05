@@ -140,6 +140,7 @@ target repo — the page lands in that repo's git-ignored `scratch/meat-diffs/`:
 meat-view /tmp/reading.diff \
   --orig "$STATE" \
   --excluded /tmp/excluded.txt \
+  --pr 175 \
   --target pr-175 \
   --title "PR #175 — drop the v1 compatibility layer" \
   --note "The four deleted tests keep their names; fixtures and assertions are
@@ -151,6 +152,13 @@ representative and dropped the rest."
 sanitized rev, `worktree`, or `staged`. Never leave it off — the default is a
 characterless `reading.html`. Repeat runs are numbered rather than overwritten,
 so prior renders survive.
+
+Say what the diff is against: `--pr <N>` when you abridged a PR, `--commit
+<rev>` when you abridged a commit. Either one puts a link to it on GitHub in
+the header band, so the page can be read beside its source. `--pr` also puts a
+copyable *watch checks, then merge* command at the bottom — the same one the
+`merge` skill runs — behind a copy-to-clipboard button. Leave both off for
+`-w` and `-staged`; there is nothing to link to.
 
 The page carries its own provenance, which is why the flags matter. `--orig`
 lets it derive which files were dropped whole, by comparing `$STATE`'s file list

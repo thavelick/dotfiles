@@ -10,8 +10,8 @@
       Based on diff2html-cli's stock template.html by rtfpessoa.
       The diff2html-title / diff2html-css / diff2html-js-ui / diff2html-header /
       diff2html-diff comment placeholders and the //diff2html-* script lines are
-      substituted by diff2html-cli; do not remove them. The meat-header comment
-      placeholder is substituted by meat-view itself.
+      substituted by diff2html-cli; do not remove them. The meat-header and
+      meat-footer comment placeholders are substituted by meat-view itself.
     -->
 
     <!--diff2html-css-->
@@ -117,6 +117,15 @@
         border-radius: 999px;
         padding: 2px 10px;
       }
+      .meat-chip-link {
+        color: var(--meat-accent);
+        border-color: var(--meat-accent);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .meat-chip-link:hover {
+        background: var(--meat-subtle);
+      }
       .meat-chip-warn {
         color: var(--meat-warn);
         background: var(--meat-warn-bg);
@@ -181,6 +190,66 @@
         padding: 16px 20px 60px;
       }
 
+      /* ---- sticky per-file header --------------------------------------
+         diff2html's own rule pins it at top: 0, which puts it under the
+         sticky file list. --meat-listh is that list's live height, set by
+         the ResizeObserver below; the fallback matters only pre-script. */
+      .d2h-file-wrapper .d2h-sticky-header {
+        top: var(--meat-listh, 0px);
+      }
+
+      /* ---- merge footer ------------------------------------------------- */
+
+      .meat-footer {
+        text-align: left;
+        margin: 0 20px 60px;
+        padding: 14px 16px;
+        border: 1px solid var(--meat-border);
+        border-radius: 6px;
+        background: var(--meat-subtle);
+        font-size: 14px;
+      }
+      .meat-footer-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .meat-footer h2 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .meat-footer p {
+        margin: 6px 0 10px;
+        color: var(--meat-muted);
+      }
+      .meat-footer pre {
+        margin: 0;
+        padding: 10px 12px;
+        overflow-x: auto;
+        border: 1px solid var(--meat-border);
+        border-radius: 4px;
+        background: var(--meat-bg);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+      }
+      .meat-copy {
+        flex: none;
+        cursor: pointer;
+        font: inherit;
+        font-size: 12px;
+        color: var(--meat-fg);
+        background: var(--meat-bg);
+        border: 1px solid var(--meat-border);
+        border-radius: 6px;
+        padding: 4px 12px;
+      }
+      .meat-copy:hover {
+        border-color: var(--meat-accent);
+        color: var(--meat-accent);
+      }
+
       /* ---- hidden line numbers ------------------------------------------
          meat's folds make in-hunk line numbers wrong, so they are not shown.
          The gutter itself stays: it is what separates the two sides. */
@@ -201,6 +270,39 @@
         //diff2html-fileContentToggle
         //diff2html-synchronisedScroll
         //diff2html-highlightCode
+        // Not a diff2html-cli placeholder — the CLI has no flag for it, but the
+        // UI bundle does, and it is what keeps each file's name and its Viewed
+        // checkbox on screen while you scroll that file.
+        diff2htmlUi.stickyFileHeaders();
+
+        // The file list is itself sticky and its height changes when it is
+        // toggled open, so the per-file headers have to stack below whatever
+        // it currently is, not below a guess.
+        const fileList = document.querySelector('.d2h-file-list-wrapper');
+        if (fileList) {
+          const track = () =>
+            document.documentElement.style.setProperty(
+              '--meat-listh',
+              fileList.offsetHeight + 'px',
+            );
+          new ResizeObserver(track).observe(fileList);
+          track();
+        }
+
+        document.querySelectorAll('.meat-copy').forEach((button) => {
+          button.addEventListener('click', async () => {
+            const text = button.dataset.copy;
+            try {
+              await navigator.clipboard.writeText(text);
+              button.textContent = 'Copied';
+            } catch {
+              // file:// pages are a secure context in current browsers, so this
+              // is the rare-permission case: leave the text selectable and say so.
+              button.textContent = 'Copy failed — select it';
+            }
+            setTimeout(() => (button.textContent = 'Copy to clipboard'), 2000);
+          });
+        });
       });
     </script>
   </head>
@@ -218,5 +320,7 @@
     <div id="diff">
       <!--diff2html-diff-->
     </div>
+
+    <!--meat-footer-->
   </body>
 </html>

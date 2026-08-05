@@ -11,9 +11,11 @@ Usage: trashit <file|directory> [...]
 Move files or directories to trash instead of permanently deleting them.
 
 This is a safer alternative to 'rm' that moves items to a trash directory:
-  - Projects (~/Projects/*): .Trash in project root (auto-added to .gitignore)
-  - macOS (elsewhere): ~/.Trash
-  - Linux (elsewhere): ~/.cache/trash
+  - macOS: ~/.Trash
+  - Linux: ~/.cache/trash
+
+If the move fails (e.g. a sandbox blocking writes outside the project), it
+falls back to .Trash in the project root (auto-added to .gitignore).
 
 Multiple files can be trashed in a single command.
 
@@ -45,14 +47,7 @@ ensure_gitignore_has_trash() {
 }
 
 get_trash_dir() {
-    if is_in_projects; then
-        local project_root
-        project_root=$(get_project_root "$(pwd)")
-        local trash_dir="$project_root/.Trash"
-        mkdir -p "$trash_dir"
-        ensure_gitignore_has_trash "$project_root"
-        echo "$trash_dir"
-    elif [[ "$(uname)" == 'Darwin' ]]; then
+    if [[ "$(uname)" == 'Darwin' ]]; then
         echo "$HOME/.Trash"
     else
         mkdir -p "$HOME/.cache/trash"
@@ -60,10 +55,29 @@ get_trash_dir() {
     fi
 }
 
+get_fallback_trash_dir() {
+    is_in_projects || return 1
+
+    local project_root
+    project_root=$(get_project_root "$(pwd)")
+    local trash_dir="$project_root/.Trash"
+    mkdir -p "$trash_dir"
+    ensure_gitignore_has_trash "$project_root"
+    echo "$trash_dir"
+}
+
 [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]] && show_help && exit 0
 [[ $# -lt 1 ]] && echo "Usage: trashit <file|directory> [...]" >&2 && exit 1
 
 trash_dir=$(get_trash_dir)
 for arg in "$@"; do
-    mv "$arg" "$trash_dir/"
+    if mv "$arg" "$trash_dir/" 2>/dev/null; then
+        continue
+    fi
+
+    fallback_trash_dir=$(get_fallback_trash_dir) ||
+        { mv "$arg" "$trash_dir/"; continue; }
+
+    echo "trashit: could not move to $trash_dir, using $fallback_trash_dir" >&2
+    mv "$arg" "$fallback_trash_dir/"
 done

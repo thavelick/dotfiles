@@ -200,9 +200,10 @@ def commit_link(rev):
 def build_footer(number):
     """A copyable `watch checks, then merge` command — what the merge skill runs."""
     cmd = (
-        f"gh pr checks {number} --watch > /dev/null "
-        f"&& gh pr checks {number} "
-        f"&& gh pr merge {number} --merge --delete-branch"
+        f"PR={number}; "
+        'gh pr checks "$PR" --watch > /dev/null '
+        '&& gh pr checks "$PR" '
+        '&& gh pr merge "$PR" --merge --delete-branch'
     )
     return (
         '<section class="meat-footer">'

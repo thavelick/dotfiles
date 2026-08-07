@@ -289,6 +289,28 @@
           track();
         }
 
+        // Checking a file's Viewed box collapses it, and everything below
+        // jumps up by the height of what just vanished — so you land mid-hunk
+        // in the next file with its opening lines already scrolled past.
+        // Re-anchor on the file you just folded, under the sticky file list,
+        // so the next one starts at the top of the frame. Delegated because
+        // stickyFileHeaders may re-render the headers these boxes live in.
+        document.addEventListener('change', (event) => {
+          const box = event.target.closest?.('.d2h-file-collapse-input');
+          if (!box || !box.checked) return;
+          const wrapper = box.closest('.d2h-file-wrapper');
+          if (!wrapper) return;
+          // Next frame, so the position measured is the post-collapse one:
+          // diff2html's own change handler runs on this same event.
+          requestAnimationFrame(() => {
+            const listHeight = fileList ? fileList.offsetHeight : 0;
+            window.scrollTo({
+              top: window.scrollY + wrapper.getBoundingClientRect().top - listHeight,
+              behavior: 'smooth',
+            });
+          });
+        });
+
         document.querySelectorAll('.meat-copy').forEach((button) => {
           button.addEventListener('click', async () => {
             const text = button.dataset.copy;

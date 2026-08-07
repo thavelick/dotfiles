@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -eu
+
+if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+    cat <<EOF
+Usage: smart-start <start-model> <then-model> [claude args...]
+
+Launch Claude Code in Smart Start mode: an expensive model for the reading
+and planning, a cheaper one from the first file edit onward.
+
+Sugar for: SMART_START_THEN=<then-model> claude --model <start-model>
+
+The switch is done by the PostToolUse hook in claude/bin/smart-start-switch.sh,
+which drives /model over tmux — so this only does anything inside tmux.
+
+Examples:
+  smart-start opus sonnet             - Plan on Opus, implement on Sonnet
+  smart-start fable opus --continue   - Extra args are passed to claude
+EOF
+    exit 0
+fi
+
+if [ $# -lt 2 ]; then
+    echo "usage: smart-start <start-model> <then-model> [claude args...]" >&2
+    exit 1
+fi
+
+start_model=$1
+then_model=$2
+shift 2
+
+if [ -z "${TMUX:-}" ]; then
+    echo "smart-start: not in tmux — the model switch will not fire" >&2
+fi
+
+SMART_START_THEN=$then_model exec claude --model "$start_model" "$@"

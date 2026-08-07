@@ -98,7 +98,8 @@ What to cut, in rough priority order:
   in full; `remove` the rest outright. This is usually the single biggest win.
 - **Test bodies.** Keep the `it(`/`test(`/`def test_` names — they are the
   contract, and reading them in a list is the fastest way to see what the change
-  claims. Fold the mock setup and assertion blocks under each.
+  claims. Fold the mock setup and assertion blocks under each. **Except for
+  data-driven tests** — see below.
 - **Mechanical function bodies** — env plumbing, URL building, JSON marshalling,
   error-message construction, field-by-field copies.
 - **Whole hunks that survive only as context** after imports are stripped.
@@ -108,6 +109,14 @@ What to keep, always:
 - Doc comments and rationale. In this codebase they carry the design argument —
   the *why* — which is exactly what a reviewer cannot reconstruct from the code.
 - Type and interface declarations, exported signatures.
+- **Case tables in data-driven tests.** `it.each` / `test.each` / `@parametrize`
+  / a Go `tests := []struct{...}` literal invert the usual test rule: the title
+  is one generic template (`"joins %o into %s"`) and the *rows* are the contract.
+  Folding the table leaves a test whose meaning is unrecoverable — the reader
+  cannot even tell what the input shape was. Keep every row. Fold the runner
+  body under it instead; that part is the boilerplate here. Only fold rows when
+  a table runs past ~25 of them and they are visibly homogeneous, and then keep
+  the first few and the edge cases and fold the middle.
 - Control flow, conditions, lifecycle edges, retry/backoff decisions, security
   boundaries, and anything a comment flags as a caveat or hazard.
 

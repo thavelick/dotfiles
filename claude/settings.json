@@ -32,6 +32,17 @@
         "matcher": "permission_prompt"
       }
     ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "$HOME/.claude/bin/smart-start-switch.sh",
+            "type": "command"
+          }
+        ],
+        "matcher": "Edit|Write"
+      }
+    ],
     "PreToolUse": [
       {
         "hooks": [

@@ -306,7 +306,9 @@
             const listHeight = fileList ? fileList.offsetHeight : 0;
             window.scrollTo({
               top: window.scrollY + wrapper.getBoundingClientRect().top - listHeight,
-              behavior: 'smooth',
+              // Instant, not smooth: the collapse and the scroll animating at
+              // once makes it hard to see which file you just folded.
+              behavior: 'instant',
             });
           });
         });

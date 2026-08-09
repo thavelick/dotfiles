@@ -114,7 +114,8 @@ def build_band(summary, retention, dropped, excluded, note, link):
     url, label = link
     if url:
         chips.append(
-            f'<a class="meat-chip meat-chip-link" href="{html.escape(url, quote=True)}">'
+            f'<a class="meat-chip meat-chip-link" href="{html.escape(url, quote=True)}" '
+            'target="_blank" rel="noopener">'
             f"{html.escape(label)} on GitHub &rarr;</a>"
         )
     if retention:
@@ -201,8 +202,8 @@ def build_footer(number):
     """A copyable `watch checks, then merge` command — what the merge skill runs."""
     cmd = (
         f"PR={number}; "
-        'gh pr checks "$PR" --watch > /dev/null '
-        '&& gh pr checks "$PR" '
+        'gh pr checks "$PR" --watch --fail-fast > /dev/null; '
+        'gh pr checks "$PR" '
         '&& gh pr merge "$PR" --merge --delete-branch'
     )
     return (

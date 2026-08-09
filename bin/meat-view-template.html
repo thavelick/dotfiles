@@ -275,6 +275,18 @@
         // checkbox on screen while you scroll that file.
         diff2htmlUi.stickyFileHeaders();
 
+        // Browsers restore checkbox state across a reload, but the collapse
+        // those boxes drive is runtime-only — so a refresh would show every
+        // file expanded with its Viewed box still ticked. Start clean. The
+        // pageshow pass covers the back/forward cache, which restores the
+        // whole page without firing DOMContentLoaded again.
+        const clearViewed = () =>
+          document
+            .querySelectorAll('.d2h-file-collapse-input')
+            .forEach((box) => (box.checked = false));
+        clearViewed();
+        window.addEventListener('pageshow', clearViewed);
+
         // The file list is itself sticky and its height changes when it is
         // toggled open, so the per-file headers have to stack below whatever
         // it currently is, not below a guess.

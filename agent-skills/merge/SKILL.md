@@ -9,7 +9,7 @@ If a PR merge is intended, follow these steps:
 
 1. Get the current PR number using `gh pr view --json number -q .number`
 
-2. Wait for CI to finish using `gh pr checks <number> --watch > /dev/null && gh pr checks <number>` — the first call blocks until checks complete (discarding its noisy per-refresh output), and the second produces one clean final-state block. Use a generous timeout on the Bash call.
+2. Wait for CI to finish using `gh pr checks <number> --watch --fail-fast > /dev/null; gh pr checks <number>` — the first call blocks until checks complete (discarding its noisy per-refresh output), and the second produces one clean final-state block. Note the `;` rather than `&&`: watch mode exits 1 on failure and 8 while pending, so chaining with `&&` would swallow the final-state block in exactly the case you need to see it. Use a generous timeout on the Bash call.
 
 3. Based on the final result:
    - **If all checks passed**: Proceed to merge immediately

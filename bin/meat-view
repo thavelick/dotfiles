@@ -93,6 +93,12 @@ def rich(text):
     return re.sub(r"`([^`]+)`", r"<code>\1</code>", html.escape(text))
 
 
+def paragraphs(text):
+    """Blank-line-separated prose as <p> blocks; single newlines stay soft wraps."""
+    blocks = [b.strip() for b in re.split(r"\n[ \t]*\n", text.strip())]
+    return "".join(f"<p>{rich(b)}</p>" for b in blocks if b)
+
+
 def details(summary, body_html, open_=False):
     attr = " open" if open_ else ""
     return (
@@ -132,7 +138,7 @@ def build_band(summary, retention, dropped, excluded, note, link):
     parts.append('<div class="meat-facts">' + "".join(chips) + "</div>")
 
     if note:
-        parts.append(f'<p class="meat-note">{rich(note)}</p>')
+        parts.append(f'<div class="meat-note">{paragraphs(note)}</div>')
 
     if dropped:
         parts.append(

@@ -1,19 +1,27 @@
 ---
-name: pocock-grilling
+name: grilling
 description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.
 ---
 
 Interview the user relentlessly until you reach a shared understanding. Map this as a **design tree**: every decision branches into the decisions that hang off it.
 
-Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled — the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round: number each question and give your recommended answer. Then wait for the user's answers before the next round.
+Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled — the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round: number each question and give your recommended answer, then one clause of why. Wait for the user's answers before the next round.
 
 Each question should be formatted like so:
 
 ```
 ❓ **Q1** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
 
-➡️ <your recommended answer>
+➡️ <the pick, then one clause of why>
 ```
+
+Write each question to these rules:
+
+- **One decision per question.** Split compound questions.
+- **State options in parallel form**: identical phrasing except the dimension that differs. No incidental variation.
+- **Put the discriminating detail at the end** of the sentence.
+- **No forward references.** Each question must stand alone.
+- **Cut hedges** — "probably", "it depends", "we could consider". If it depends, say what it depends on; that's the real question.
 
 Each round the user answers reshapes the tree — settled decisions push the frontier outward and unblock questions that depended on them. Recompute the frontier and ask the next round. A question whose answer depends on another question still open in this round belongs to a _later_ round, not this one.
 

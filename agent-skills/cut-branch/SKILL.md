@@ -18,9 +18,7 @@ Create a new git branch following the naming convention: `description_of_issue_<
    - If a branch already exists for this issue, ask the user if they want to check it out instead (skip remaining steps)
 
 3. **Fetch issue details** (if there is an issue number):
-   1. Check if the project has a `.issues` directory by running: `[ -d .issues ] && echo ".issues directory found" || echo ".issues directory not found"`
-   2. If the `.issues` directory exists: use `gh-issue-sync pull && gh-issue-sync view <number>` to get the issue title
-   3. If the `.issues` directory does NOT exist: use `gh issue view <number>` to get the issue title
+   - Run `gh issue view <number>` to get the issue title
 
 4. **Generate branch name**:
    - Use your judgment to create a short, descriptive branch name based on the issue title

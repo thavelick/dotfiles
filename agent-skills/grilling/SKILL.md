@@ -5,7 +5,11 @@ description: Grill the user relentlessly about a plan, decision, or idea. Use wh
 
 Interview the user relentlessly until you reach a shared understanding. Map this as a **design tree**: every decision branches into the decisions that hang off it.
 
-Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled — the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round: number each question and give your recommended answer, then one clause of why. Wait for the user's answers before the next round.
+A long grilling, or one whose decisions have to outlive the chat, belongs in `grill-with-collaboration` — the open questions and the settled decisions go into a doc you both edit instead of scrolling away.
+
+Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled — the questions you can ask _now_ without guessing at answers you haven't heard yet. Each round costs the user one reply, so fill it with as many frontier questions as they can answer without holding two tradeoffs in mind at once — one question if it needs weighing, up to five if each is a pick from named options. Number each question and give your recommended answer, then one clause of why. Wait for the user's answers before the next round.
+
+Complexity is a property of the decision, not a dial you turn. Never inflate a pick into a deliberation to justify a smaller round.
 
 Each question should be formatted like so:
 
@@ -19,6 +23,7 @@ Write each question to these rules:
 
 - **One decision per question.** Split compound questions.
 - **State options in parallel form**: identical phrasing except the dimension that differs. No incidental variation.
+- **One option per line**, as its own list item. Options run together in a paragraph are read as one blur.
 - **Put the discriminating detail at the end** of the sentence.
 - **No forward references.** Each question must stand alone.
 - **Cut hedges** — "probably", "it depends", "we could consider". If it depends, say what it depends on; that's the real question.

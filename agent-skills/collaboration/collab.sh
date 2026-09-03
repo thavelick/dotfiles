@@ -11,7 +11,7 @@ set -euo pipefail
 
 usage() {
   cat <<'USAGE'
-Usage: collab.sh [--focus] [--dir DIR]
+Usage: collab.sh [--focus] [--dir DIR] [--template FILE]
        collab.sh open [--focus] FILE [LINE [COL]]
 
   (no args)  open this session's collaboration doc, spawning the pane if needed
@@ -19,6 +19,9 @@ Usage: collab.sh [--focus] [--dir DIR]
 
   --focus    make the editor pane active (default: leave focus where it is)
   --dir DIR  scratchpad directory to use, if auto-detection fails
+  --template FILE
+             seed a brand-new doc with FILE instead of the default header;
+             ignored when the doc already exists, so re-runs never clobber it
   --edit F   internal: exec the editor on F (used as the pane's command)
   --sock S   internal: nvim --listen address for the pane started by --edit
 
@@ -54,17 +57,31 @@ fi
 
 focus=false
 dir=""
+template=""
 args=()
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --focus) focus=true; shift ;;
     --dir) dir="${2:?--dir needs a path}"; shift 2 ;;
+    --template) template="${2:?--template needs a path}"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     -*) echo "unknown option: $1" >&2; usage >&2; exit 2 ;;
     *) args+=("$1"); shift ;;
   esac
 done
+
+if [ -n "$template" ]; then
+  if [ "$subcommand" != doc ]; then
+    echo "--template applies to the collaboration doc, not to open" >&2
+    usage >&2
+    exit 2
+  fi
+  if [ ! -f "$template" ]; then
+    echo "no such template: $template" >&2
+    exit 1
+  fi
+fi
 
 if [ "$subcommand" = doc ] && [ ${#args[@]} -gt 0 ]; then
   echo "unexpected argument: ${args[0]}" >&2
@@ -100,13 +117,19 @@ doc="$dir/collaboration.md"
 created=false
 if [ ! -e "$doc" ]; then
   created=true
-  cat > "$doc" <<'HEADER'
+  # A template stands in for the header entirely: a doc that titles itself does
+  # not need the generic blurb explaining what a collaboration doc is.
+  if [ -n "$template" ]; then
+    cat "$template" > "$doc"
+  else
+    cat > "$doc" <<'HEADER'
 # Collaboration doc
 
 Shared scratch for this Claude session. Claude writes its notes here; edit or
 annotate in place and Claude will read your changes back.
 
 HEADER
+  fi
 fi
 
 # --- editor plumbing --------------------------------------------------------

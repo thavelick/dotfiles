@@ -1,5 +1,5 @@
 #!/bin/sh
-# Claude Code status line: directory, model, context/token usage, session cost, elapsed time.
+# Claude Code status line: directory, model, context/token usage, session cost, active time.
 # Receives session JSON on stdin. See https://code.claude.com/docs/en/statusline
 
 input=$(cat)
@@ -13,7 +13,7 @@ tin=$(field '.context_window.total_input_tokens // 0')
 tout=$(field '.context_window.total_output_tokens // 0')
 size=$(field '.context_window.context_window_size // 0')
 cost=$(field '.cost.total_cost_usd // empty')
-elapsed=$(field '.cost.total_duration_ms // empty')
+transcript=$(field '.transcript_path // empty')
 
 # 41990 -> 42k, 1000000 -> 1m, 1240000 -> 1.2m, 320 -> 320
 human() {
@@ -23,6 +23,19 @@ human() {
     else if (n >= 1000) { printf "%.0fk\n", n / 1000 }
     else { printf "%d\n", n }
   }'
+}
+
+# Time actually spent working, in ms: the sum of gaps between transcript entries,
+# with each gap capped at IDLE_CUTOFF so an afk stretch counts as a pause, not work.
+IDLE_CUTOFF=900
+active_ms() {
+  [ -f "$1" ] || return
+  jq -r 'select(.timestamp) | .timestamp | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601' "$1" 2>/dev/null |
+    sort -n |
+    awk -v cut="$IDLE_CUTOFF" '
+      NR > 1 { d = $1 - prev; total += (d > cut ? cut : d) }
+      { prev = $1 }
+      END { printf "%d\n", total * 1000 }'
 }
 
 # Milliseconds -> minute resolution: 720000 -> 12m, 6420000 -> 1h47m
@@ -48,6 +61,7 @@ if [ -n "$cost" ]; then
   printf ' \033[2m$%.2f\033[0m' "$cost"
 fi
 
-if [ -n "$elapsed" ]; then
-  printf '  \033[2m⏱ %s\033[0m' "$(human_time "$elapsed")"
+active=$(active_ms "$transcript")
+if [ -n "$active" ]; then
+  printf '  \033[2m⏱ %s\033[0m' "$(human_time "$active")"
 fi

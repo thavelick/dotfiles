@@ -1,0 +1,245 @@
+#!/usr/bin/env python3
+"""Refresh the Twitch chat OAuth token and write it into the irssi config.
+
+Twitch user access tokens last about four hours, so the token cannot live in
+KeePassXC directly. Instead KeePassXC holds the long-lived credentials
+(client id, client secret, refresh token), `update-secrets twitch` stages them
+to ~/.config/twitch/credentials, and this script trades the refresh token for a
+fresh access token whenever you want to connect.
+
+Usage: twitch-token [--init]
+  twitch-token          # refresh and rewrite ~/.irssi/config, then /reload in irssi
+  twitch-token --init   # one-time authorization flow to obtain a refresh token
+"""
+
+import json
+import secrets
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+from pathlib import Path
+
+AUTHORIZE_URL = "https://id.twitch.tv/oauth2/authorize"
+TOKEN_URL = "https://id.twitch.tv/oauth2/token"
+REDIRECT_URI = "https://localhost:61181"
+SCOPES = "chat:read chat:edit"
+
+CREDENTIALS_PATH = Path.home() / ".config" / "twitch" / "credentials"
+CACHE_PATH = Path.home() / ".cache" / "twitch" / "access_token"
+IRSSI_CONFIG = Path.home() / ".irssi" / "config"
+TWITCH_ADDRESS = "irc.chat.twitch.tv"
+
+
+class Colors:
+    """ANSI color codes for terminal output."""
+
+    RED = "\033[31m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    RESET = "\033[0m"
+
+
+def error(msg):
+    """Print an error message in red."""
+    print(f"{Colors.RED}Error: {msg}{Colors.RESET}", file=sys.stderr)
+
+
+def success(msg):
+    """Print a success message in green."""
+    print(f"{Colors.GREEN}{msg}{Colors.RESET}")
+
+
+def info(msg):
+    """Print an info message in yellow."""
+    print(f"{Colors.YELLOW}{msg}{Colors.RESET}")
+
+
+def read_credentials():
+    """Read the staged KEY=value credentials file."""
+    if not CREDENTIALS_PATH.exists():
+        error(f"Credentials not found at {CREDENTIALS_PATH}")
+        info("Run: update-secrets twitch")
+        sys.exit(1)
+
+    credentials = {}
+    for line in CREDENTIALS_PATH.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        credentials[key.strip()] = value.strip()
+    return credentials
+
+
+def write_credentials(credentials):
+    """Rewrite the staged credentials file, preserving the template's comment."""
+    lines = ["# Rendered by `update-secrets twitch` from KeePassXC. Not tracked in git."]
+    lines += [f"{key}={value}" for key, value in credentials.items()]
+    CREDENTIALS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CREDENTIALS_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    CREDENTIALS_PATH.chmod(0o600)
+
+
+def post_token_request(payload):
+    """POST to the Twitch token endpoint and return the parsed response."""
+    data = urllib.parse.urlencode(payload).encode("utf-8")
+    request = urllib.request.Request(TOKEN_URL, data=data, method="POST")
+    try:
+        with urllib.request.urlopen(request) as response:
+            return json.loads(response.read())
+    except urllib.error.HTTPError as e:
+        error(f"Twitch rejected the token request ({e.code}): {e.read().decode('utf-8')}")
+        sys.exit(1)
+    except urllib.error.URLError as e:
+        error(f"Could not reach Twitch: {e.reason}")
+        sys.exit(1)
+
+
+def authorize(client_id):
+    """Run the authorization code flow and return the code Twitch redirects with."""
+    state = secrets.token_urlsafe(16)
+    params = {
+        "response_type": "code",
+        "client_id": client_id,
+        "redirect_uri": REDIRECT_URI,
+        "scope": SCOPES,
+        "state": state,
+    }
+    info("Open this URL in your browser and approve the app:\n")
+    print(f"{AUTHORIZE_URL}?{urllib.parse.urlencode(params)}\n")
+    info("Your browser will fail to load the redirect - nothing is listening there.")
+    info("That is expected. Copy the whole URL out of the address bar and paste it here.\n")
+
+    redirected = input("Redirect URL: ").strip()
+    query = urllib.parse.parse_qs(urllib.parse.urlparse(redirected).query)
+    if "error" in query:
+        error(f"Authorization denied: {query.get('error_description', query['error'])[0]}")
+        sys.exit(1)
+    if query.get("state", [None])[0] != state:
+        error("State mismatch on the redirect; aborting rather than trusting the code")
+        sys.exit(1)
+    if "code" not in query:
+        error("That URL carried no authorization code")
+        sys.exit(1)
+    return query["code"][0]
+
+
+def prompt(label, existing):
+    """Ask for a value, defaulting to what is already staged."""
+    if existing:
+        return existing
+    value = input(f"{label}: ").strip()
+    if not value:
+        error(f"{label} is required")
+        sys.exit(1)
+    return value
+
+
+def do_init():
+    """Obtain a refresh token and tell the user where to put it."""
+    credentials = read_credentials() if CREDENTIALS_PATH.exists() else {}
+    client_id = prompt("Twitch client ID", credentials.get("TWITCH_CLIENT_ID"))
+    client_secret = prompt("Twitch client secret", credentials.get("TWITCH_CLIENT_SECRET"))
+
+    code = authorize(client_id)
+    tokens = post_token_request(
+        {
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "code": code,
+            "grant_type": "authorization_code",
+            "redirect_uri": REDIRECT_URI,
+        }
+    )
+
+    success("✓ Authorized")
+    print()
+    info("Store these on the KeePassXC entry named 'Twitch' as custom attributes:")
+    print(f"  ClientID:     {client_id}")
+    print(f"  ClientSecret: {client_secret}")
+    print(f"  RefreshToken: {tokens['refresh_token']}")
+    print()
+    info("Then run: update-secrets twitch && twitch-token")
+
+
+def update_irssi_config(access_token):
+    """Rewrite the password line in the irssi Twitch server block."""
+    if not IRSSI_CONFIG.exists():
+        error(f"irssi config not found at {IRSSI_CONFIG}")
+        info("Run: update-secrets irssi")
+        sys.exit(1)
+
+    lines = IRSSI_CONFIG.read_text(encoding="utf-8").splitlines(keepends=True)
+    in_twitch_block = False
+    for index, line in enumerate(lines):
+        if TWITCH_ADDRESS in line:
+            in_twitch_block = True
+        elif in_twitch_block and line.strip() in ("},", "}"):
+            break
+        elif in_twitch_block and line.strip().startswith("password ="):
+            indent = line[: len(line) - len(line.lstrip())]
+            lines[index] = f'{indent}password = "oauth:{access_token}";\n'
+            IRSSI_CONFIG.write_text("".join(lines), encoding="utf-8")
+            IRSSI_CONFIG.chmod(0o600)
+            return
+
+    error(f"No password line found in a server block for {TWITCH_ADDRESS}")
+    sys.exit(1)
+
+
+def do_refresh():
+    """Trade the refresh token for a fresh access token and install it."""
+    credentials = read_credentials()
+    missing = [
+        key
+        for key in ("TWITCH_CLIENT_ID", "TWITCH_CLIENT_SECRET", "TWITCH_REFRESH_TOKEN")
+        if not credentials.get(key)
+    ]
+    if missing:
+        error(f"Missing in {CREDENTIALS_PATH}: {', '.join(missing)}")
+        info("Run: twitch-token --init")
+        sys.exit(1)
+
+    tokens = post_token_request(
+        {
+            "client_id": credentials["TWITCH_CLIENT_ID"],
+            "client_secret": credentials["TWITCH_CLIENT_SECRET"],
+            "grant_type": "refresh_token",
+            "refresh_token": credentials["TWITCH_REFRESH_TOKEN"],
+        }
+    )
+
+    rotated = tokens.get("refresh_token")
+    if rotated and rotated != credentials["TWITCH_REFRESH_TOKEN"]:
+        credentials["TWITCH_REFRESH_TOKEN"] = rotated
+        write_credentials(credentials)
+        info("!! Twitch rotated the refresh token.")
+        info(f"!! Update the KeePassXC 'Twitch' entry's RefreshToken to: {rotated}")
+
+    CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CACHE_PATH.write_text(tokens["access_token"] + "\n", encoding="utf-8")
+    CACHE_PATH.chmod(0o600)
+
+    update_irssi_config(tokens["access_token"])
+    success(f"✓ Twitch token refreshed (valid ~{tokens.get('expires_in', 0) // 3600}h)")
+    info("In irssi: /reload then /connect Twitch")
+
+
+def main():
+    """Main entry point."""
+    args = sys.argv[1:]
+    if args and args[0] in ("-h", "--help"):
+        print(__doc__)
+        return
+    if args and args[0] == "--init":
+        do_init()
+        return
+    if args:
+        error(f"Unknown argument: {args[0]}")
+        sys.exit(1)
+    do_refresh()
+
+
+if __name__ == "__main__":
+    main()

@@ -75,6 +75,10 @@ channels = (
   { name = "#oftc"; chatnet = "OFTC"; autojoin = "No"; }
 );
 
+ignores = (
+  { level = "JOINS PARTS QUITS"; servertag = "Twitch"; }
+);
+
 aliases = {
   ATAG = "WINDOW SERVER";
   ADDALLCHANS = "SCRIPT EXEC foreach my \\$channel (Irssi::channels()) { Irssi::command(\"CHANNEL ADD -auto \\$channel->{visible_name} \\$channel->{server}->{tag} \\$channel->{key}\")\\;}";

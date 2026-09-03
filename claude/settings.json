@@ -87,7 +87,7 @@
       }
     ]
   },
-  "model": "opus",
+  "model": "fable",
   "permissions": {
     "allow": [
       "Bash(git *)",

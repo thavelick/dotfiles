@@ -19,13 +19,20 @@ servers = (
     port = "6697";
     use_tls = "yes";
     tls_verify = "yes";
-    autoconnect = "yes";
   },
   {
     address = "irc.oftc.net";
     chatnet = "OFTC";
     port = "6697";
     password = "{{IRSSI_OFTC_PASSWORD}}";
+    use_tls = "yes";
+    tls_verify = "yes";
+  },
+  {
+    address = "irc.chat.twitch.tv";
+    chatnet = "Twitch";
+    port = "6697";
+    password = "oauth:PENDING";
     use_tls = "yes";
     tls_verify = "yes";
   }
@@ -51,18 +58,25 @@ chatnets = {
     autosendcmd = "/msg NickServ IDENTIFY {{IRSSI_OFTC_PASSWORD}}";
   };
   IRC4Fun = { type = "IRC"; };
+  Twitch = {
+    type = "IRC";
+    nick = "natris1979";
+    username = "natris1979";
+    realname = "natris1979";
+    max_kicks = "1";
+    max_msgs = "1";
+    max_whois = "1";
+    max_modes = "1";
+    autosendcmd = "/quote CAP REQ :twitch.tv/tags twitch.tv/commands twitch.tv/membership";
+  };
 };
 
 channels = (
-  { name = "#lobby"; chatnet = "EsperNet"; autojoin = "No"; },
-  { name = "#freenode"; chatnet = "Freenode"; autojoin = "No"; },
-  { name = "#irssi"; chatnet = "Freenode"; autojoin = "No"; },
-  { name = "#gamesurge"; chatnet = "GameSurge"; autojoin = "No"; },
-  { name = "#irssi"; chatnet = "IRCNet"; autojoin = "No"; },
-  { name = "#ircsource"; chatnet = "IRCSource"; autojoin = "No"; },
-  { name = "#netfuze"; chatnet = "NetFuze"; autojoin = "No"; },
-  { name = "#oftc"; chatnet = "OFTC"; autojoin = "No"; },
-  { name = "silc"; chatnet = "SILC"; autojoin = "No"; }
+  { name = "#oftc"; chatnet = "OFTC"; autojoin = "No"; }
+);
+
+ignores = (
+  { level = "JOINS PARTS QUITS"; servertag = "Twitch"; }
 );
 
 aliases = {

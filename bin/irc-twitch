@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -u
+set -o pipefail
+
+if [[ "${1:-}" == "-h" ]] || [[ "${1:-}" == "--help" ]]; then
+    cat <<USAGE
+Usage: irc-twitch
+
+Refresh the Twitch chat token and start irssi connected to Twitch.
+
+Twitch access tokens expire after about four hours, so the token is refreshed
+into ~/.irssi/config immediately before irssi reads it. Any extra arguments are
+passed through to irssi.
+USAGE
+    exit 0
+fi
+
+twitch-token || exit
+
+exec irssi -c Twitch "$@"

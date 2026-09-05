@@ -23,12 +23,14 @@ Write each question to these rules:
 
 - **One decision per question.** Split compound questions.
 - **State options in parallel form**: identical phrasing except the dimension that differs. No incidental variation.
-- **One option per line**, as its own list item. Options run together in a paragraph are read as one blur.
+- **One option per line**, lettered A, B, C, so an answer can be "Q1 B". Options run together in a paragraph are read as one blur.
 - **Put the discriminating detail at the end** of the sentence.
 - **No forward references.** Each question must stand alone.
 - **Cut hedges** — "probably", "it depends", "we could consider". If it depends, say what it depends on; that's the real question.
 
 Each round the user answers reshapes the tree — settled decisions push the frontier outward and unblock questions that depended on them. Recompute the frontier and ask the next round. A question whose answer depends on another question still open in this round belongs to a _later_ round, not this one.
+
+If the subject has a ticket, read it with its comments first. A comment headed `## Pre-grill` is the tree already built. Its established facts are settled; re-check one only when the file it cites has changed since the comment. Its questions are open unless a later comment answers them by number, and the open ones form the frontier like any other question, so one that assumes an answer still open waits for a later round. When the session ends with the ticket still open, post the decisions made as a comment answering the questions by number, so the thread stays the record.
 
 Finding _facts_ is your job, never the user's. When a frontier question needs a fact from the environment (filesystem, tools, etc.), dispatch a sub-agent to find it — don't ask the user for anything you could look up yourself. Don't block on it: a running exploration is an unsettled prerequisite, so only the questions downstream of it wait for the sub-agent to report — ask the rest of the frontier now. The _decisions_ are the user's — put each to them and wait.
 

@@ -6,10 +6,13 @@ set -o pipefail
 
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
 SFX_DIR="$XDG_CONFIG_HOME/dotfiles-sfx"
+MUTE_FILE=/tmp/dotfiles-sfx-muted  # in /tmp so a reboot clears it
 
 # Show usage if no argument provided
 if [ $# -eq 0 ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
   echo "Usage: sfx <sound>"
+  echo ""
+  echo "Plays nothing while muted via 'toggle-mute --sfx-only' (flag file: $MUTE_FILE)."
   echo ""
   echo "Available sounds:"
   if [ -d "$SFX_DIR" ]; then
@@ -22,6 +25,11 @@ if [ $# -eq 0 ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo "  (none - $SFX_DIR not found)"
   fi
   exit 1
+fi
+
+# Silently do nothing while muted (see toggle-mute --sfx-only)
+if [ -f "$MUTE_FILE" ]; then
+  exit 0
 fi
 
 SOUND_FILE="$SFX_DIR/$1.ogg"

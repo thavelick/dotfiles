@@ -20,9 +20,9 @@ Skills in this directory *without* the `pocock-` prefix are not Matt's.
 
 ## Local deviations
 
-Two edits go beyond the mechanical rename, and a resync has to reapply them:
+Three edits go beyond the mechanical rename, and a resync has to reapply them:
 
-- `pocock-implement` drops upstream's `disable-model-invocation: true`, so an agent
-  can reach for the skill on its own.
+- `pocock-implement` and `pocock-implement-spec` drop upstream's
+  `disable-model-invocation: true`, so an agent can reach for the skill on its own.
 - `pocock-wizard/template.sh` carries a `shellcheck disable=SC2034` for its color
   palette, which exists for the stages an author writes below the marker.

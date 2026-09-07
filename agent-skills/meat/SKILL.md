@@ -58,6 +58,25 @@ The default set can't know your repo's conventions. Add to it, or opt out:
 Exclude patterns: `*.lock` matches a basename, `a/b/*.py` matches a full path,
 `dir/` matches that directory at any depth, `/dir/` only at the repo root.
 
+A repo can pin its own additions in a `.meatignore` at its root: one glob per
+line, blank lines and `#` comments ignored, same pattern rules as `-x`. The shim
+reads no file — build the flags yourself before the pipe, reading the file on
+its own descriptor so stdin stays free for the diff:
+
+```sh
+X=()
+[ -f .meatignore ] && while IFS= read -r p; do
+  case $p in ''|'#'*) ;; *) X+=(-x "$p") ;; esac
+done < .meatignore
+gh pr diff <N> | MEATX_STATE=$STATE meatx prep "${X[@]}" > /tmp/prompt.txt 2>/tmp/excluded.txt
+```
+
+These are repo conventions for paths a reviewer never needs — generated files,
+dev tooling — and they are separate from the built-in generated-file filter:
+`.meatignore` adds to the defaults, and `-no-default-excludes` still only
+disables the built-ins. What it drops is named on stderr like everything else,
+so the page still shows what vanished.
+
 Read `/tmp/prompt.txt`. It contains meat's own instructions plus the diff with a
 1-based `N|` gutter. If it warns the diff exceeds one agent run, say so — the
 plan will still compile, but meat proper would have chunked it. That threshold

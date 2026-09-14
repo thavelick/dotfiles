@@ -1,5 +1,6 @@
 {
   "alwaysThinkingEnabled": true,
+  "autoCompactWindow": 250000,
   "effortLevel": "medium",
   "enabledPlugins": {
     "clangd-lsp@claude-plugins-official": false,

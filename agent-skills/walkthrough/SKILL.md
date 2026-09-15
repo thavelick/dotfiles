@@ -27,7 +27,10 @@ Gather these before spawning, and ask for any that are missing.
   no walkthrough already.
 - **Scope.** The whole flow, or `--only-end-state`: only the screen the
   scenario ends on. A single screenshot makes a single-section walkthrough.
-- Optional: a PR or spec number for the title.
+- **The diff.** `gh pr diff <n>` or `git diff main...HEAD`, saved to
+  `<out>/diff.patch`, plus the PR or spec number for the title. The diff is
+  the scope: it decides which screens are shot and what counts as an
+  oddity. Walking through `main` with no diff, the scenario is the scope.
 
 `--reshoot` takes the existing directory and section numbers instead; see §5.
 
@@ -43,7 +46,7 @@ In the output directory:
 - `shoot.mjs`, the Playwright script the agent wrote to drive the app. It is
   part of the output: a reshoot reruns pieces of it.
 
-The run is done when every screen the scenario names has a section, every
+The run is done when every screen the diff changes has a section, every
 figure carries a path label, and `open index.html` has put the page in the
 browser.
 
@@ -82,6 +85,10 @@ Two browsers; pick one and name it in the report.
 
 Rules that came from getting it wrong:
 
+- **Shoot the diff.** Read `diff.patch` before the first shot and list the
+  screens it touches; those are the sections. Drive through the rest of the
+  flow to reach them, without shooting it. A screen the diff leaves alone is
+  a screen the reviewer has already seen.
 - **Wait on state.** Confirmation pages that poll, background reconcilers,
   and email delivery can take a minute or more. Wait on the element or text
   that proves the state arrived; a fixed sleep shoots the wrong frame.
@@ -105,9 +112,9 @@ them. Each has:
 
 - An `<h2>`: the number and a short name for the screen.
 - One paragraph in plain English: what is on screen, how you got here, what
-  to look at. Quote on-screen text exactly, capitalisation and punctuation
-  included. Describe what is there; the spec's wording belongs in an oddity
-  when the two differ.
+  the diff changed here. Quote on-screen text exactly, capitalisation and
+  punctuation included. Describe what is there; the spec's wording belongs
+  in an oddity when the two differ.
 - One `<figure>` per shot. Above every image, `<p class="path">` holding the
   path from `page.url()` with ids and tokens collapsed: `/orders/[id]`,
   `/verify?token=[token]`. Off-site pages get their host,
@@ -122,12 +129,15 @@ The last section, id `oddities`, titled "Screens not captured, and oddities
 noticed". The title stays even when everything was captured; only the
 `.note` paragraph goes.
 
-An oddity is anything that looked wrong, surprising, or inconsistent while
-driving: copy and plurals, timing, a redirect that lands somewhere odd, a
-console error, a missing link, a control that looks enabled and is not, a
-typeface or spacing mismatch, a label that differs from the spec's wording.
-List every one, including those that may be by design; say "by design per
-the tests" when you found that, and the reviewer decides.
+An oddity is anything that looked wrong, surprising, or inconsistent in what
+the diff changed: copy and plurals, timing, a redirect that lands somewhere
+odd, a console error, a missing link, a control that looks enabled and is
+not, a typeface or spacing mismatch, a label that differs from the spec's
+wording. Before listing one, find the hunk in `diff.patch` that produced or
+touched it; an item with no hunk is pre-existing and belongs to a different
+review. List every one that has a hunk, including those that may be by
+design; say "by design per the tests" when you found that, and the reviewer
+decides.
 
 Write them as a numbered `<ol>`, each item:
 

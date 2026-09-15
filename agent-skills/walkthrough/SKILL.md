@@ -19,8 +19,9 @@ Gather these before spawning, and ask for any that are missing.
 - **Scenario**, one or two sentences. "The account page after a completed
   checkout." "Editing the profile updates an unsaved draft."
 - **The change under review**: a PR number, a branch, or a diff against the
-  base branch. The walkthrough covers this change and nothing else. Without
-  one, the whole scenario is the change.
+  base branch, saved as `<out>/diff.patch` (`gh pr diff <n>` or
+  `git diff main...HEAD`). The walkthrough covers this change and nothing
+  else. Without one, the whole scenario is the change.
 - **Base URL** of the running app, checked to respond.
 - **How to sign in.** A seeded account, or a mail-catcher URL plus one
   sentence on how the login form works. Sign-in is per project and arrives as
@@ -134,10 +135,10 @@ and is not, a typeface or spacing mismatch, a label that differs from the
 spec's wording. List every one, including those that may be by design; say
 "by design per the tests" when you found that, and the reviewer decides.
 
-Behaviour the branch did not touch is not an oddity, however wrong it looks.
-When unsure whether the branch caused something, check the diff; if the
-lines are untouched, leave it out. The reviewer is deciding on this change,
-and a list padded with old problems buries the new ones.
+Before listing an oddity, find the hunk in `diff.patch` that produced or
+touched it. An item with no hunk is pre-existing and belongs to a different
+review, however wrong it looks: the reviewer is deciding on this change, and
+a list padded with old problems buries the new ones.
 
 Write them as a numbered `<ol>`, each item:
 

@@ -258,13 +258,93 @@
 
       /* ---- hidden line numbers ------------------------------------------
          meat's folds make in-hunk line numbers wrong, so they are not shown.
-         The gutter itself stays: it is what separates the two sides. */
+         The gutter itself stays: it is what separates the two sides, and it
+         now carries the per-line dot that marks where a logical line starts
+         (see the wrapping block below). */
       /* !important because diff2html's dark rules are
          `.d2h-auto-color-scheme .d2h-code-side-linenumber`, which outranks a
          bare class selector — without it the numbers reappear in dark mode. */
       .d2h-code-side-linenumber,
       .d2h-code-linenumber {
         color: transparent !important;
+      }
+
+      /* ---- wrapped lines -------------------------------------------------
+         diff2html sets `white-space: pre` on the code cells and gives each
+         side its own horizontal scrollbar, so one long line pushes the rest
+         of that side off screen and the two halves scroll apart. A reading
+         diff is for reading: wrap instead. `anywhere` rather than
+         `break-word` because code has few break opportunities — a minified
+         line or a long URL would otherwise still overflow.
+
+         The container keeps `white-space: normal`: diff2html pretty-prints
+         the markup, so the newlines and indentation between the prefix and
+         content spans are real characters that `pre-wrap` would render,
+         putting every +/- on a line of its own. Only the spans that hold
+         code preserve their whitespace. */
+      .d2h-code-line,
+      .d2h-code-side-line {
+        display: block;
+        width: auto;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+      /* `hidden`, not `auto`: each side reserves a scrollbar, and the table
+         inside sizes to 100% of the padding box while the scrollbar eats the
+         client box — so the bar keeps itself alive by 15px forever. Nothing
+         overflows sideways once lines wrap, so there is nothing to scroll
+         to. */
+      .d2h-file-side-diff,
+      .d2h-file-diff {
+        overflow-x: hidden;
+      }
+      /* The line content is an inline-block at `width: 100%`, which wraps as
+         one unit below the +/- prefix instead of letting its text flow; the
+         del/ins highlight spans are inline-blocks too, and an inline-block
+         never breaks internally, so the longest runs would not wrap at all.
+
+         `overflow-wrap` is inherited, but diff2html sets `word-wrap: normal`
+         (its alias) on the content span, which both blocks breaking and,
+         because an unbreakable cell sets a table's min-content width, keeps
+         the whole table wider than its column. */
+      .d2h-code-line-ctn,
+      .d2h-code-line-prefix {
+        display: inline;
+        width: auto;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+      .d2h-code-line del,
+      .d2h-code-line ins,
+      .d2h-code-side-line del,
+      .d2h-code-side-line ins {
+        display: inline;
+      }
+      /* Hanging indent: continuation rows sit 2ch in so a wrapped line reads
+         as one line rather than as two statements. The negative text-indent
+         pulls the first row — prefix span included — back flush, so the extra
+         padding shows up only on the rows after it. */
+      .d2h-code-side-line {
+        padding-left: calc(4.5em + 2ch);
+        text-indent: -2ch;
+      }
+      .d2h-code-line {
+        padding-left: calc(8em + 2ch);
+        text-indent: -2ch;
+      }
+      /* With the numbers hidden and lines wrapping, nothing said where one
+         logical line ended and the next began. This dot does: one per line,
+         floated to the top-left of the gutter cell, which stays one row tall
+         even when its line wraps. Skipped on hunk headers and on the blank
+         placeholders that pad one side against the other, which are not
+         lines. Declaring the color here beats the `transparent` the cell
+         inherits without needing !important. */
+      .d2h-code-side-linenumber:not(.d2h-info):not(.d2h-code-side-emptyplaceholder)::before,
+      .d2h-code-linenumber:not(.d2h-info):not(.d2h-emptyplaceholder)::before {
+        content: '·';
+        float: left;
+        color: var(--meat-muted);
+        opacity: 0.55;
       }
     </style>
 
@@ -307,6 +387,50 @@
           track();
         }
 
+        // Side-by-side mode renders the two halves of a file as two separate
+        // tables, so nothing makes row n on the left as tall as row n on the
+        // right. Once lines wrap that matters: one wrapped line on one side
+        // shifts every row below it out of step with its counterpart. Pair
+        // the rows up by index and give both the taller of the two.
+        const syncRowHeights = () => {
+          document.querySelectorAll('.d2h-files-diff').forEach((pair) => {
+            // A collapsed ("Viewed") file measures zero; pinning rows to 0px
+            // would leave it broken when it is expanded again. The change
+            // handler below re-syncs it then.
+            if (!pair.offsetParent) return;
+            const sides = pair.querySelectorAll(':scope > .d2h-file-side-diff');
+            if (sides.length !== 2) return;
+            const rows = [...sides].map((side) =>
+              side.querySelectorAll('tbody.d2h-diff-tbody > tr'),
+            );
+            const count = Math.min(rows[0].length, rows[1].length);
+            // Three passes, not one: a height written to one row invalidates
+            // layout for every row after it, so clear them all, then measure
+            // them all, then write. Interleaving would measure stale rows.
+            for (let i = 0; i < count; i++) {
+              rows[0][i].style.height = '';
+              rows[1][i].style.height = '';
+            }
+            const heights = [];
+            for (let i = 0; i < count; i++) {
+              heights.push(Math.max(rows[0][i].offsetHeight, rows[1][i].offsetHeight));
+            }
+            for (let i = 0; i < count; i++) {
+              rows[0][i].style.height = heights[i] + 'px';
+              rows[1][i].style.height = heights[i] + 'px';
+            }
+          });
+        };
+        syncRowHeights();
+        // Wrapping depends on the width, and highlighting and webfonts can
+        // both land after DOMContentLoaded and change how much fits per row.
+        window.addEventListener('load', syncRowHeights);
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(syncRowHeights, 120);
+        });
+
         // Checking a file's Viewed box collapses it, and everything below
         // jumps up by the height of what just vanished — so you land mid-hunk
         // in the next file with its opening lines already scrolled past.
@@ -315,7 +439,11 @@
         // stickyFileHeaders may re-render the headers these boxes live in.
         document.addEventListener('change', (event) => {
           const box = event.target.closest?.('.d2h-file-collapse-input');
-          if (!box || !box.checked) return;
+          if (!box) return;
+          // Expanding a file reveals rows that were unmeasurable while it was
+          // collapsed, so they only get their heights now.
+          requestAnimationFrame(syncRowHeights);
+          if (!box.checked) return;
           const wrapper = box.closest('.d2h-file-wrapper');
           if (!wrapper) return;
           // Next frame, so the position measured is the post-collapse one:

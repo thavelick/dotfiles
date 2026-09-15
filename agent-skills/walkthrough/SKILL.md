@@ -18,6 +18,9 @@ Gather these before spawning, and ask for any that are missing.
 
 - **Scenario**, one or two sentences. "The account page after a completed
   checkout." "Editing the profile updates an unsaved draft."
+- **The change under review**: a PR number, a branch, or a diff against the
+  base branch. The walkthrough covers this change and nothing else. Without
+  one, the whole scenario is the change.
 - **Base URL** of the running app, checked to respond.
 - **How to sign in.** A seeded account, or a mail-catcher URL plus one
   sentence on how the login form works. Sign-in is per project and arrives as
@@ -25,8 +28,10 @@ Gather these before spawning, and ask for any that are missing.
 - **Output directory.** Convention: `scratch/walkthrough-<slug>/` in the
   repo, with `scratch/` git-ignored. Confirm per repo, and confirm it holds
   no walkthrough already.
-- **Scope.** The whole flow, or `--only-end-state`: only the screen the
-  scenario ends on. A single screenshot makes a single-section walkthrough.
+- **Scope.** The screens the change touched, or `--only-end-state`: only
+  the screen the scenario ends on. Screens the flow passes through on the
+  way (sign-in, forms the change did not alter, payment) are driven but not
+  shot. A single screenshot makes a single-section walkthrough.
 - Optional: a PR or spec number for the title.
 
 `--reshoot` takes the existing directory and section numbers instead; see §5.
@@ -43,7 +48,7 @@ In the output directory:
 - `shoot.mjs`, the Playwright script the agent wrote to drive the app. It is
   part of the output: a reshoot reruns pieces of it.
 
-The run is done when every screen the scenario names has a section, every
+The run is done when every screen the change touched has a section, every
 figure carries a path label, and `open index.html` has put the page in the
 browser.
 
@@ -100,8 +105,8 @@ Rules that came from getting it wrong:
 
 ## 4. Writing the page
 
-One `<section id="sNN">` per screen, numbered in the order a user meets
-them. Each has:
+One `<section id="sNN">` per screen the change touched, numbered in the
+order a user meets them. Each has:
 
 - An `<h2>`: the number and a short name for the screen.
 - One paragraph in plain English: what is on screen, how you got here, what
@@ -122,12 +127,17 @@ The last section, id `oddities`, titled "Screens not captured, and oddities
 noticed". The title stays even when everything was captured; only the
 `.note` paragraph goes.
 
-An oddity is anything that looked wrong, surprising, or inconsistent while
-driving: copy and plurals, timing, a redirect that lands somewhere odd, a
-console error, a missing link, a control that looks enabled and is not, a
-typeface or spacing mismatch, a label that differs from the spec's wording.
-List every one, including those that may be by design; say "by design per
-the tests" when you found that, and the reviewer decides.
+An oddity is anything that looked wrong, surprising, or inconsistent in
+what the change touched: copy and plurals, timing, a redirect that lands
+somewhere odd, a console error, a missing link, a control that looks enabled
+and is not, a typeface or spacing mismatch, a label that differs from the
+spec's wording. List every one, including those that may be by design; say
+"by design per the tests" when you found that, and the reviewer decides.
+
+Behaviour the branch did not touch is not an oddity, however wrong it looks.
+When unsure whether the branch caused something, check the diff; if the
+lines are untouched, leave it out. The reviewer is deciding on this change,
+and a list padded with old problems buries the new ones.
 
 Write them as a numbered `<ol>`, each item:
 
@@ -160,7 +170,8 @@ The page is the artifact; the report is short:
 
 - The path to `index.html` and which browser drove it.
 - Sections and shot count, one line.
-- Anything the scenario asked for that was not captured, and why.
+- Anything the scenario asked for that was not captured, and why. Screens
+  skipped because the change did not touch them need no mention.
 - The oddities, numbered, each as its one or two sentences from the page.
   The user records a decision per item, so each must make sense with the
   page closed.

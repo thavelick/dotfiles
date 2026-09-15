@@ -1,5 +1,5 @@
 ---
-name: cut-branch
+name: personal-cut-branch
 description: Create a new git branch for working on a feature or fix
 argument-hint: "[issue-number or description]"
 ---

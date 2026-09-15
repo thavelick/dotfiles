@@ -1,5 +1,5 @@
 ---
-name: meat
+name: personal-meat
 description: Abridge a diff into a "reading diff" — drop mechanical noise, keep what carries meaning. Use when the user wants to read/review a large diff, PR, or commit at the concept level rather than line by line.
 disable-model-invocation: false
 argument-hint: "[pr-number | revision | range | -w | -staged]"
@@ -185,7 +185,7 @@ Say what the diff is against: `--pr <N>` when you abridged a PR, `--commit
 <rev>` when you abridged a commit. Either one puts a link to it on GitHub in
 the header band, so the page can be read beside its source. `--pr` also puts a
 copyable *watch checks, then merge* command at the bottom — the same one the
-`merge` skill runs — behind a copy-to-clipboard button. Leave both off for
+`personal-merge` skill runs — behind a copy-to-clipboard button. Leave both off for
 `-w` and `-staged`; there is nothing to link to.
 
 The page carries its own provenance, which is why the flags matter. `--orig`

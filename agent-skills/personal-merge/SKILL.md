@@ -1,5 +1,5 @@
 ---
-name: merge
+name: personal-merge
 description: Merge the current PR with branch deletion, but only after CI passes. Use when the user clearly means "merge the open PR" (e.g. plain "merge", "merge it", "ship it"). Do NOT use for git branch merges ("merge main into X") or code merges.
 ---
 

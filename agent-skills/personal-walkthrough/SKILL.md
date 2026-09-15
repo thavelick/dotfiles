@@ -1,5 +1,5 @@
 ---
-name: walkthrough
+name: personal-walkthrough
 description: Screenshot walkthrough of a web-app scenario. Use when the user wants to see a flow screen by screen, review a PR's UI without clicking through it, or re-shoot one section after a fix.
 argument-hint: "<scenario> [--only-end-state] [--reshoot NN ...]"
 ---

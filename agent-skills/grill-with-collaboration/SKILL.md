@@ -3,7 +3,7 @@ name: grill-with-collaboration
 description: Grill the user about a plan, design, or decision with a shared collaboration doc as the agenda. Use when the user asks to grill something and also wants a doc, an agenda, shared notes, or a scratchpad to run it in.
 ---
 
-Run a `/grilling` session with a `/collaboration` doc as the agenda. The doc
+Run a `/personal-grilling` session with a `/collaboration` doc as the agenda. The doc
 carries the breadth — every open question, every decision made so far — so the
 chat can stay narrow and the record survives the scroll.
 
@@ -49,7 +49,7 @@ Ask in chat, record in the doc. After every answer, before the next question:
 Say in one line what you wrote. `## Notes` holds scenarios, tangents, and things
 noticed that are not decisions.
 
-Follow `/grilling` for everything else — question format, round sizing, and the
+Follow `/personal-grilling` for everything else — question format, round sizing, and the
 rule that finding facts is your job, not the user's.
 
 ## 4. When the frontier is empty

@@ -69,6 +69,10 @@
           {
             "command": "$HOME/.claude/bin/claude-notify-sfx.py play dading 60",
             "type": "command"
+          },
+          {
+            "command": "$HOME/.claude/bin/self-compact.sh hook",
+            "type": "command"
           }
         ]
       }

@@ -17,3 +17,6 @@ irssi/config
 
 # PKGBUILD artifacts
 arch/pkgbuilds/build/
+
+# Claude Code account-skill sync cache
+agent-skills/synced/

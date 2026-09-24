@@ -143,5 +143,6 @@
     "type": "command"
   },
   "theme": "auto",
-  "tui": "fullscreen"
+  "tui": "fullscreen",
+  "verbose": false
 }

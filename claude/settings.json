@@ -24,10 +24,6 @@
           {
             "command": "playback --pause-distractions",
             "type": "command"
-          },
-          {
-            "command": "$HOME/.claude/bin/claude-notify-sfx.py play ringaling 90",
-            "type": "command"
           }
         ],
         "matcher": "permission_prompt"
@@ -65,10 +61,6 @@
           {
             "command": "playback --pause-distractions",
             "type": "command"
-          },
-          {
-            "command": "$HOME/.claude/bin/claude-notify-sfx.py play dading 60",
-            "type": "command"
           }
         ]
       }
@@ -76,10 +68,6 @@
     "UserPromptSubmit": [
       {
         "hooks": [
-          {
-            "command": "$HOME/.claude/bin/claude-notify-sfx.py start",
-            "type": "command"
-          },
           {
             "command": "jq -r '.prompt // \"\"' | grep -qiE '(qcopy|qpaste|clipboard|copy (me|that|this)|paste (me|that|this))' && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"Use qcopy and qpaste for the user clipboard (cross-platform pbcopy/pbpaste). Only applies to clipboard ops — ignore if the request is about copying files or pasting code into a file.\"}}' || true",
             "type": "command"

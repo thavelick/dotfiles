@@ -12,8 +12,8 @@ Toggle the default audio output's mute state (cross-platform).
 Prints "muted" or "unmuted" to stdout reflecting the new state.
 
 Options:
-  --sfx-only  Only toggle sound effects played by 'sfx' (timer, Claude Code
-              hooks, etc.), leaving system audio alone. Cleared on reboot. Flag file:
+  --sfx-only  Only toggle sound effects played by 'sfx' (timer, etc.),
+              leaving system audio alone. Cleared on reboot. Flag file:
               $MUTE_FILE
 
 Backends (in preference order):

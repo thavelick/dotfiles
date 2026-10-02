@@ -1,6 +1,5 @@
 {
   "alwaysThinkingEnabled": true,
-  "autoCompactWindow": 250000,
   "effortLevel": "medium",
   "enabledPlugins": {
     "clangd-lsp@claude-plugins-official": false,
@@ -17,6 +16,7 @@
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
+  "feedbackDrafts": "off",
   "hooks": {
     "Notification": [
       {

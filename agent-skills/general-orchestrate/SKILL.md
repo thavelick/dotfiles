@@ -16,13 +16,9 @@ costs fewer tokens than a brief.
 
 ## Models
 
-| Role                                    | Model |
-| --------------------------------------- | ----- |
-| Implementor running `/pocock-implement` | opus  |
-| Code review the implementor agent runs  | fable |
-| `/personal-meat` runner                 | opus  |
-| `/personal-walkthrough` runner          | opus  |
-| Briefed fix agents                      | opus  |
+Agents run on opus: the implementor running `/pocock-implement`, the code
+review it runs, the `/personal-meat` runner, the `/personal-walkthrough`
+runner, and briefed fix agents.
 
 Anything else is your judgement.
 
@@ -39,7 +35,7 @@ worktrees.
 2. **Implement.** Spawn the implementor to invoke `/pocock-implement <n>`.
    The brief: branch `<feature>_<n>` cut from the default branch in its own
    worktree, set up the way this repo sets worktrees up, its review agents on
-   fable, every gate this repo gates a PR on run inside that worktree —
+   opus, every gate this repo gates a PR on run inside that worktree —
    typecheck, lint, tests with coverage, and the end-to-end suite when the
    change touches it — a PR against the default branch, the worktree and its
    stack left up, nothing merged. It reports the PR number, worktree path and

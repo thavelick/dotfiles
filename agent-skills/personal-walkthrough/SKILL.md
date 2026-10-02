@@ -6,7 +6,7 @@ argument-hint: "<scenario> [--only-end-state] [--reshoot NN ...]"
 
 Produce a screenshot walkthrough of `$ARGUMENTS`.
 
-The main session gathers the inputs, then spawns **one agent on `fable`** that
+The main session gathers the inputs, then spawns **one agent on `opus`** that
 does the whole run: drives the browser, writes the captions, writes the
 oddities. The oddities are why the walkthrough exists, and they need the
 strongest model watching the app in the moment, so the run is one agent on

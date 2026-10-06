@@ -1,5 +1,6 @@
 {
   "alwaysThinkingEnabled": true,
+  "cleanupPeriodDays": 3650,
   "effortLevel": "medium",
   "enabledPlugins": {
     "clangd-lsp@claude-plugins-official": false,

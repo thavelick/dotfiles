@@ -22,8 +22,9 @@ cd /tmp
 $SUDO mv squashfs-root/usr/bin/nvim /usr/local/bin/nvim
 $SUDO mv squashfs-root/usr/share/nvim/runtime /usr/local/share/nvim
 
-# Fix file ownership
+# Fix file ownership and permissions (newer AppImages extract dirs as 0700)
 $SUDO chown -R root:root /usr/local/bin/nvim /usr/local/share/nvim
+$SUDO chmod -R a+rX /usr/local/bin/nvim /usr/local/share/nvim
 
 # Cleanup
 rm -rf "$NVIM_APPIMAGE" squashfs-root 2>/dev/null || $SUDO rm -rf squashfs-root

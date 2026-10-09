@@ -46,9 +46,7 @@ elif command_exists nvim; then
 fi
 
 # Browser detection - use first available
-if command_exists cha; then
-    export BROWSER=cha
-elif command_exists zen-browser; then
+if command_exists zen-browser; then
     export BROWSER=zen-browser
 elif command_exists firefox; then
     export BROWSER=firefox

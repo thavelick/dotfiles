@@ -3,7 +3,6 @@
 #
 # Rendered by `update-secrets weechat` from KeePassXC. Not tracked in git.
 # No passphrase is set, so WeeChat keeps these as plain text (like irssi's config).
-# The twitch entry is added later by `twitch-token`.
 #
 
 [crypt]

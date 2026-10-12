@@ -2,7 +2,7 @@
 # weechat -- sec.conf
 #
 # Rendered by `update-secrets weechat` from KeePassXC. Not tracked in git.
-# No passphrase is set, so WeeChat keeps these as plain text (like irssi's config).
+# No passphrase is set, so WeeChat keeps these as plain text.
 #
 
 [crypt]

@@ -1,0 +1,17 @@
+#
+# weechat -- sec.conf
+#
+# Rendered by `update-secrets weechat` from KeePassXC. Not tracked in git.
+# No passphrase is set, so WeeChat keeps these as plain text (like irssi's config).
+# The twitch entry is added later by `twitch-token`.
+#
+
+[crypt]
+cipher = aes256
+hash_algo = sha256
+passphrase_command = ""
+salt = on
+
+[data]
+__passphrase__ = off
+libera = "{{WEECHAT_LIBERA_PASSWORD}}"

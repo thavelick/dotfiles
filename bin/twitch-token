@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh the Twitch chat OAuth token and write it into the irssi config.
+"""Refresh the Twitch chat OAuth token and hand it to irssi and/or WeeChat.
 
 Twitch user access tokens last about four hours, so the token cannot live in
 KeePassXC directly. Instead KeePassXC holds the long-lived credentials
@@ -8,12 +8,14 @@ to ~/.config/twitch/credentials, and this script trades the refresh token for a
 fresh access token whenever you want to connect.
 
 Usage: twitch-token [--init]
-  twitch-token          # refresh and rewrite ~/.irssi/config, then /reload in irssi
+  twitch-token          # refresh, rewrite ~/.irssi/config and set WeeChat's sec.data.twitch
   twitch-token --init   # one-time authorization flow to obtain a refresh token
 """
 
 import json
+import os
 import secrets
+import subprocess
 import sys
 import urllib.error
 import urllib.parse
@@ -28,6 +30,8 @@ SCOPES = "chat:read chat:edit"
 CREDENTIALS_PATH = Path.home() / ".config" / "twitch" / "credentials"
 CACHE_PATH = Path.home() / ".cache" / "twitch" / "access_token"
 IRSSI_CONFIG = Path.home() / ".irssi" / "config"
+WEECHAT_DIR = Path.home() / ".config" / "weechat"
+WEECHAT_RUNTIME_DIR = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "weechat"
 TWITCH_ADDRESS = "irc.chat.twitch.tv"
 
 
@@ -165,11 +169,6 @@ def do_init():
 
 def update_irssi_config(access_token):
     """Rewrite the password line in the irssi Twitch server block."""
-    if not IRSSI_CONFIG.exists():
-        error(f"irssi config not found at {IRSSI_CONFIG}")
-        info("Run: update-secrets irssi")
-        sys.exit(1)
-
     lines = IRSSI_CONFIG.read_text(encoding="utf-8").splitlines(keepends=True)
     in_twitch_block = False
     for index, line in enumerate(lines):
@@ -186,6 +185,34 @@ def update_irssi_config(access_token):
 
     error(f"No password line found in a server block for {TWITCH_ADDRESS}")
     sys.exit(1)
+
+
+def update_weechat(access_token):
+    """Store the token as WeeChat secure data "twitch".
+
+    A running WeeChat gets it through its FIFO pipe; otherwise a throwaway
+    headless instance sets it, so it is there on the next start.
+    """
+    command = f"/secure set twitch {access_token}"
+    delivered = False
+    for pipe in WEECHAT_RUNTIME_DIR.glob("weechat_fifo_*"):
+        try:
+            # Non-blocking so a pipe left behind by a dead WeeChat fails fast
+            fd = os.open(pipe, os.O_WRONLY | os.O_NONBLOCK)
+        except OSError:
+            continue
+        with os.fdopen(fd, "w", encoding="utf-8") as fifo:
+            fifo.write(f"*{command}\n")
+        delivered = True
+    if delivered:
+        return
+
+    subprocess.run(
+        ["weechat-headless", "--no-connect", "-r", command, "-r", "/quit"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=True,
+    )
 
 
 def do_refresh():
@@ -221,9 +248,21 @@ def do_refresh():
     CACHE_PATH.write_text(tokens["access_token"] + "\n", encoding="utf-8")
     CACHE_PATH.chmod(0o600)
 
-    update_irssi_config(tokens["access_token"])
+    if not IRSSI_CONFIG.exists() and not WEECHAT_DIR.exists():
+        error(f"Neither {IRSSI_CONFIG} nor {WEECHAT_DIR} exists")
+        info("Run: update-secrets irssi, or weechat/setup.sh")
+        sys.exit(1)
+
+    if IRSSI_CONFIG.exists():
+        update_irssi_config(tokens["access_token"])
+    if WEECHAT_DIR.exists():
+        update_weechat(tokens["access_token"])
+
     success(f"✓ Twitch token refreshed (valid ~{tokens.get('expires_in', 0) // 3600}h)")
-    info("In irssi: /reload then /connect Twitch")
+    if IRSSI_CONFIG.exists():
+        info("In irssi: /reload then /connect Twitch")
+    if WEECHAT_DIR.exists():
+        info("In WeeChat: /connect twitch")
 
 
 def main():

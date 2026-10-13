@@ -25,7 +25,6 @@ gitleaks
 google-chrome
 haxe
 inkscape
-irssi
 isync
 jq
 keepassxc
@@ -77,6 +76,7 @@ tree
 typescript-language-server
 uv
 watch
+weechat
 xq
 yamllint
 yt-dlp

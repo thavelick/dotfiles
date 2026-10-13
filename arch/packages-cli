@@ -33,7 +33,6 @@ grub
 haxe
 inetutils
 intel-ucode
-irssi
 isync
 iwd
 jdk8-openjdk
@@ -95,6 +94,7 @@ tree
 ttf-meslo-nerd
 typescript-language-server
 wavemon
+weechat
 words
 yamllint
 yt-dlp

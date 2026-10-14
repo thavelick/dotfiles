@@ -1,6 +1,7 @@
 #!/bin/sh
-# Wrap URLs that end a sentence in angle brackets: "see https://x/1." becomes
-# "see <https://x/1>." so clicking the link in kitty doesn't grab the period.
+# Wrap URLs directly followed by punctuation (.,;:!?) in angle brackets:
+# "see https://x/1." becomes "see <https://x/1>." so clicking the link in
+# kitty doesn't grab the punctuation.
 #
 # Registered as a MessageDisplay hook. Display-only: the stored message and
 # what the model sees are untouched. Prints nothing when there's nothing to

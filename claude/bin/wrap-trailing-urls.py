@@ -13,15 +13,24 @@ import json
 import re
 import sys
 
+# Matches a URL and the punctuation right after it, capturing them separately
+# so the URL can be wrapped and the punctuation left outside.
+#
+# URLs already in <...> are skipped, as are markdown link targets ](...),
+# which are already links. The URL match is lazy so it stops before the
+# punctuation instead of swallowing it, and the punctuation must be followed
+# by whitespace so a "." inside the URL (example.com) doesn't count.
 URL_BEFORE_PUNCTUATION = re.compile(
     r"""
-    (?<![<(])            # not already in <...>, and not a markdown link target ](...)
-    \b
-    (https?://[^\s<>]+?) # the URL: no whitespace or angle brackets; lazy, so
-                         # it stops before the punctuation instead of eating it
-    ([.,;:!?]+)          # the punctuation run kitty would otherwise include
-    (?=\s|$)             # ...which must end the word, so a "." inside the
-                         # URL (example.com) doesn't count
+    (?<![<(])       # the character before is not "<" or "("
+    \b              # starting at a word boundary
+    (               # capture group 1, the URL:
+      https?://     #   "http://" or "https://"
+      [^\s<>]+?     #   then one or more characters that aren't whitespace,
+                    #   "<" or ">", as few as possible
+    )
+    ([.,;:!?]+)     # capture group 2: one or more of . , ; : ! ?
+    (?=\s|$)        # followed by whitespace or the end of the text
     """,
     re.VERBOSE,
 )

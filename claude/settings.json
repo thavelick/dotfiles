@@ -23,7 +23,7 @@
       {
         "hooks": [
           {
-            "command": "$HOME/.claude/bin/wrap-trailing-urls.sh",
+            "command": "$HOME/.claude/bin/wrap-trailing-urls.py",
             "type": "command"
           }
         ]

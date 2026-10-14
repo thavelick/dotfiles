@@ -38,7 +38,10 @@ URL_BEFORE_PUNCTUATION = re.compile(
 
 def main():
     delta = json.load(sys.stdin).get("delta", "")
-    fixed = URL_BEFORE_PUNCTUATION.sub(r"<\1>\2", delta)
+    # The "<" is escaped so markdown shows the brackets instead of treating
+    # <url> as an autolink and hiding them. The ">" must stay unescaped: the
+    # renderer would otherwise keep the backslash as part of the URL.
+    fixed = URL_BEFORE_PUNCTUATION.sub(r"\\<\1>\2", delta)
     if fixed == delta:
         return
     json.dump(

@@ -1,0 +1,74 @@
+# Maintainer: Tristan Havelick <tristan@havelick.com>
+
+pkgname=t3code
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Desktop GUI for coding agents"
+arch=('x86_64')
+url="https://github.com/pingdotgg/t3code"
+license=('MIT')
+# Runtime libs mirror the .deb depends in scripts/build-desktop-artifact.ts
+depends=('alsa-lib' 'at-spi2-core' 'gtk3' 'libnotify' 'libsecret' 'libxss'
+         'libxtst' 'mesa' 'nss' 'util-linux-libs' 'xdg-utils')
+# From docs/operations/development.md#linux-appimage-prerequisites; python is
+# for node-gyp, since node-pty is compiled from source on Linux
+makedepends=('git' 'nodejs' 'pnpm' 'python' 'rust' 'pkgconf' 'imagemagick')
+# Electron and its prebuilt helpers ship as-is
+options=('!strip' '!debug')
+source=("git+https://github.com/pingdotgg/t3code.git#tag=v$pkgver"
+        "$pkgname.desktop")
+sha256sums=('b03a50fdf6af30401c7eb9e8da6489738910af1c75aa29b2c6ba5eb75f338a7d'
+            '81706accb8ab2f5435ee87409a1fe618998bd1b193298b78eba786294359b2da')
+
+build() {
+  cd "$pkgname"
+
+  # pnpm, electron-builder and the native module rebuild download their
+  # dependencies (npm packages, Electron, Electron headers) during the build.
+  # All of it is pinned by pnpm-lock.yaml and apps/desktop/package.json.
+  # Same install filter as the release workflow (.github/workflows/release.yml)
+  pnpm install --frozen-lockfile \
+    --filter=t3... --filter=@t3tools/web... --filter=@t3tools/desktop... --filter=@t3tools/scripts...
+  export PATH="$PWD/node_modules/.bin:$PWD/apps/desktop/node_modules/.bin:$PATH"
+
+  # Release CI stamps the tag version into the app/server/web manifests
+  node scripts/update-release-package-versions.ts "$pkgver"
+
+  # The repo's own desktop packager, asked for an unpacked app ("dir") rather
+  # than an AppImage. It only copies top-level files out of its staging dir,
+  # so keep the stage and pin it under $srcdir to pick up linux-unpacked.
+  rm -rf "$srcdir/stage"
+  mkdir -p "$srcdir/stage"
+  TMPDIR="$srcdir/stage" node scripts/build-desktop-artifact.ts \
+    --platform linux \
+    --target dir \
+    --arch x64 \
+    --build-version "$pkgver" \
+    --output-dir "$srcdir/release" \
+    --keep-stage \
+    --verbose
+}
+
+package() {
+  local _stage_app=("$srcdir"/stage/t3code-desktop-linux-stage-*/app)
+
+  install -d "$pkgdir"/opt "$pkgdir"/usr/bin
+  cp -a "$_stage_app"/dist/linux-unpacked "$pkgdir"/opt/$pkgname
+  ln -s /opt/$pkgname/t3code "$pkgdir"/usr/bin/t3code
+
+  # Stray pnpm .bin shim that hardcodes the stage path; the SDK runs bin/rg directly
+  rm -r "$pkgdir"/opt/$pkgname/resources/node_modules/@cursor/sdk-linux-x64/node_modules
+
+  install -Dm644 "$srcdir"/$pkgname.desktop "$pkgdir"/usr/share/applications/$pkgname.desktop
+
+  # Icons resized by the build script from the production brand icon
+  for i in "$_stage_app"/apps/desktop/resources/icons/*.png; do
+    install -Dm644 "$i" \
+      "$pkgdir"/usr/share/icons/hicolor/$(basename "$i" .png)/apps/$pkgname.png
+  done
+
+  cd "$pkgname"
+  install -Dm644 apps/desktop/resources/linux/com.t3tools.t3code.metainfo.xml \
+    "$pkgdir"/usr/share/metainfo/com.t3tools.t3code.metainfo.xml
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}

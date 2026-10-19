@@ -12,12 +12,12 @@ depends=('alsa-lib' 'at-spi2-core' 'gtk3' 'libnotify' 'libsecret' 'libxss'
          'libxtst' 'mesa' 'nss' 'util-linux-libs' 'xdg-utils')
 # From docs/operations/development.md#linux-appimage-prerequisites; python is
 # for node-gyp, since node-pty is compiled from source on Linux
-makedepends=('git' 'nodejs' 'pnpm' 'python' 'rust' 'libsecret' 'pkgconf' 'imagemagick')
+makedepends=('git' 'nodejs' 'pnpm' 'python' 'rust' 'pkgconf' 'imagemagick')
 # Electron and its prebuilt helpers ship as-is
 options=('!strip' '!debug')
 source=("git+https://github.com/pingdotgg/t3code.git#tag=v$pkgver"
         "$pkgname.desktop")
-sha256sums=('SKIP'
+sha256sums=('b03a50fdf6af30401c7eb9e8da6489738910af1c75aa29b2c6ba5eb75f338a7d'
             '81706accb8ab2f5435ee87409a1fe618998bd1b193298b78eba786294359b2da')
 
 build() {
@@ -28,7 +28,7 @@ build() {
   # All of it is pinned by pnpm-lock.yaml and apps/desktop/package.json.
   # Same install filter as the release workflow (.github/workflows/release.yml)
   pnpm install --frozen-lockfile \
-    --filter=@t3tools/desktop... --filter=t3... --filter=@t3tools/scripts...
+    --filter=t3... --filter=@t3tools/web... --filter=@t3tools/desktop... --filter=@t3tools/scripts...
   export PATH="$PWD/node_modules/.bin:$PWD/apps/desktop/node_modules/.bin:$PATH"
 
   # Release CI stamps the tag version into the app/server/web manifests
@@ -50,10 +50,10 @@ build() {
 }
 
 package() {
-  local _stage=("$srcdir"/stage/t3code-desktop-linux-stage-*/app)
+  local _stage_app=("$srcdir"/stage/t3code-desktop-linux-stage-*/app)
 
   install -d "$pkgdir"/opt "$pkgdir"/usr/bin
-  cp -a "$_stage"/dist/linux-unpacked "$pkgdir"/opt/$pkgname
+  cp -a "$_stage_app"/dist/linux-unpacked "$pkgdir"/opt/$pkgname
   ln -s /opt/$pkgname/t3code "$pkgdir"/usr/bin/t3code
 
   # Stray pnpm .bin shim that hardcodes the stage path; the SDK runs bin/rg directly
@@ -62,7 +62,7 @@ package() {
   install -Dm644 "$srcdir"/$pkgname.desktop "$pkgdir"/usr/share/applications/$pkgname.desktop
 
   # Icons resized by the build script from the production brand icon
-  for i in "$_stage"/apps/desktop/resources/icons/*.png; do
+  for i in "$_stage_app"/apps/desktop/resources/icons/*.png; do
     install -Dm644 "$i" \
       "$pkgdir"/usr/share/icons/hicolor/$(basename "$i" .png)/apps/$pkgname.png
   done

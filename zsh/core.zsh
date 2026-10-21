@@ -1,5 +1,6 @@
 # PATH
-export PATH=$PATH:$HOME/.local/bin:$HOME/.claude/local:$HOME/.lmstudio/bin:$HOME/dotfiles-bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.npm-global/bin
+typeset -U path  # Drop duplicate PATH entries, keeping the first
+path=($HOME/.local/bin $path $HOME/.claude/local $HOME/.lmstudio/bin $HOME/dotfiles-bin $HOME/go/bin $HOME/.cargo/bin $HOME/.npm-global/bin)
 
 # History settings
 export HISTSIZE=100000

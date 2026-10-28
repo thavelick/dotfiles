@@ -36,8 +36,6 @@ Pick by Platform from your environment context:
 
 If that comes back empty, fall back to listing `inet` addresses (`ifconfig` / `ip -4 addr`) and pick the private one (`192.168.*`, `10.*`, `172.16–31.*`). If there are several plausible ones, list them all as links rather than guessing.
 
-If `tailscale` is on PATH, also grab `tailscale ip -4` — that link works when the user isn't on the same LAN.
-
 ## 4. Start the server
 
 Pick a free port, then launch with the Bash tool's `run_in_background: true` so it outlives the call:
@@ -64,7 +62,7 @@ A `200` means it's up. If it fails, check the background task's output before re
 
 Then reply with:
 
-- The link(s) as clickable markdown — LAN first, Tailscale second if you have one.
+- The link(s) as clickable markdown.
 - What directory is being served.
 - How to stop it: it's a background task you can kill on request (or `pkill -f "http.server $port"`).
 - On macOS, if the user says it won't load, the first-run firewall prompt for Python may be blocking incoming connections.

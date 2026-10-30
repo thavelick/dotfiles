@@ -62,6 +62,10 @@
           {
             "command": "jq -r '.tool_input.command' | grep -qE '(^|[ ;&|()`$])gh( |$)' && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"GitHub identity: @thavelick. @me works in gh CLI filters (--assignee @me, --author @me, search syntax) but NOT in @-mentions, commit co-author trailers, URLs, or most GraphQL login args — use @thavelick literally there.\"}}' || true",
             "type": "command"
+          },
+          {
+            "command": "$HOME/.claude/bin/block-hand-stacked-pr.py",
+            "type": "command"
           }
         ],
         "matcher": "Bash"

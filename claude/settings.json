@@ -13,10 +13,19 @@
     "pr-review-toolkit@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": false,
     "sentry@claude-plugins-official": true,
+    "typescript-lsp-quiet@tristan-local": true,
     "typescript-lsp@claude-plugins-official": false
   },
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "extraKnownMarketplaces": {
+    "tristan-local": {
+      "source": {
+        "path": "/Users/tristan/Projects/dotfiles/claude/plugins",
+        "source": "directory"
+      }
+    }
   },
   "feedbackDrafts": "off",
   "hooks": {

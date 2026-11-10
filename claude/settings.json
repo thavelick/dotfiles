@@ -29,16 +29,6 @@
   },
   "feedbackDrafts": "off",
   "hooks": {
-    "MessageDisplay": [
-      {
-        "hooks": [
-          {
-            "command": "$HOME/.claude/bin/wrap-trailing-urls.py",
-            "type": "command"
-          }
-        ]
-      }
-    ],
     "Notification": [
       {
         "hooks": [

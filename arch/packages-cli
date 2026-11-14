@@ -53,6 +53,7 @@ mypy
 nasm
 nmap
 nodejs
+notmuch
 noto-fonts
 noto-fonts-emoji
 npm

@@ -50,7 +50,7 @@ fi
 
 # Email sync
 if command_exists mbsync && command_exists notmuch; then
-    alias mailsync="mbsync primary && notmuch new"
+    alias mailsync="mbsync -a && notmuch new"
 fi
 
 # Backward compatibility aliases for renamed scripts

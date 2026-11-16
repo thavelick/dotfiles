@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render a meat reading diff to a standalone HTML page and open it."""
+"""Render a meat reading diff to a standalone HTML page."""
 
 import argparse
 import html
@@ -12,8 +12,7 @@ import tempfile
 
 HELP = """Usage: meat-view <reading.diff> [OPTIONS]
 
-Render a meat "reading diff" as a side-by-side HTML page and open it in the
-browser. The page carries a header band explaining what the abridgement left
+Render a meat "reading diff" as a side-by-side HTML page. The page carries a header band explaining what the abridgement left
 out, so the artifact accounts for its own omissions.
 
 Options:
@@ -29,6 +28,7 @@ Options:
   --target <name>     Names the output file: pr-175, worktree, staged, a sha.
                       Defaults to "reading".
   --title <text>      Page title / header line. Defaults to the target.
+  --open              Open the page in the browser after rendering.
   -h, --help          Show this help.
 
 Output goes to <repo>/scratch/meat-diffs/<target>.html, or $TMPDIR if that
@@ -37,7 +37,7 @@ renders are never overwritten.
 
 Requirements:
   - bunx (renders via diff2html-cli)
-  - qopen
+  - qopen (only with --open)
   - git
   - gh (only for --pr, and only to resolve the URL; falls back to the remote)
 """
@@ -275,12 +275,13 @@ def main():
     p.add_argument("--commit")
     p.add_argument("--target")
     p.add_argument("--title")
+    p.add_argument("--open", action="store_true")
     args = p.parse_args()
 
     if args.pr and args.commit:
         die("--pr and --commit are mutually exclusive")
 
-    for cmd in ("bunx", "qopen", "git"):
+    for cmd in ("bunx", "git") + (("qopen",) if args.open else ()):
         if not shutil.which(cmd):
             die(f"{cmd} is required but not installed")
 
@@ -348,7 +349,8 @@ def main():
         os.unlink(tmpl_path)
 
     print(out)
-    subprocess.run(["qopen", out])
+    if args.open:
+        subprocess.run(["qopen", out])
 
 
 if __name__ == "__main__":

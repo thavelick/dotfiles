@@ -16,7 +16,6 @@ fzf
 git
 grim
 inkscape
-irssi
 keepassxc
 libevdev-dev
 libpixman-1-0
@@ -51,6 +50,7 @@ torsocks
 udiskie
 waybar
 wayland-protocols
+weechat
 wl-clipboard
 wlr-randr
 xz-utils

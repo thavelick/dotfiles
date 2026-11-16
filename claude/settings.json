@@ -1,6 +1,6 @@
 {
   "alwaysThinkingEnabled": true,
-  "autoCompactWindow": 250000,
+  "cleanupPeriodDays": 3650,
   "effortLevel": "medium",
   "enabledPlugins": {
     "clangd-lsp@claude-plugins-official": false,
@@ -12,21 +12,28 @@
     "playwright@claude-plugins-official": true,
     "pr-review-toolkit@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": false,
+    "sentry@claude-plugins-official": true,
+    "typescript-lsp-quiet@tristan-local": true,
     "typescript-lsp@claude-plugins-official": false
   },
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
+  "extraKnownMarketplaces": {
+    "tristan-local": {
+      "source": {
+        "path": "/Users/tristan/Projects/dotfiles/claude/plugins",
+        "source": "directory"
+      }
+    }
+  },
+  "feedbackDrafts": "off",
   "hooks": {
     "Notification": [
       {
         "hooks": [
           {
             "command": "playback --pause-distractions",
-            "type": "command"
-          },
-          {
-            "command": "$HOME/.claude/bin/claude-notify-sfx.py play ringaling 90",
             "type": "command"
           }
         ],
@@ -54,6 +61,10 @@
           {
             "command": "jq -r '.tool_input.command' | grep -qE '(^|[ ;&|()`$])gh( |$)' && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"GitHub identity: @thavelick. @me works in gh CLI filters (--assignee @me, --author @me, search syntax) but NOT in @-mentions, commit co-author trailers, URLs, or most GraphQL login args — use @thavelick literally there.\"}}' || true",
             "type": "command"
+          },
+          {
+            "command": "$HOME/.claude/bin/block-hand-stacked-pr.py",
+            "type": "command"
           }
         ],
         "matcher": "Bash"
@@ -65,10 +76,6 @@
           {
             "command": "playback --pause-distractions",
             "type": "command"
-          },
-          {
-            "command": "$HOME/.claude/bin/claude-notify-sfx.py play dading 60",
-            "type": "command"
           }
         ]
       }
@@ -77,10 +84,6 @@
       {
         "hooks": [
           {
-            "command": "$HOME/.claude/bin/claude-notify-sfx.py start",
-            "type": "command"
-          },
-          {
             "command": "jq -r '.prompt // \"\"' | grep -qiE '(qcopy|qpaste|clipboard|copy (me|that|this)|paste (me|that|this))' && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"Use qcopy and qpaste for the user clipboard (cross-platform pbcopy/pbpaste). Only applies to clipboard ops — ignore if the request is about copying files or pasting code into a file.\"}}' || true",
             "type": "command"
           }
@@ -88,7 +91,12 @@
       }
     ]
   },
-  "model": "fable",
+  "model": "opus",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "medium"
+    }
+  },
   "permissions": {
     "allow": [
       "Bash(git *)",
@@ -120,7 +128,6 @@
       "Edit(.claude/settings.json)",
       "Edit(~/.claude/settings.json)",
       "Edit(~/Projects/dotfiles/claude/settings.json)",
-      "Bash(gh pr merge*)",
       "Bash(gh repo delete*)"
     ],
     "defaultMode": "auto",
@@ -138,5 +145,6 @@
     "type": "command"
   },
   "theme": "auto",
-  "tui": "fullscreen"
+  "tui": "fullscreen",
+  "verbose": false
 }

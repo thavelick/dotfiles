@@ -1,5 +1,6 @@
 # PATH
-export PATH=$PATH:$HOME/.local/bin:$HOME/.claude/local:$HOME/.lmstudio/bin:$HOME/dotfiles-bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.npm-global/bin
+typeset -U path  # Drop duplicate PATH entries, keeping the first
+path=($HOME/.local/bin $path $HOME/.claude/local $HOME/.lmstudio/bin $HOME/dotfiles-bin $HOME/go/bin $HOME/.cargo/bin $HOME/.npm-global/bin)
 
 # History settings
 export HISTSIZE=100000
@@ -46,9 +47,7 @@ elif command_exists nvim; then
 fi
 
 # Browser detection - use first available
-if command_exists cha; then
-    export BROWSER=cha
-elif command_exists zen-browser; then
+if command_exists zen-browser; then
     export BROWSER=zen-browser
 elif command_exists firefox; then
     export BROWSER=firefox

@@ -1,0 +1,12 @@
+{
+  "name": "tristan-local",
+  "owner": { "name": "Tristan Havelick" },
+  "description": "Personal plugins kept in dotfiles",
+  "plugins": [
+    {
+      "name": "typescript-lsp-quiet",
+      "source": "./typescript-lsp-quiet",
+      "description": "TypeScript language server without diagnostics pushed after edits"
+    }
+  ]
+}

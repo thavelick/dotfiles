@@ -16,7 +16,17 @@
     },
     {
         "name": "backups",
-        "command": "~/Projects/dotfiles/backups.sh",
+        "command": "sudo -E borg create --progress --exclude-from=/home/tristan/Projects/dotfiles/arch/backup_excludes.txt \"/backuprepo/::system-$(date +%s)\" /",
+        "interval": "11"
+    },
+    {
+        "name": "sync backups to bernard",
+        "command": "sudo rclone --config /home/tristan/.config/rclone/rclone.conf sync -P /backuprepo bernard:/media/disk2/backup/\"$(uname -n)\"",
+        "interval": "11"
+    },
+    {
+        "name": "sync backups to cloud",
+        "command": "sudo rclone --config /home/tristan/.config/rclone/rclone.conf sync --transfers=10 -P /backuprepo system-backup:thavelick-backup/\"$(uname -n)\"",
         "interval": "11"
     },
     {

@@ -15,7 +15,7 @@ which drives /model over tmux — so this only does anything inside tmux.
 
 Examples:
   smart-start opus sonnet             - Plan on Opus, implement on Sonnet
-  smart-start fable opus --continue   - Extra args are passed to claude
+  smart-start opus sonnet --continue  - Extra args are passed to claude
 EOF
     exit 0
 fi

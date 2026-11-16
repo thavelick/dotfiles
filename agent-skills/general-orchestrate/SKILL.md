@@ -16,13 +16,9 @@ costs fewer tokens than a brief.
 
 ## Models
 
-| Role                                    | Model |
-| --------------------------------------- | ----- |
-| Implementor running `/pocock-implement` | opus  |
-| Code review the implementor agent runs  | fable |
-| `/meat` runner                          | opus  |
-| `/walkthrough` runner                   | opus  |
-| Briefed fix agents                      | opus  |
+Agents run on opus: the implementor running `/pocock-implement`, the code
+review it runs, the `/personal-meat` runner, the `/personal-walkthrough`
+runner, and briefed fix agents.
 
 Anything else is your judgement.
 
@@ -39,7 +35,7 @@ worktrees.
 2. **Implement.** Spawn the implementor to invoke `/pocock-implement <n>`.
    The brief: branch `<feature>_<n>` cut from the default branch in its own
    worktree, set up the way this repo sets worktrees up, its review agents on
-   fable, every gate this repo gates a PR on run inside that worktree —
+   opus, every gate this repo gates a PR on run inside that worktree —
    typecheck, lint, tests with coverage, and the end-to-end suite when the
    change touches it — a PR against the default branch, the worktree and its
    stack left up, nothing merged. It reports the PR number, worktree path and
@@ -48,9 +44,9 @@ worktrees.
 3. **Prep for human review.** Two jobs, in parallel.
    - **Reading diff.** Size it by the additions in `gh pr diff <pr> --stat`,
      since deleted code skims easily. Over about 200 lines added,
-     `/meat <pr>`. Under that, no `/meat` run is needed: it keeps most of a
+     `/personal-meat <pr>`. Under that, no `/personal-meat` run is needed: it keeps most of a
      small diff, and the run costs more than it cuts.
-   - **Walkthrough**, when a visual element changed. `/walkthrough` pointed
+   - **Walkthrough**, when a visual element changed. `/personal-walkthrough` pointed
      at the app the worktree is serving, at whatever address this repo gives
      it. Its runner is the only agent holding the browser.
 
@@ -61,7 +57,7 @@ worktrees.
    and recommend one. A fix agent gets a brief naming the decided change, the
    files, and the gates. The merge is the user's call; everything else
    proceeds without asking.
-5. **Merge** on the user's word with `/merge`. Then tear down: stop whatever
+5. **Merge** on the user's word with `/personal-merge`. Then tear down: stop whatever
    the worktree was running and undo its setup the way this repo undoes it;
    from the main checkout `git worktree remove --force <path>`
    (`git worktree unlock` first if locked), `git worktree prune`,

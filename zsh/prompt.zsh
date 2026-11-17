@@ -109,14 +109,12 @@ docker_indicator() {
     fi
 }
 
-# Nextcloud sync indicator: shows ☁️ when nextcloud-sync-check has found the
+# Nextcloud sync indicator: shows ☁ when nextcloud-sync-check has found the
 # local ~/nextcloud out of sync with the remote (sentinel maintained by the
 # nextcloud-sync-check timer, cleared when nextcloud-sync runs).
 nextcloud_indicator() {
     if [ -f "${XDG_CACHE_HOME:-$HOME/.cache}/nextcloud-sync-needed" ]; then
-        # zsh counts ☁️ (cloud + U+FE0F) as 1 column but terminals draw 2;
-        # %2{...%} gives zsh the real width so line editing stays aligned.
-        echo " %2{☁️%}"
+        echo " ☁"
     fi
 }
 

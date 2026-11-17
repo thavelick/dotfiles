@@ -114,7 +114,7 @@ docker_indicator() {
 # nextcloud-sync-check timer, cleared when nextcloud-sync runs).
 nextcloud_indicator() {
     if [ -f "${XDG_CACHE_HOME:-$HOME/.cache}/nextcloud-sync-needed" ]; then
-        echo " ☁️"
+        echo " %2{☁️%}"
     fi
 }
 

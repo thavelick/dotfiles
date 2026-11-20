@@ -30,3 +30,14 @@ scope = drive
 shared_with_me = true
 token = {{RCLONE_GDRIVE_TOKEN}}
 
+[gdrive-1099]
+type = drive
+scope = drive
+token = {{RCLONE_GDRIVE_1099_TOKEN}}
+
+[gdrive-1099-shared]
+type = drive
+scope = drive
+shared_with_me = true
+token = {{RCLONE_GDRIVE_1099_TOKEN}}
+

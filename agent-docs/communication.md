@@ -16,12 +16,13 @@ it is silent.
 
 ## Ticket and PR references
 
-Link every ticket or PR you mention. Make the link text a few words that say
-what the ticket is, or its title when the title already says that. A bare
-`#412` makes the user look the ticket up.
+Link every ticket or PR you mention. Make the link text its number, then a few
+words that say what it is, or its title when the title already says that. A
+bare `#412` makes the user look the ticket up, and words without the number
+hide which ticket it is.
 
-- Ticket: `[one-time sign-in code](https://github.com/owner/repo/issues/412)`
-- PR: `[state picker](https://github.com/owner/repo/pull/530)`
+- Ticket: `[#412 one-time sign-in code](https://github.com/owner/repo/issues/412)`
+- PR: `[#530 state picker](https://github.com/owner/repo/pull/530)`
 
 The exceptions are places where GitHub reads the number itself: `Closes #412`
 in a PR body, and a `Blocked by: #412` line.

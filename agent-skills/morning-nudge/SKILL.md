@@ -1,5 +1,5 @@
 ---
-name: personal-morning-nudge
+name: morning-nudge
 description: Pick the one thing to work on today in this project, from the goals in scratch/GOALS.md, then start it on the user's "go". Use for the scheduled weekday morning run, or when asked for the morning nudge or what to work on today.
 ---
 
@@ -8,16 +8,10 @@ a list.
 
 ## 1. Goals
 
-Goals live in `scratch/GOALS.md` at the root of the project's main checkout,
-not the worktree you may be running in: `scratch/` is usually gitignored, so a
-worktree has no copy. Find it with:
-
-```sh
-echo "$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/scratch/GOALS.md"
-```
-
-Read that file. If it is missing, ask the user what their goals are (front
-burner and back burner), write their answer to that path, and continue.
+Read `scratch/GOALS.md`, relative to the project's main worktree (not a
+linked worktree you may be running in). If it is missing, ask the user what
+their goals are (front burner and back burner), write their answer there, and
+continue.
 
 ## 2. Candidates
 
@@ -57,13 +51,3 @@ Repeating yesterday's pick is fine when it is still the best one.
 
 Reply with the pick, a link (a thread's `link` verbatim, or the issue/PR
 URL), one line on why it beats the rest, and what "go" will start. Then stop.
-
-## 5. On "go"
-
-If the action below names a skill that isn't available in this project, tell
-the user so and stop; don't improvise a substitute.
-
-- Ticket without `agent-queue`: run `/personal-grilling` on it.
-- PR: run `/personal-meat` on its diff; the user does the review.
-- `agent-queue` ticket: run `/orchestrate` with that ticket number.
-- T3 thread: the work continues there; give its link and stop.

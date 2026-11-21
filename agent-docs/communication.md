@@ -27,6 +27,13 @@ hide which ticket it is.
 The exceptions are places where GitHub reads the number itself: `Closes #412`
 in a PR body, and a `Blocked by: #412` line.
 
+## File links
+
+Make a file link's text a short name for the file, usually its folder or
+skill name: `[ci-review](/abs/path/skills/ci-review/SKILL.md)`. The chat shows
+any path, linked or backticked, as a chip with only the filename, so every
+skill's link reads `SKILL.md` unless the text names it.
+
 ## Committed documents
 
 Before you commit a new or edited document, run the skill that matches its

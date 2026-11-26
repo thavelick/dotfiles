@@ -20,7 +20,7 @@ Write each question to these rules:
 - **One decision per question.** Split compound questions.
 - **End the body in a question**, not a topic label.
 - **State options in parallel form**: identical phrasing except the dimension that differs. No incidental variation.
-- **One option per line**, lettered A, B, C. Options run together in a paragraph are read as one blur.
+- **One option per line**, lettered A, B, C. Options run together in a paragraph are read as one blur. When the options choose between things the screen already labels, letter them with those labels: mock-up variants opened with `?variant=C` and `?variant=D` become options C and D, not A and B.
 - **One action per option.** When several actions can each be taken, letter each one, say "pick any" in the body, and recommend the set you would take.
 - **Put the discriminating detail at the end** of the sentence.
 - **No forward references.** Each question must stand alone.
